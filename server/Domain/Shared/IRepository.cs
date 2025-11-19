@@ -2,7 +2,7 @@
 
 public interface IRepository<T> where T : BaseEntity<T>
 {
-    Task AddAsync(T newEntity);
+    Task<Guid> AddAsync(T newEntity);
     Task AddRangeAsync(IList<T> entities);
     Task<T> UpdateAsync(Guid id, T updatedEntity);
     Task<bool> DeleteAsync(Guid id);
