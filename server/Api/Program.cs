@@ -1,3 +1,7 @@
+using System.Text.Json.Serialization;
+using OblivionDrive.Api.Identity;
+using OblivionDrive.Application;
+using OblivionDrive.Infrastructure.Orm;
 
 namespace OblivionDrive.Api
 {
@@ -7,29 +11,32 @@ namespace OblivionDrive.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            builder.Services
+                .AddInfraetructureLayer(builder.Configuration)
+                .AddApplicationLayer(builder.Logging,builder.Configuration);
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services
+                .AddControllers()
+                .AddJsonOptions(options =>
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+            builder.Services
+                .AddEndpointsApiExplorer()
+                .AddIdentityProviderConfig(builder.Configuration);
+
+            builder.Services.AddSwaggerConfig();
+            builder.Services.ConfigureCorsPolicy(builder.Environment, builder.Configuration);
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
+            app.ApplyMigrations();
+            app.UseSwagger();
+            app.UseSwaggerUI();
             app.UseHttpsRedirection();
-
+            app.UseCors();
+            app.UseAuthentication();
             app.UseAuthorization();
-
-
             app.MapControllers();
-
             app.Run();
         }
     }

@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>f1937eb3-333d-4a7d-b83f-90379b180d3c</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +20,11 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Application\OblivionDrive.Application.csproj" />
+    <ProjectReference Include="..\Infrastructure\OblivionDrive.Infrastructure.Orm.csproj" />
   </ItemGroup>
 
 </Project>

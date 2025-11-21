@@ -6,7 +6,7 @@ public static class OblivionDriveDbContextFactory
     public static OblivionDriveDbContext CreateDbContext(string connectionString) 
     {
         var options = new DbContextOptionsBuilder<OblivionDriveDbContext>()
-            .UseNpgsql(connectionString)
+            .UseSqlServer(connectionString)
             .Options;
 
         var dbContext = new OblivionDriveDbContext(options);
