@@ -6,18 +6,31 @@ using OblivionDrive.Domain.PartnerModule;
 using OblivionDrive.Domain.Shared;
 
 namespace OblivionDrive.Infrastructure.Orm.Shared;
-public class OblivionDriveDbContext(DbContextOptions options, ITenantProvider? _tenantProvider = null)
-    : IdentityDbContext<User, Role, Guid>(options), IUnitOfWork
+public class OblivionDriveDbContext : IdentityDbContext<User, Role, Guid>, IUnitOfWork
 {
+    private readonly ITenantProvider? _tenantProvider;
+
+    public Guid? CurrentCompanyId { get; }
+
+    public OblivionDriveDbContext(
+        DbContextOptions options,
+        ITenantProvider? tenantProvider = null)
+        : base(options)
+    {
+        _tenantProvider = tenantProvider;
+        CurrentCompanyId = _tenantProvider?.CompanyId;
+    }
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         if (_tenantProvider is not null)
         {
-            var currentUserId = _tenantProvider.UserId;
 
             // adicionar todas as entidades
             //modelBuilder.Entity<Partner>()
-            //    .HasQueryFilter(x => x.UserId == currentUserId);
+            //.HasQueryFilter(p =>
+            //    !CurrentCompanyId.HasValue || p.CompanyId == CurrentCompanyId);
         }
 
         // adicionar todas os mapeadores
