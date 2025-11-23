@@ -19,10 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Application\OblivionDrive.Application.csproj" />
     <ProjectReference Include="..\Infrastructure\OblivionDrive.Infrastructure.Orm.csproj" />
   </ItemGroup>

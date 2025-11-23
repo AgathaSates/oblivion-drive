@@ -1,12 +1,34 @@
-﻿using System.Text.Json.Serialization;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using OblivionDrive.Application;
+using OblivionDrive.Domain.AuthenticationModule;
 using OblivionDrive.Infrastructure.Orm.Shared;
 
 namespace OblivionDrive.Api;
 
 public static class ApiDependencyInjection
 {
+    public static IServiceCollection AddApiMappings(
+      this IServiceCollection services,
+      IConfiguration configuration)
+    {
+        var applicationAssembly = typeof(ApplicationDependencyInjection).Assembly;
+        var apiAssembly = typeof(Program).Assembly;
+
+        var automapperLicenseKey = configuration["AUTOMAPPER_LICENSE_KEY"];
+
+        if (string.IsNullOrWhiteSpace(automapperLicenseKey))
+            throw new Exception("A variável AUTOMAPPER_LICENSE_KEY não foi fornecida.");
+
+        services.AddAutoMapper(cfg =>
+        {
+            cfg.LicenseKey = automapperLicenseKey;
+        }, applicationAssembly, apiAssembly);
+
+        return services;
+    }
+
     public static void AddSwaggerConfig(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
@@ -53,6 +75,8 @@ public static class ApiDependencyInjection
                     []
                 }
             });
+
+            options.EnableAnnotations();
         });
     }
 
@@ -102,9 +126,43 @@ public static class ApiDependencyInjection
     public static void ApplyMigrations(this IHost host)
     {
         using var scope = host.Services.CreateScope();
+        var services = scope.ServiceProvider;
 
         var dbContext = scope.ServiceProvider.GetRequiredService<OblivionDriveDbContext>();
 
-        dbContext.Database.Migrate(); 
+        dbContext.Database.Migrate();
+
+        CreateRoles(services);
+    }
+
+    private static void CreateRoles(IServiceProvider services)
+    {
+        var roleManager = services.GetRequiredService<RoleManager<Role>>();
+
+        string[] roles =
+        [
+            "Company",
+            "Employee"
+        ];
+
+        foreach (string roleName in roles)
+        {
+            bool exists = roleManager.RoleExistsAsync(roleName)
+                .GetAwaiter()
+                .GetResult();
+
+            if (!exists)
+            {
+                var role = new Role
+                {
+                    Name = roleName,
+                    NormalizedName = roleName.ToUpperInvariant()
+                };
+
+                roleManager.CreateAsync(role)
+                    .GetAwaiter()
+                    .GetResult();
+            }
+        }
     }
 }

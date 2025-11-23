@@ -13,7 +13,9 @@ namespace OblivionDrive.Api
 
             builder.Services
                 .AddInfraetructureLayer(builder.Configuration)
-                .AddApplicationLayer(builder.Logging,builder.Configuration);
+                .AddApplicationLayer(builder.Logging,builder.Configuration)
+                .AddApiMappings(builder.Configuration);
+
 
             builder.Services
                 .AddControllers()
