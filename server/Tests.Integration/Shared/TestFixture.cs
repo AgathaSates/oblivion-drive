@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
 using OblivionDrive.Infrastructure.Orm.Shared;
 using Testcontainers.MsSql;
 
@@ -30,16 +30,6 @@ public class TestFixture
         await DatabaseContainer.StartAsync();
     }
 
-    [AssemblyCleanup]
-    public static async Task AssemblyTeardown()
-    {
-        if (DatabaseContainer is null)
-            return;
-
-        await DatabaseContainer.StopAsync();
-        await DatabaseContainer.DisposeAsync();
-    }
-
     [TestInitialize]
     public void Setup()
     {
@@ -47,6 +37,20 @@ public class TestFixture
             throw new InvalidOperationException("O banco de dados não foi inicializado.");
 
         string connectionString = DatabaseContainer.GetConnectionString();
+
+        using (var dbContext = OblivionDriveDbContextFactory.CreateDbContext(connectionString))
+        {
+            dbContext.Database.Migrate();
+
+            dbContext.UserRoles.RemoveRange(dbContext.UserRoles);
+            dbContext.Users.RemoveRange(dbContext.Users);
+            dbContext.Roles.RemoveRange(dbContext.Roles);
+
+            // Futuro: limpar outras entidades
+            // dbContext.Partners.RemoveRange(dbContext.Partners);
+
+            dbContext.SaveChanges();
+        }
 
         Environment.SetEnvironmentVariable("SQL_CONNECTION_STRING", connectionString);
         Environment.SetEnvironmentVariable("AUTOMAPPER_LICENSE_KEY", "integration-tests-automapper-license");
@@ -58,20 +62,6 @@ public class TestFixture
 
         ApiFactory = new OblivionDriveApiFactory(connectionString);
         HttpClient = ApiFactory.CreateClient();
-
-        using IServiceScope scope = ApiFactory.Services.CreateScope();
-        OblivionDriveDbContext dbContext =
-            scope.ServiceProvider.GetRequiredService<OblivionDriveDbContext>();
-
-        dbContext.Database.EnsureCreated();
-
-        dbContext.UserRoles.RemoveRange(dbContext.UserRoles);
-        dbContext.Users.RemoveRange(dbContext.Users);
-
-        // Depois: limpar outras entidades
-        // dbContext.Partners.RemoveRange(dbContext.Partners);
-
-        dbContext.SaveChanges();
     }
 
     [TestCleanup]
@@ -79,5 +69,15 @@ public class TestFixture
     {
         HttpClient.Dispose();
         ApiFactory.Dispose();
+    }
+
+    [AssemblyCleanup]
+    public static async Task AssemblyTeardown()
+    {
+        if (DatabaseContainer is null)
+            return;
+
+        await DatabaseContainer.StopAsync();
+        await DatabaseContainer.DisposeAsync();
     }
 }
