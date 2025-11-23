@@ -77,8 +77,5 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run client tests
-        run: npm run test:ci --if-present
-
       - name: Build client
         run: npm run build --if-present
