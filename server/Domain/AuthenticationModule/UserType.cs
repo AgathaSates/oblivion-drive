@@ -1,6 +1,6 @@
 ﻿namespace OblivionDrive.Domain.AuthenticationModule;
 public enum UserType
 {
-    Funcionario = 0,
-    Empresa = 1,
+    Employee = 0,
+    Company = 1,
 }
