@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop 
+
+jobs:
+  backend:
+    name: Backend - build and tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # Restore da solução do servidor
+      - name: Restore backend
+        working-directory: ./server
+        run: dotnet restore OblivionDrive.sln
+
+      # Build da solução em Release
+      - name: Build backend
+        working-directory: ./server
+        run: dotnet build OblivionDrive.sln --no-restore --configuration Release
+
+      # ---------- TESTES DE UNIDADE ----------
+      - name: Run unit tests
+        working-directory: ./server/Tests.Unit
+        run: dotnet test OblivionDrive.Tests.Unit.csproj \
+              --no-build --configuration Release \
+              --logger "trx;LogFileName=unit-tests.trx"
+
+      - name: Upload unit test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-results
+          path: server/Tests.Unit/TestResults/*.trx
+
+      # ---------- TESTES DE INTEGRAÇÃO ----------
+      - name: Run integration tests
+        working-directory: ./server/Tests.Integration
+        env:
+          DOTNET_TESTCONTAINERS_RYUK_DISABLED: true
+        run: dotnet test OblivionDrive.Tests.Integration.csproj \
+              --no-build --configuration Release \
+              --logger "trx;LogFileName=integration-tests.trx"
+
+      - name: Upload integration test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-results
+          path: server/Tests.Integration/TestResults/*.trx
+
+  frontend:
+    name: Frontend - build and tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run client tests
+        run: npm run test --if-present
+
+      - name: Build client
+        run: npm run build --if-present
