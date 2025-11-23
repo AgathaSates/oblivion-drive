@@ -7,8 +7,9 @@ using OblivionDrive.Domain.Shared;
 namespace OblivionDrive.Infrastructure.Orm.Shared;
 public class OblivionDriveDbContext : IdentityDbContext<User, Role, Guid>, IUnitOfWork
 {
-    private readonly ITenantProvider? _tenantProvider;
+    public DbSet<TestEntity> TestEntities => Set<TestEntity>();
 
+    private readonly ITenantProvider? _tenantProvider;
     public Guid? CurrentCompanyId { get; }
 
     public OblivionDriveDbContext(
@@ -35,6 +36,17 @@ public class OblivionDriveDbContext : IdentityDbContext<User, Role, Guid>, IUnit
         // adicionar todas os mapeadores
 
         //modelBuilder.ApplyConfiguration(new MapperPartinerOrm());
+
+        modelBuilder.Entity<TestEntity>(builder =>
+        {
+            builder.HasKey(x => x.Id);
+
+            builder.Property(x => x.Name)
+                   .IsRequired()
+                   .HasMaxLength(200);
+
+            builder.ToTable("TestEntities");
+        });
 
         base.OnModelCreating(modelBuilder);
     }
