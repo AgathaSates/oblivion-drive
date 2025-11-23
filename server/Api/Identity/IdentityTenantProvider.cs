@@ -9,17 +9,29 @@ public class IdentityTenantProvider(IHttpContextAccessor contextAccessor) : ITen
     {
         get
         {
-            var claimId = contextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier);
-
-            if (claimId is null)
-                return null;
-
-            return Guid.Parse(claimId.Value);
+            var claim = contextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier);
+            return claim is null ? null : Guid.Parse(claim.Value);
         }
     }
 
-    public bool IsInRole(string role)
+    public Guid? CompanyId
     {
-        return contextAccessor.HttpContext?.User?.IsInRole(role) ?? false;
+        get
+        {
+            var claim = contextAccessor.HttpContext?.User.FindFirst("tenant_company_id");
+            return claim is null ? null : Guid.Parse(claim.Value);
+        }
     }
+
+    public UserType? UserType
+    {
+        get
+        {
+            var claim = contextAccessor.HttpContext?.User.FindFirst("user_type");
+            return claim is null ? null : Enum.Parse<UserType>(claim.Value);
+        }
+    }
+
+    public bool IsInRole(string role) =>
+        contextAccessor.HttpContext?.User?.IsInRole(role) ?? false;
 }
