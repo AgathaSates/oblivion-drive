@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using OblivionDrive.Domain.AuthenticationModule;
-using OblivionDrive.Domain.PartnerModule;
 using OblivionDrive.Domain.Shared;
 
 namespace OblivionDrive.Infrastructure.Orm.Shared;

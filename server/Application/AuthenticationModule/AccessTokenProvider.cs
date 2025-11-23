@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using OblivionDrive.Application.AuthenticationModule.DTOs;
 using OblivionDrive.Domain.AuthenticationModule;
 
 namespace OblivionDrive.Application.AuthenticationModule;
@@ -27,22 +28,31 @@ public class AccessTokenProvider : ITokenProvider
         jwtExpiration = DateTime.UtcNow.AddMinutes(60);
     }
 
-    public AccessToken CreateAcessToken(User user)
+    public IAccessToken CreateAcessToken(User user)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-
         var chaveEmBytes = Encoding.ASCII.GetBytes(jwtSigningKey!);
+
+        Guid tenantCompanyId = user.UserType == UserType.Company
+            ? user.Id
+            : user.CompanyId
+              ?? throw new InvalidOperationException("Funcionário deve ter CompanyId preenchido.");
+
+        var claims = new List<Claim>
+    {
+        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+        new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName!),
+        new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
+
+        new Claim("tenant_company_id", tenantCompanyId.ToString()),
+        new Claim("user_type", user.UserType.ToString())
+    };
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Issuer = "oblivion-drive-api",
             Audience = validAudience,
-            Subject = new ClaimsIdentity(
-            [
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName!),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email!)
-            ]),
+            Subject = new ClaimsIdentity(claims),
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(chaveEmBytes),
                 SecurityAlgorithms.HmacSha256Signature
@@ -51,15 +61,14 @@ public class AccessTokenProvider : ITokenProvider
         };
 
         var token = tokenHandler.CreateToken(tokenDescriptor);
-
         var tokenString = tokenHandler.WriteToken(token);
 
         return new AccessToken(
             tokenString,
             jwtExpiration,
-             new AuthenticatedUser(
+            new AuthenticatedUser(
                 user.Id,
-                user.FullName ?? string.Empty,
+                user.UserName,
                 user.Email ?? string.Empty,
                 user.UserType
             )
