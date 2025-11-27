@@ -12,8 +12,8 @@ using OblivionDrive.Infrastructure.Orm.Shared;
 namespace OblivionDrive.Infrastructure.Orm.Migrations
 {
     [DbContext(typeof(OblivionDriveDbContext))]
-    [Migration("20251123071845_TestEntityTable")]
-    partial class TestEntityTable
+    [Migration("20251126030516_teste")]
+    partial class teste
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -182,6 +182,9 @@ namespace OblivionDrive.Infrastructure.Orm.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<Guid?>("EmployeeID")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -231,6 +234,37 @@ namespace OblivionDrive.Infrastructure.Orm.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("OblivionDrive.Domain.EmployeeModule.Employee", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateOnly>("HireDate")
+                        .HasColumnType("date");
+
+                    b.Property<Guid>("IdentityUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<decimal>("Salary")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdentityUserId");
+
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("OblivionDrive.Infrastructure.Orm.Shared.TestEntity", b =>
@@ -307,6 +341,17 @@ namespace OblivionDrive.Infrastructure.Orm.Migrations
                         .HasForeignKey("CompanyUserId");
 
                     b.Navigation("CompanyUser");
+                });
+
+            modelBuilder.Entity("OblivionDrive.Domain.EmployeeModule.Employee", b =>
+                {
+                    b.HasOne("OblivionDrive.Domain.AuthenticationModule.User", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("IdentityUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("IdentityUser");
                 });
 #pragma warning restore 612, 618
         }

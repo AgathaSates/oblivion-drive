@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OblivionDrive.Domain.EmployeeModule;
 using OblivionDrive.Domain.Shared;
+using OblivionDrive.Infrastructure.Orm.EmployeeModule;
 using OblivionDrive.Infrastructure.Orm.Shared;
 
 namespace OblivionDrive.Infrastructure.Orm;
@@ -10,8 +12,8 @@ public static class InfrastructureDependencyInjection
     public static IServiceCollection AddInfraetructureLayer
         (this IServiceCollection services, IConfiguration configuration)
     {
-        // adicionar cada repositóri
-        //services.AddScoped<IRepositorioTal, RepositorioTal>();
+        // adicionar cada repositório
+        services.AddScoped<IRepositoryEmployee, EmployeeOrmRepository>();
 
         services.AddEntityFrameworkConfig(configuration);
 
