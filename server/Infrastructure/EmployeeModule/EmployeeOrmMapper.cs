@@ -12,7 +12,6 @@ public class EmployeeOrmMApper : IEntityTypeConfiguration<Employee>
         builder.Property(e => e.CompanyId)
             .IsRequired();
 
-        // Relação com Identity User
         builder.Property(e => e.IdentityUserId)
             .IsRequired();
 
