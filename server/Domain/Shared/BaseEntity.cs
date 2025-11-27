@@ -8,6 +8,5 @@ public abstract class BaseEntity<T>
 
 public abstract class TenantEntity<T> : BaseEntity<T>
 {
-    public Guid UserId { get; set; }
     public Guid CompanyId { get; set; }
 }
