@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OblivionDrive.Infrastructure.Orm.EmployeeModule;
 using OblivionDrive.Infrastructure.Orm.Shared;
 using Testcontainers.MsSql;
 
@@ -9,9 +10,7 @@ public class TestFixture
 {
     protected OblivionDriveDbContext? DbContext;
 
-    // Depois: repositórios
-    // protected PartnerRepository? _partnerRepository;
-    // protected SomethingRepository? _somethingRepository;
+    protected EmployeeOrmRepository? _employeeRepository;
 
     protected static MsSqlContainer? DatabaseContainer;
 
@@ -38,19 +37,19 @@ public class TestFixture
 
         string connectionString = DatabaseContainer.GetConnectionString();
 
-        using (var dbContext = OblivionDriveDbContextFactory.CreateDbContext(connectionString))
-        {
-            dbContext.Database.Migrate();
+        DbContext = OblivionDriveDbContextFactory.CreateDbContext(connectionString);
 
-            dbContext.UserRoles.RemoveRange(dbContext.UserRoles);
-            dbContext.Users.RemoveRange(dbContext.Users);
-            dbContext.Roles.RemoveRange(dbContext.Roles);
+        DbContext.Database.Migrate();
 
-            // Futuro: limpar outras entidades
-            // dbContext.Partners.RemoveRange(dbContext.Partners);
+        DbContext.UserRoles.RemoveRange(DbContext.UserRoles);
+        DbContext.Users.RemoveRange(DbContext.Users);
+        DbContext.Roles.RemoveRange(DbContext.Roles);
 
-            dbContext.SaveChanges();
-        }
+        DbContext.Employees.RemoveRange(DbContext.Employees);
+
+        DbContext.SaveChanges();
+
+        _employeeRepository = new EmployeeOrmRepository(DbContext);
 
         Environment.SetEnvironmentVariable("SQL_CONNECTION_STRING", connectionString);
         Environment.SetEnvironmentVariable("AUTOMAPPER_LICENSE_KEY", "integration-tests-automapper-license");
@@ -67,6 +66,7 @@ public class TestFixture
     [TestCleanup]
     public void Cleanup()
     {
+        DbContext?.Dispose();
         HttpClient.Dispose();
         ApiFactory.Dispose();
     }

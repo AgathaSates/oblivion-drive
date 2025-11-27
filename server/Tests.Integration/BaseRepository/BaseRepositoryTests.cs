@@ -85,7 +85,7 @@ public sealed class BaseRepositoryTests : TestFixture
         var updated = new TestEntity("Updated name");
 
         // act
-        var result = await _baseRepository.UpdateAsync(original.Id, updated);
+        var result = await _baseRepository.UpdateAsync(original, updated);
         await _dbContext.SaveChangesAsync();
 
         // assert
@@ -105,7 +105,7 @@ public sealed class BaseRepositoryTests : TestFixture
         await _dbContext.SaveChangesAsync();
 
         // act
-        var deleted = await _baseRepository.DeleteAsync(entity.Id);
+        var deleted = await _baseRepository.DeleteAsync(entity);
         await _dbContext.SaveChangesAsync();
 
         // assert
