@@ -22,12 +22,9 @@ public class AuthenticationController(IMediator mediator, IMapper mapper) : Cont
     )]
     public async Task<ActionResult<AccessToken>> Register(RegisterUserRequest request, CancellationToken cancellationToken)
     {
-        var command = new RegisterUserCommand(
-        request.UserName,
-        request.Email,
-        request.Password);
+        var command = mapper.Map<RegisterUserCommand>(request);
 
-        var result = await mediator.Send(command);
+        var result = await mediator.Send(command, cancellationToken);
 
         if (result.IsFailed)
             return result.ToActionResult();
