@@ -16,14 +16,19 @@ public class LoginUserCommandValidatorTests
         _validator = new LoginUserCommandValidator();
     }
 
+    private static LoginUserCommand CreateValidCommand()
+    {
+        return new LoginUserCommand(
+            UserName: "validUser",
+            Password: "Senha123!"
+        );
+    }
+
     [TestMethod]
     public void Should_Fail_When_UserName_Is_Empty()
     {
         // arrange
-        var command = new LoginUserCommand(
-            UserName: string.Empty,
-            Password: "Senha123!"
-        );
+        var command = CreateValidCommand() with { UserName = string.Empty };
 
         // act
         ValidationResult result = _validator.Validate(command);
@@ -39,10 +44,7 @@ public class LoginUserCommandValidatorTests
     public void Should_Fail_When_UserName_Is_Shorter_Than_Three_Characters()
     {
         // arrange
-        var command = new LoginUserCommand(
-            UserName: "ab",
-            Password: "Senha123!"
-        );
+        var command = CreateValidCommand() with { UserName = "ab" };
 
         // act
         ValidationResult result = _validator.Validate(command);
@@ -58,10 +60,7 @@ public class LoginUserCommandValidatorTests
     public void Should_Fail_When_Password_Is_Empty()
     {
         // arrange
-        var command = new LoginUserCommand(
-            UserName: "validUser",
-            Password: string.Empty
-        );
+        var command = CreateValidCommand() with { Password = string.Empty };
 
         // act
         ValidationResult result = _validator.Validate(command);
@@ -77,10 +76,7 @@ public class LoginUserCommandValidatorTests
     public void Should_Fail_When_Password_Is_Shorter_Than_Minimum_Length()
     {
         // arrange
-        var command = new LoginUserCommand(
-            UserName: "validUser",
-            Password: "Ab1!"
-        );
+        var command = CreateValidCommand() with { Password = "Ab1!" };
 
         // act
         ValidationResult result = _validator.Validate(command);
@@ -96,10 +92,7 @@ public class LoginUserCommandValidatorTests
     public void Should_Fail_When_Password_Does_Not_Match_Strength_Rules()
     {
         // arrange
-        var command = new LoginUserCommand(
-            UserName: "validUser",
-            Password: "Senha123"
-        );
+        var command = CreateValidCommand() with { Password = "Senha123" };
 
         // act
         ValidationResult result = _validator.Validate(command);
@@ -115,10 +108,7 @@ public class LoginUserCommandValidatorTests
     public void Should_Pass_When_Command_Is_Valid()
     {
         // arrange
-        var command = new LoginUserCommand(
-            UserName: "validUser",
-            Password: "Senha123!"
-        );
+        var command = CreateValidCommand();
 
         // act
         ValidationResult result = _validator.Validate(command);
