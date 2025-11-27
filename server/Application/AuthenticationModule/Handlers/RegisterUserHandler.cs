@@ -32,8 +32,10 @@ public class RegisterUserHandler(
         {
             UserName = command.UserName,
             Email = command.Email,
-            UserType = UserType.Company
+            UserType = UserType.Company,
         };
+
+        newUser.CompanyId = newUser.Id;
 
         IdentityResult userResult = await userManager.CreateAsync(newUser, command.Password);
 

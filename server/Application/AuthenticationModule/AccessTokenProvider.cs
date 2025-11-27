@@ -45,7 +45,9 @@ public class AccessTokenProvider : ITokenProvider
         new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
 
         new Claim("tenant_company_id", tenantCompanyId.ToString()),
-        new Claim("user_type", user.UserType.ToString())
+        new Claim("user_type", user.UserType.ToString()),
+        new Claim(ClaimTypes.Role, user.UserType.ToString())
+
     };
 
         var tokenDescriptor = new SecurityTokenDescriptor
