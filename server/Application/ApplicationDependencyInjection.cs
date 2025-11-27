@@ -31,12 +31,6 @@ public static class ApplicationDependencyInjection
             cfg.LicenseKey = licensekey;
         });
 
-        services.AddAutoMapper(cfg =>
-        {
-            cfg.LicenseKey = licensekey;
-
-        }, assembly);
-
         services.AddValidatorsFromAssembly(assembly);
 
         services.AddStackExchangeRedisCache(opt =>
