@@ -25,22 +25,18 @@ public class BaseRepository<T> where T : BaseEntity<T>
         return Records.AddRangeAsync(entities);
     }
 
-    public async Task<T> UpdateAsync(Guid id, T updatedEntity)
+    public Task<T> UpdateAsync(T entity, T updatedEntity)
     {
-        var existingEntity = await GetByIdAsync(id);
+        entity!.Update(updatedEntity);
 
-        existingEntity!.Update(updatedEntity);
-
-        return existingEntity;
+        return Task.FromResult(entity);
     }
 
-    public async Task<bool> DeleteAsync(Guid id)
+    public Task<bool> DeleteAsync(T Entity)
     {
-        var existingEntity = await GetByIdAsync(id);
+        Records.Remove(Entity);
 
-        Records.Remove(existingEntity!);
-
-        return true;
+        return Task.FromResult(true);
     }
 
     public virtual async Task<List<T>> GetAllAsync()
