@@ -29,7 +29,7 @@ public class AuthenticationIntegrationTests : TestFixture
     [TestMethod]
     public async Task Logout_Should_Return_Unauthorized_When_Token_Is_Invalid()
     {
-        // arrange – token completamente inválido
+        // arrange
         HttpClient.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", "this-is-a-fake-invalid-token");
 
@@ -92,11 +92,9 @@ public class AuthenticationIntegrationTests : TestFixture
             Password: "Senha123!"
         );
 
-        // primeiro cadastro
         var firstResponse = await HttpClient.PostAsJsonAsync("/api/auth/register", request);
         Assert.AreEqual(HttpStatusCode.OK, firstResponse.StatusCode);
 
-        // segundo cadastro com mesmo login/email
         var secondResponse = await HttpClient.PostAsJsonAsync("/api/auth/register", request);
 
         Assert.AreEqual(HttpStatusCode.BadRequest, secondResponse.StatusCode);
