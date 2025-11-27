@@ -22,8 +22,4 @@
     <ProjectReference Include="..\Domain\OblivionDrive.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="AutoMapper\" />
-  </ItemGroup>
-
 </Project>
