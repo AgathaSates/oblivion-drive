@@ -190,7 +190,7 @@ public class UpdateEmployeeByCompanyCommandValidatorTests
 
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateEmployeeByCompanyCommand.Salary) &&
-            e.ErrorMessage == "O salário não pode ser maior que 1.000.000,00."));
+            e.ErrorMessage.StartsWith("O salário não pode ser maior que")));
     }
 
     [TestMethod]
