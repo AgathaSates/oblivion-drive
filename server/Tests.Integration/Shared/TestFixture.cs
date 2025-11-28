@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OblivionDrive.Domain.FuelPriceConfigurationModule;
 using OblivionDrive.Infrastructure.Orm.EmployeeModule;
+using OblivionDrive.Infrastructure.Orm.FuelPriceConfigurationModule;
 using OblivionDrive.Infrastructure.Orm.Shared;
 using Testcontainers.MsSql;
 
@@ -11,6 +13,7 @@ public class TestFixture
     protected OblivionDriveDbContext? DbContext;
 
     protected EmployeeOrmRepository? _employeeRepository;
+    protected FuelPriceConfigurationOrmRepository? _fuelRepository;
 
     protected static MsSqlContainer? DatabaseContainer;
 
@@ -46,6 +49,7 @@ public class TestFixture
         DbContext.Roles.RemoveRange(DbContext.Roles);
 
         DbContext.Employees.RemoveRange(DbContext.Employees);
+        DbContext.fuelPrices.RemoveRange(DbContext.fuelPrices);
 
         DbContext.SaveChanges();
 
