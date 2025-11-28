@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using OblivionDrive.Api.Helpers;
 using OblivionDrive.Api.Models.FuelPriceConfigurationModule;
 using OblivionDrive.Application.FuelPriceConfigurationModule.Commands;
-using OblivionDrive.Application.FuelPriceConfigurationModule.DTOs;
 using OblivionDrive.Application.FuelPriceConfigurationModule.Querys;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -21,7 +20,7 @@ public class FuelPriceConfigurationController(IMediator mediator, IMapper mapper
         Summary = "Obter configuração de preços de combustíveis",
         Description = "Retorna a configuração de preços de combustíveis da empresa do usuário logado. Acesso permitido apenas a usuários com o cargo 'Company'."
     )]
-    public async Task<ActionResult<FuelPriceConfigurationDto>> Get(CancellationToken cancellationToken)
+    public async Task<ActionResult<GetFuelPriceConfigurationResponse>> Get(CancellationToken cancellationToken)
     {
         var query = new GetFuelPriceConfigurationQuery();
 
@@ -30,7 +29,9 @@ public class FuelPriceConfigurationController(IMediator mediator, IMapper mapper
         if (result.IsFailed)
             return result.ToActionResult();
 
-        return Ok(result.Value);
+        var response = mapper.Map<GetFuelPriceConfigurationResponse>(result.Value);
+
+        return Ok(response);
     }
 
     [HttpPut]
@@ -39,21 +40,17 @@ public class FuelPriceConfigurationController(IMediator mediator, IMapper mapper
         Description = "Atualiza os preços de combustíveis da empresa do usuário logado. Acesso permitido apenas a usuários com o cargo 'Company'."
     )]
     [Authorize(Roles = "Company")]
-    public async Task<ActionResult<FuelPriceConfigurationDto>> Update(
-        UpdateFuelPriceConfigurationRequest request,
-        CancellationToken cancellationToken)
+    public async Task<ActionResult<UpdateFuelPriceConfigurationResponse>> Update(UpdateFuelPriceConfigurationRequest request, CancellationToken cancellationToken)
     {
-        var command = new UpdateFuelPriceConfigurationCommand(
-            request.Gasoline,
-            request.Gas,
-            request.Diesel,
-            request.Alcohol);
+        var command = mapper.Map<UpdateFuelPriceConfigurationCommand>(request);
 
         var result = await mediator.Send(command, cancellationToken);
 
         if (result.IsFailed)
             return result.ToActionResult();
 
-        return Ok(result.Value);
+        var response = mapper.Map<UpdateFuelPriceConfigurationResponse>(result.Value);
+
+        return Ok(response);
     }
 }
