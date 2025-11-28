@@ -12,20 +12,25 @@ public class EmployeeModelsMappingProfile : Profile
     public EmployeeModelsMappingProfile() 
     {
         CreateMap<RegisterEmployeeRequest, RegisterEmployeeCommand>();
-        CreateMap<EmployeeDTO, RegisterEmployeeResponse>();
+        CreateMap<UpdateOwnEmployeeRequest, UpdateOwnEmployeeProfileCommand>();
+        CreateMap<(Guid, UpdateEmployeeByCompanyRequest), UpdateEmployeeByCompanyCommand>()
+           .ConvertUsing(src => new UpdateEmployeeByCompanyCommand(
+                src.Item1,
+                src.Item2.Name,
+                src.Item2.HireDate,
+                src.Item2.Salary
+               ));
 
+        CreateMap<EmployeeDTO, RegisterEmployeeResponse>();
         CreateMap<UpdatedEmployeeDTO, UpdateEmployeeByCompanyResponse>();
         CreateMap<UpdatedEmployeeDTO, UpdateOwnEmployeeResponse>();
-
         CreateMap<DetailEmployeeDTO, GetEmployeeByCompanyResponse>();
-
         CreateMap<EmployeesResult, GetAllEmployeesForCompanyResponse>()
             .ConvertUsing((src, dest, ctx) => new GetAllEmployeesForCompanyResponse(
                 src.Employees.Count,
                 src?.Employees?
                     .Select(e => ctx.Mapper.Map<DetailEmployeeDTO>(e))
-                    .ToImmutableList()
-                ?? ImmutableList<DetailEmployeeDTO>.Empty
+                    .ToImmutableList() ?? ImmutableList<DetailEmployeeDTO>.Empty
             ));
     }
 }

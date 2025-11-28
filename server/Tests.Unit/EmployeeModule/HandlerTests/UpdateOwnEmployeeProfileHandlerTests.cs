@@ -436,12 +436,12 @@ public class UpdateOwnEmployeeProfileHandlerTests
 
 
         var expectedDto = new UpdatedEmployeeDTO
-        {
-            UpdatedSuccessfully = true,
-            Name = NameFormatter.FormatName(command.Name),
-            HireDate = existingEmployee.HireDate,
-            Salary = existingEmployee.Salary
-        };
+        (
+            true,
+            NameFormatter.FormatName(command.Name),
+            existingEmployee.HireDate,
+            existingEmployee.Salary
+        );
 
         _mapperMock
             .Setup(m => m.Map<UpdatedEmployeeDTO>(existingEmployee))

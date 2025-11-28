@@ -373,7 +373,7 @@ public class EmployeeIntegrationTests : TestFixture
         Assert.IsNotNull(errors);
         Assert.IsTrue(errors.Count > 0);
     }
-
+    
     [TestMethod]
     public async Task UpdateEmployeeByCompany_Should_Return_NotFound_When_Employee_Belongs_To_Other_Company()
     {

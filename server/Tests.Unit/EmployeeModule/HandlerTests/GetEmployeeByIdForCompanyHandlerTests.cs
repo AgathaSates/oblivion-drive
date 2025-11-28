@@ -387,12 +387,12 @@ public class GetEmployeeByIdForCompanyHandlerTests
             .ReturnsAsync(employee);
 
         var expectedDto = new DetailEmployeeDTO
-        {
-            Id = employee.Id,
-            Name = employee.Name,
-            HireDate = employee.HireDate,
-            Salary = employee.Salary
-        };
+        (
+           employee.Id,
+           employee.Name,
+           employee.HireDate,
+           employee.Salary
+        );
 
         _mapperMock
             .Setup(m => m.Map<DetailEmployeeDTO>(employee))

@@ -288,21 +288,20 @@ public class GetAllEmployeesForCompanyHandlerTests
 
         var employeeDtos = new List<DetailEmployeeDTO>
         {
-            new()
-            {
-                Id = employees[0].Id,
-                Name = employees[0].Name,
-                HireDate = employees[0].HireDate,
-                Salary = employees[0].Salary
-            },
-            new()
-            {
-                Id = employees[1].Id,
-                Name = employees[1].Name,
-                HireDate = employees[1].HireDate,
-                Salary = employees[1].Salary
-            }
+            new(
+                employees[0].Id,
+                employees[0].Name,
+                employees[0].HireDate,
+                employees[0].Salary
+            ),
+            new(
+                employees[1].Id,
+                employees[1].Name,
+                employees[1].HireDate,
+                employees[1].Salary
+            )
         };
+
 
         _mapperMock
             .Setup(m => m.Map<List<DetailEmployeeDTO>>(employees))
@@ -357,13 +356,12 @@ public class GetAllEmployeesForCompanyHandlerTests
 
         var employeeDtos = new List<DetailEmployeeDTO>
         {
-            new()
-            {
-                Id = employees[0].Id,
-                Name = employees[0].Name,
-                HireDate = employees[0].HireDate,
-                Salary = employees[0].Salary
-            }
+            new(       
+                employees[0].Id,
+                employees[0].Name,
+                employees[0].HireDate,
+                employees[0].Salary
+            )
         };
 
         _mapperMock

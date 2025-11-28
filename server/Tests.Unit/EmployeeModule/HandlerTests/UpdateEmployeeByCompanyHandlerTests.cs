@@ -434,12 +434,12 @@ public class UpdateEmployeeByCompanyHandlerTests
             .ReturnsAsync(existingEmployee);
 
         var expectedDto = new UpdatedEmployeeDTO
-        {
-            UpdatedSuccessfully = true,
-            Name = NameFormatter.FormatName(command.Name),
-            HireDate = command.HireDate,
-            Salary = command.Salary
-        };
+        (
+            true,
+            NameFormatter.FormatName(command.Name),
+            command.HireDate,
+            command.Salary
+        );
 
         _mapperMock
             .Setup(m => m.Map<UpdatedEmployeeDTO>(existingEmployee))

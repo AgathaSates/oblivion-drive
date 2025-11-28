@@ -485,11 +485,11 @@ public class RegisterEmployeeHandlerTests
             .ReturnsAsync(Guid.NewGuid());
 
         var expectedDto = new EmployeeDTO
-        {
-            CreatedSuccessfully = true,
-            Name = NameFormatter.FormatName(command.Name),
-            UserName = command.UserName
-        };
+        (
+            true,
+            NameFormatter.FormatName(command.Name),
+            command.UserName
+        );
 
         _mapperMock
             .Setup(m => m.Map<EmployeeDTO>(It.IsAny<Employee>()))

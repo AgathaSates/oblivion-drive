@@ -30,7 +30,9 @@ public class EmployeeController(IMediator mediator, IMapper mapper) : Controller
         if (result.IsFailed)
             return result.ToActionResult();
 
-        return Ok(result.Value);
+        var response = mapper.Map<RegisterEmployeeResponse>(result.Value);
+
+        return Ok(response);
     }
 
     [HttpPatch("{employeeId:guid}")]
@@ -39,22 +41,18 @@ public class EmployeeController(IMediator mediator, IMapper mapper) : Controller
     Description = "Atualiza os dados de um funcionário (nome, data de admissão e salário). Acesso permitido apenas a usuários com o cargo 'Company'."
     )]
     [Authorize(Roles = "Company")]
-    public async Task<ActionResult<UpdateEmployeeByCompanyResponse>> UpdateByCompany(
-        Guid employeeId, UpdateEmployeeByCompanyRequest request, CancellationToken cancellationToken)
+    public async Task<ActionResult<UpdateEmployeeByCompanyResponse>> UpdateByCompany(Guid employeeId, UpdateEmployeeByCompanyRequest request, CancellationToken cancellationToken)
     {
-        var command = new UpdateEmployeeByCompanyCommand(
-        employeeId,
-        request.Name,
-        request.HireDate,
-        request.Salary
-        );
-
+        var command = mapper.Map<(Guid, UpdateEmployeeByCompanyRequest), UpdateEmployeeByCompanyCommand>((employeeId, request));
+        
         var result = await mediator.Send(command, cancellationToken);
 
         if (result.IsFailed)
             return result.ToActionResult();
 
-        return Ok(result.Value);
+        var response = mapper.Map<UpdateEmployeeByCompanyResponse>(result.Value);
+
+        return Ok(response);
     }
 
     [HttpPatch("profile")]
@@ -63,17 +61,18 @@ public class EmployeeController(IMediator mediator, IMapper mapper) : Controller
     Description = "Atualiza apenas o nome do funcionário logado. Acesso permitido apenas ao perfil 'Employee'."
     )]
     [Authorize(Roles = "Employee")]
-    public async Task<ActionResult<UpdateOwnEmployeeResponse>> UpdateOwnProfile(
-    UpdateOwnEmployeeRequest request, CancellationToken cancellationToken)
+    public async Task<ActionResult<UpdateOwnEmployeeResponse>> UpdateOwnProfile(UpdateOwnEmployeeRequest request, CancellationToken cancellationToken)
     {
-        var command = new UpdateOwnEmployeeProfileCommand(request.Name);
+        var command = mapper.Map<UpdateOwnEmployeeProfileCommand>(request);
 
         var result = await mediator.Send(command, cancellationToken);
 
         if (result.IsFailed)
             return result.ToActionResult();
 
-        return Ok(result.Value);
+        var response = mapper.Map<UpdateOwnEmployeeResponse>(result.Value);
+
+        return Ok(response);
     }
 
     [HttpDelete("{employeeId:guid}")]
@@ -82,9 +81,7 @@ public class EmployeeController(IMediator mediator, IMapper mapper) : Controller
         Description = "Exclui um funcionário da empresa. Acesso permitido apenas a usuários com o cargo 'Company'."
     )]
     [Authorize(Roles = "Company")]
-    public async Task<ActionResult<DeleteEmployeeByCompanyResponse>> DeleteByCompany(
-        Guid employeeId,
-        CancellationToken cancellationToken)
+    public async Task<ActionResult<DeleteEmployeeByCompanyResponse>> DeleteByCompany(Guid employeeId, CancellationToken cancellationToken)
     {
         var command = new DeleteEmployeeByCompanyCommand(employeeId);
 
@@ -93,11 +90,7 @@ public class EmployeeController(IMediator mediator, IMapper mapper) : Controller
         if (result.IsFailed)
             return result.ToActionResult();
 
-        var response = new DeleteEmployeeByCompanyResponse
-        {
-            DeletedSuccessfully = true,
-            EmployeeId = employeeId
-        };
+        var response = new DeleteEmployeeByCompanyResponse(true, employeeId);
 
         return Ok(response);
     }
@@ -108,8 +101,7 @@ public class EmployeeController(IMediator mediator, IMapper mapper) : Controller
         Description = "Retorna os dados de um funcionário (nome, data de admissão e salário). Acesso permitido apenas a usuários com o cargo 'Company'."
     )]
     [Authorize(Roles = "Company")]
-    public async Task<ActionResult<GetEmployeeByCompanyResponse>> GetByIdForCompany(
-        Guid employeeId, CancellationToken cancellationToken)
+    public async Task<ActionResult<GetEmployeeByCompanyResponse>> GetByIdForCompany(Guid employeeId, CancellationToken cancellationToken)
     {
         var query = new GetEmployeeByIdForCompanyQuery(employeeId);
 
@@ -118,7 +110,9 @@ public class EmployeeController(IMediator mediator, IMapper mapper) : Controller
         if (result.IsFailed)
             return result.ToActionResult();
 
-        return Ok(result.Value);
+        var response = mapper.Map<GetEmployeeByCompanyResponse>(result.Value);
+
+        return Ok(response);
     }
 
     [HttpGet]
@@ -127,8 +121,7 @@ public class EmployeeController(IMediator mediator, IMapper mapper) : Controller
         Description = "Retorna os funcionários cadastrados da empresa do usuário logado. Acesso permitido apenas a usuários com o cargo 'Company'."
     )]
     [Authorize(Roles = "Company")]
-    public async Task<ActionResult<GetAllEmployeesForCompanyResponse>> GetAllForCompany(int? quantity,
-        CancellationToken cancellationToken)
+    public async Task<ActionResult<GetAllEmployeesForCompanyResponse>> GetAllForCompany(int? quantity, CancellationToken cancellationToken)
     {
         var query = new GetAllEmployeesForCompanyQuery(quantity);
 
@@ -137,8 +130,7 @@ public class EmployeeController(IMediator mediator, IMapper mapper) : Controller
         if (result.IsFailed)
             return result.ToActionResult();
 
-        GetAllEmployeesForCompanyResponse response =
-        mapper.Map<GetAllEmployeesForCompanyResponse>(result.Value);
+        var response = mapper.Map<GetAllEmployeesForCompanyResponse>(result.Value);
 
         return Ok(response);
     }
