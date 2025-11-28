@@ -3,15 +3,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using OblivionDrive.Domain.AuthenticationModule;
 using OblivionDrive.Domain.EmployeeModule;
+using OblivionDrive.Domain.FuelPriceConfigurationModule;
 using OblivionDrive.Domain.Shared;
 using OblivionDrive.Infrastructure.Orm.EmployeeModule;
+using OblivionDrive.Infrastructure.Orm.FuelPriceConfigurationModule;
 
 namespace OblivionDrive.Infrastructure.Orm.Shared;
 public class OblivionDriveDbContext : IdentityDbContext<User, Role, Guid>, IUnitOfWork
 {
     public DbSet<TestEntity> TestEntities => Set<TestEntity>();
     public DbSet<Employee> Employees => Set<Employee>();
-
+    public DbSet<FuelPriceConfiguration> fuelPrices => Set<FuelPriceConfiguration>();
 
     private readonly ITenantProvider? _tenantProvider;
     public Guid? CurrentCompanyId { get; }
@@ -23,7 +25,6 @@ public class OblivionDriveDbContext : IdentityDbContext<User, Role, Guid>, IUnit
         CurrentCompanyId = _tenantProvider?.CompanyId;
     }
 
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         if (_tenantProvider is not null)
@@ -32,11 +33,16 @@ public class OblivionDriveDbContext : IdentityDbContext<User, Role, Guid>, IUnit
             modelBuilder.Entity<Employee>()
             .HasQueryFilter(p =>
                 !CurrentCompanyId.HasValue || p.CompanyId == CurrentCompanyId);
+
+            modelBuilder.Entity<FuelPriceConfiguration>()
+                .HasQueryFilter(p =>
+                !CurrentCompanyId.HasValue || p.CompanyId == CurrentCompanyId);
         }
 
         // adicionar todas os mapeadores
 
         modelBuilder.ApplyConfiguration(new EmployeeOrmMApper());
+        modelBuilder.ApplyConfiguration(new FuelPriceConfigurationOrmMapper());
 
         modelBuilder.Entity<TestEntity>(builder =>
         {

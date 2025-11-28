@@ -2,8 +2,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OblivionDrive.Domain.EmployeeModule;
+using OblivionDrive.Domain.FuelPriceConfigurationModule;
 using OblivionDrive.Domain.Shared;
 using OblivionDrive.Infrastructure.Orm.EmployeeModule;
+using OblivionDrive.Infrastructure.Orm.FuelPriceConfigurationModule;
 using OblivionDrive.Infrastructure.Orm.Shared;
 
 namespace OblivionDrive.Infrastructure.Orm;
@@ -14,6 +16,7 @@ public static class InfrastructureDependencyInjection
     {
         // adicionar cada repositório
         services.AddScoped<IRepositoryEmployee, EmployeeOrmRepository>();
+        services.AddScoped<IRepositoryFuelPriceSettings, FuelPriceConfigurationOrmRepository>();
 
         services.AddEntityFrameworkConfig(configuration);
 
