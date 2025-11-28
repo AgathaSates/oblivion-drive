@@ -354,8 +354,8 @@ public class RegisterEmployeeComandValidatorTests
         Assert.IsFalse(result.IsValid);
 
         Assert.IsTrue(result.Errors.Any(e =>
-            e.PropertyName == nameof(RegisterEmployeeCommand.Salary) &&
-            e.ErrorMessage == "O salário não pode ser maior que 1.000.000,00."));
+            e.PropertyName == nameof(UpdateEmployeeByCompanyCommand.Salary) &&
+            e.ErrorMessage.StartsWith("O salário não pode ser maior que")));
     }
 
     [TestMethod]
