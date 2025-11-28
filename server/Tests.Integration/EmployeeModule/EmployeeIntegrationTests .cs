@@ -114,9 +114,6 @@ public class EmployeeIntegrationTests : TestFixture
         return employee!.Id;
     }
 
-    private static Task<DeleteEmployeeByCompanyResponse?> ReadDeleteEmployeeResponseAsync(HttpResponseMessage response) =>
-    response.Content.ReadFromJsonAsync<DeleteEmployeeByCompanyResponse>(JsonOptions);
-
     [TestMethod]
     public async Task RegisterEmployee_Should_Return_Unauthorized_When_Token_Is_Missing()
     {
@@ -1176,7 +1173,7 @@ public class EmployeeIntegrationTests : TestFixture
     [TestMethod]
     public async Task GetAllEmployeesForCompany_Should_Return_BadRequest_When_Quantity_Is_Less_Than_Or_Equal_To_Zero()
     {
-        // arrange – registra uma Company
+        // arrange
         AccessToken companyToken = await RegisterCompanyAndGetTokenAsync(
             userName: "company-getall-qty-zero@test.com",
             password: "Senha123!"
