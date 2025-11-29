@@ -2,6 +2,7 @@
 using OblivionDrive.Domain.FuelPriceConfigurationModule;
 using OblivionDrive.Infrastructure.Orm.EmployeeModule;
 using OblivionDrive.Infrastructure.Orm.FuelPriceConfigurationModule;
+using OblivionDrive.Infrastructure.Orm.ServicesModule;
 using OblivionDrive.Infrastructure.Orm.Shared;
 using Testcontainers.MsSql;
 
@@ -14,6 +15,7 @@ public class TestFixture
 
     protected EmployeeOrmRepository? _employeeRepository;
     protected FuelPriceConfigurationOrmRepository? _fuelRepository;
+    protected ServicesOrmRepository? _servicesRepository;
 
     protected static MsSqlContainer? DatabaseContainer;
 
@@ -50,6 +52,7 @@ public class TestFixture
 
         DbContext.Employees.RemoveRange(DbContext.Employees);
         DbContext.fuelPrices.RemoveRange(DbContext.fuelPrices);
+        DbContext.Services.RemoveRange(DbContext.Services);
 
         DbContext.SaveChanges();
 
