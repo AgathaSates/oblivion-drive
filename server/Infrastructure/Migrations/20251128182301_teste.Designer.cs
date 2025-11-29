@@ -12,7 +12,7 @@ using OblivionDrive.Infrastructure.Orm.Shared;
 namespace OblivionDrive.Infrastructure.Orm.Migrations
 {
     [DbContext(typeof(OblivionDriveDbContext))]
-    [Migration("20251126030516_teste")]
+    [Migration("20251128182301_teste")]
     partial class teste
     {
         /// <inheritdoc />
@@ -265,6 +265,61 @@ namespace OblivionDrive.Infrastructure.Orm.Migrations
                     b.HasIndex("IdentityUserId");
 
                     b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("OblivionDrive.Domain.FuelPriceConfigurationModule.FuelPriceConfiguration", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Alcohol")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Diesel")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal>("Gas")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal>("Gasoline")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<DateOnly>("LastUpdate")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("fuelPrices");
+                });
+
+            modelBuilder.Entity("OblivionDrive.Domain.ServicesModule.Service", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ChargeType")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Services");
                 });
 
             modelBuilder.Entity("OblivionDrive.Infrastructure.Orm.Shared.TestEntity", b =>

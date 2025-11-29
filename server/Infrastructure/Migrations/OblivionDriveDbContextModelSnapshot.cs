@@ -293,6 +293,32 @@ namespace OblivionDrive.Infrastructure.Orm.Migrations
                     b.ToTable("fuelPrices");
                 });
 
+            modelBuilder.Entity("OblivionDrive.Domain.ServicesModule.Service", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ChargeType")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Services");
+                });
+
             modelBuilder.Entity("OblivionDrive.Infrastructure.Orm.Shared.TestEntity", b =>
                 {
                     b.Property<Guid>("Id")

@@ -60,6 +60,38 @@ namespace OblivionDrive.Infrastructure.Orm.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "fuelPrices",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Gasoline = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    Gas = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    Diesel = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    Alcohol = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    LastUpdate = table.Column<DateOnly>(type: "date", nullable: false),
+                    CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_fuelPrices", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Services",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    ChargeType = table.Column<int>(type: "int", nullable: false),
+                    CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Services", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TestEntities",
                 columns: table => new
                 {
@@ -269,6 +301,12 @@ namespace OblivionDrive.Infrastructure.Orm.Migrations
 
             migrationBuilder.DropTable(
                 name: "Employees");
+
+            migrationBuilder.DropTable(
+                name: "fuelPrices");
+
+            migrationBuilder.DropTable(
+                name: "Services");
 
             migrationBuilder.DropTable(
                 name: "TestEntities");
