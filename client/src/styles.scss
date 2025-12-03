@@ -1,43 +1,269 @@
-@use 'bootstrap/scss/bootstrap-reboot';
-@use 'bootstrap/scss/bootstrap-grid';
-@use 'bootstrap/scss/bootstrap-utilities';
 @use '@angular/material' as mat;
+@use 'sass:color';
+@use 'colors' as *;
+
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
+
+@import 'bootstrap/scss/bootstrap-reboot';
+@import 'bootstrap/scss/bootstrap-grid';
+@import 'bootstrap/scss/bootstrap-utilities';
+@import 'bootstrap/scss/carousel';
+
+$oblivion-primary-palette: (
+  0: $color-primary,
+  10: $color-primary,
+  20: $color-primary,
+  30: $color-primary,
+  40: $color-primary,
+  50: $color-primary,
+  60: $color-primary,
+  70: $color-primary,
+  80: $color-primary,
+  90: $color-primary,
+  95: $color-primary,
+  99: $color-primary,
+  100: $color-primary,
+  contrast: (
+    0: $color-primary-contrast,
+    10: $color-primary-contrast,
+    20: $color-primary-contrast,
+    30: $color-primary-contrast,
+    40: $color-primary-contrast,
+    50: $color-primary-contrast,
+    60: $color-primary-contrast,
+    70: $color-primary-contrast,
+    80: $color-primary-contrast,
+    90: $color-primary-contrast,
+    95: $color-primary-contrast,
+    99: $color-primary-contrast,
+    100: $color-primary-contrast,
+  ),
+);
 
 html {
   @include mat.theme(
     (
       color: (
-        primary: mat.$azure-palette,
-        tertiary: mat.$blue-palette,
+        theme-type: dark,
+        primary: $oblivion-primary-palette,
+        surface: $color-background,
       ),
       typography: Roboto,
       density: 0,
     )
   );
-}
 
-body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
+  .notification-success {
+    @include mat.snack-bar-overrides(
+      (
+        button-color: #0e8f4c,
+        container-color: #b9e6d2,
+        supporting-text-color: #0e8f4c,
+      )
+    );
+  }
 
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
+  .notification-warning {
+    @include mat.snack-bar-overrides(
+      (
+        button-color: #b67515,
+        container-color: #fac184,
+        supporting-text-color: #b67515,
+      )
+    );
+  }
 
-  // Reset the user agent margin.
-  margin: 0;
+  .notification-error {
+    @include mat.snack-bar-overrides(
+      (
+        button-color: red,
+        container-color: #ffdad6,
+        supporting-text-color: #ba1a1a,
+      )
+    );
+  }
 }
 
 html,
 body {
   height: 100%;
 }
+
 body {
-  margin: 0;
+  color-scheme: dark;
+  background-color: $color-background-2;
+  color: $color-text;
+  font: var(--mat-sys-body-medium);
   font-family: Roboto, 'Helvetica Neue', sans-serif;
+  margin: 0;
+}
+
+.app-root {
+  min-height: 100%;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.auth-layout {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.5rem;
+  width: 100%;
+
+  background:
+    radial-gradient(
+      circle at 30% 0,
+      // agora o glow vem do topo ESQUERDO
+      rgba($color-primary, 0.32) 0,
+      transparent 60%
+    ),
+    linear-gradient(
+      135deg,
+      color.adjust($color-background-2, $lightness: -6%) 0%,
+      $color-background 55%,
+      #000000 100%
+    );
+}
+
+.app-footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 0.75rem 1.5rem;
+  font-size: 0.8rem;
+
+  display: flex;
+  justify-content: center;
+  background-color: $color-background-footer;
+  color: $color-text;
+}
+
+.footer-inner {
+  width: 100%;
+  max-width: 960px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: center;
+  align-items: center;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.footer-social {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.footer-social-links {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.footer-social-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  text-decoration: none;
+  color: inherit;
+  opacity: 0.9;
+}
+
+.footer-social-links a:hover {
+  text-decoration: underline;
+  opacity: 1;
+}
+
+.footer-social mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.footer-copy {
+  font-size: 0.75rem;
+  opacity: 0.9;
+  white-space: nowrap;
+}
+
+.mat-mdc-dialog-container
+  .mat-mdc-unelevated-button.mat-mdc-button-base.mat-primary
+  .mdc-button__label {
+  color: $color-text;
+  font-weight: 500;
+}
+
+.auth-card mat-form-field .mat-mdc-form-field-hint-wrapper,
+.auth-card mat-form-field .mat-mdc-form-field-subscript-wrapper {
+  padding-left: 4px !important;
+  padding-right: 0 !important;
+}
+
+.auth-form__field .mat-mdc-form-field-error {
+  color: #ff3862;
+  font-weight: 500;
+}
+
+@media (min-width: 960px) {
+  .app-footer.app-footer--with-shell {
+    justify-content: center;
+  }
+
+  .app-footer.app-footer--with-shell .footer-inner {
+    margin-left: calc(380px / 2);
+  }
+
+  .cdk-overlay-pane.as-shell-dialog-centered {
+    margin-left: 230px;
+  }
+}
+
+button[mat-flat-button].mat-primary,
+button[mat-raised-button].mat-primary,
+button[mat-fab].mat-primary,
+button[mat-mini-fab].mat-primary {
+  color: #ffffff;
+
+  .mat-icon {
+    color: #ffffff;
+  }
+}
+
+@media (max-width: 599px) {
+  .footer-inner {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer-copy {
+    white-space: normal;
+  }
 }

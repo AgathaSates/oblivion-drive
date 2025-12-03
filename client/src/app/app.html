@@ -1,1 +1,55 @@
-<h1>Hello Word o/</h1>
+<div class="page">
+  <div class="content">
+    @if (accessToken$ | async; as accessToken) {
+      <as-shell [AuthenticatedUser]="accessToken.authenticatedUser" (logoutRequested)="logout()">
+        <router-outlet></router-outlet>
+      </as-shell>
+    } @else {
+      <main class="auth-layout">
+        <router-outlet></router-outlet>
+      </main>
+    }
+  </div>
+
+  <footer
+    class="app-footer"
+    [class.app-footer--with-shell]="accessToken$ | async"
+    role="contentinfo"
+  >
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <strong>Oblivion Drive</strong>
+        <span>Plataforma para gestão e aluguel de veículos.</span>
+        <span>Projeto desenvolvido como Trabalho de Conclusão da Academia do programador. </span>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-social">
+          <div class="footer-social-links">
+            <a
+              href="https://www.linkedin.com/in/agatha-sates-4537a7355/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+            >
+              <mat-icon fontIcon="work"></mat-icon>
+              <span>LinkedIn</span>
+            </a>
+
+            <a
+              href="https://github.com/AgathaSates"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+            >
+              <mat-icon fontIcon="code"></mat-icon>
+              <span>GitHub</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-copy">© 2025 Agatha Sates. Todos os direitos reservados.</div>
+      </div>
+    </div>
+  </footer>
+</div>
