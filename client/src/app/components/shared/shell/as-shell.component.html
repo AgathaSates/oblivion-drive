@@ -1,0 +1,65 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+  >
+    <div class="sidenav-inner">
+      <div class="sidenav-header">
+        <img src="/logo-oblivion-drive.png" alt="Oblivion Drive" class="sidenav-logo" />
+        <span class="sidenav-title">Oblivion Drive</span>
+      </div>
+
+      <mat-nav-list class="sidenav-menu">
+        @for (item of navbarItems; track item.name) {
+          <a
+            mat-list-item
+            [routerLink]="item.route"
+            routerLinkActive="sidenav-item--active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            ariaCurrentWhenActive="page"
+          >
+            <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+            <div>{{ item.name }}</div>
+          </a>
+        }
+      </mat-nav-list>
+
+      <button mat-list-item type="button" class="sidenav-logout" (click)="openLogoutDialog()">
+        <mat-icon matListItemIcon>logout</mat-icon>
+        <div>Logout</div>
+      </button>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      @if (isHandset$ | async) {
+        <button
+          type="button"
+          aria-label="Toggle sidenav"
+          matIconButton
+          class="menu-toggle-button"
+          (click)="drawer.toggle()"
+        >
+          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        </button>
+      }
+      <div class="shell-user">
+        <button mat-button type="button" class="shell-user__button">
+          <mat-icon class="shell-user__avatar">assignment_ind</mat-icon>
+
+          <div class="shell-user__info">
+            <span class="shell-user__name">{{ AuthenticatedUser.name }}</span>
+            <span class="shell-user__role">
+              {{ userTypeDisplay[AuthenticatedUser.userType] }}
+            </span>
+          </div>
+        </button>
+      </div>
+    </mat-toolbar>
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

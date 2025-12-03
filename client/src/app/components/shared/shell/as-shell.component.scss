@@ -1,0 +1,129 @@
+@use 'colors' as *;
+
+.sidenav-container {
+  height: 100%;
+  background-color: $color-background-2;
+}
+
+.sidenav {
+  width: 230px;
+  border-radius: 0px;
+  background-color: $color-background;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.sidenav-inner {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  max-height: 100%;
+  padding: 16px 12px 12px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.sidenav-menu {
+  flex: 1 0 auto;
+  margin-bottom: 8px;
+}
+
+.sidenav-logout {
+  margin-top: auto;
+  border: 0;
+  outline: none;
+  flex-shrink: 0;
+}
+
+.sidenav [mat-list-item] {
+  border-radius: 45px;
+  padding-inline: 12px;
+  color: $color-text;
+}
+
+.sidenav [mat-list-item] + [mat-list-item] {
+  margin-top: 0.1rem;
+}
+
+.sidenav [mat-list-item]:hover {
+  background-color: rgba($color-primary, 0.18);
+}
+
+.sidenav .sidenav-item--active {
+  background-color: rgba($color-primary, 0.28);
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: $color-background;
+}
+
+.menu-toggle-button .mat-icon {
+  color: $color-primary-contrast;
+}
+
+.sidenav-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 8px 16px 8px;
+}
+
+.sidenav-logo {
+  max-width: 125px;
+  max-height: 125px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
+.sidenav-title {
+  font-weight: 600;
+  font-size: 1.6rem;
+  color: $color-primary;
+}
+
+.shell-user {
+  margin-left: auto;
+}
+
+.shell-user__button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-inline: 0.75rem;
+  border-radius: 999px;
+  text-transform: none;
+  font-size: 0.85rem;
+  background-color: $color-primary-contrast;
+
+  &:hover {
+    background-color: #5a1c35;
+  }
+}
+
+.shell-user__avatar {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.shell-user__info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  text-align: left;
+}
+
+.shell-user__name {
+  font-weight: 500;
+}
+
+.shell-user__role {
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
