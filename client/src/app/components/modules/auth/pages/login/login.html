@@ -1,0 +1,76 @@
+<div class="auth-shell">
+  <mat-card class="auth-card">
+    <div class="auth-card__content">
+      <div class="auth-card__side auth-card__side--hero">
+        <div class="auth-hero">
+          <h3 class="auth-hero__title">Bem-vindo de volta</h3>
+          <p class="auth-hero__text">
+            Acesse sua conta Oblivion Drive e continue gerenciando seus aluguéis, clientes e
+            veículos em um só lugar.
+          </p>
+        </div>
+      </div>
+
+      <div class="auth-card__side auth-card__side--form">
+        <h2 class="auth-card__title">Faça login</h2>
+        <p class="auth-card__subtitle">
+          Entre com seus dados para acessar o painel da Oblivion Drive.
+        </p>
+
+        <form [formGroup]="loginForm" (ngSubmit)="login()" class="auth-form">
+          <mat-form-field appearance="outline" class="auth-form__field">
+            <mat-label>Nome de usuário</mat-label>
+            <input matInput formControlName="userName" autocomplete="username" />
+
+            @if (userName?.touched && userName?.errors?.['required']) {
+              <mat-error>O nome de usuário é obrigatório.</mat-error>
+            }
+            @if (userName?.touched && userName?.errors?.['minlength']) {
+              <mat-error>O nome de usuário deve conter no mínimo 3 caracteres.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="auth-form__field">
+            <mat-label>Senha</mat-label>
+            <input
+              matInput
+              type="password"
+              formControlName="password"
+              autocomplete="current-password"
+            />
+
+            <mat-hint align="start">
+              <span>Mínimo de 6 caracteres, com maiúsculas, minúsculas, número e símbolo.</span>
+            </mat-hint>
+
+            @let pwd = password;
+
+            @if (pwd?.touched && pwd?.errors?.['required']) {
+              <mat-error>A senha é obrigatória.</mat-error>
+            } @else if (pwd?.touched && pwd?.errors?.['minlength']) {
+              <mat-error>A senha deve conter no mínimo 6 caracteres.</mat-error>
+            } @else if (pwd?.touched && pwd?.errors?.['pattern']) {
+              <mat-error>
+                A senha deve ter maiúsculas, minúsculas, número e caractere especial.
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <div class="auth-form__actions">
+            <a mat-button color="primary" routerLink="/auth/registrar"> Criar uma conta </a>
+
+            <button
+              mat-flat-button
+              class="auth-submit-button"
+              color="primary"
+              type="submit"
+              [disabled]="loginForm.invalid"
+            >
+              Entrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </mat-card>
+</div>
