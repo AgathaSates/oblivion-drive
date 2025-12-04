@@ -227,4 +227,118 @@ public class RegisterUserHandlerTests
         // assert
         Assert.IsTrue(result.IsFailed);
     }
+
+    [TestMethod]
+    public async Task Handle_Should_Return_InvalidRequest_When_UserName_Already_Exists()
+    {
+        // arrange
+        var command = new RegisterUserCommand(
+            UserName: "duplicateUser",
+            Email: "newemail@test.com",
+            Password: "Senha123!"
+        );
+
+        var existingUser = new User
+        {
+            UserName = command.UserName,
+            Email = "other@test.com"
+        };
+
+        _userManagerMock
+            .Setup(manager => manager.FindByNameAsync(command.UserName))
+            .ReturnsAsync(existingUser);
+
+        // act
+        Result<AccessToken> result = await _handler.Handle(command, CancellationToken.None);
+
+        // assert
+        Assert.IsTrue(result.IsFailed, "O resultado deveria ter falhado.");
+
+        var error = result.Errors.Single();
+
+        // garante que veio como erro de requisição inválida
+        Assert.IsTrue(
+            error.Metadata.TryGetValue("ErrorType", out object? errorType) &&
+            string.Equals(errorType?.ToString(), "InvalidRequest", StringComparison.Ordinal),
+            "ErrorType deveria ser 'InvalidRequest'."
+        );
+
+        // opcional: validar mensagem de erro
+        Assert.IsTrue(
+            error.Reasons.Any(reason =>
+                reason.Message.Contains("Já existe um usuário cadastrado com este nome de usuário.", StringComparison.CurrentCulture)),
+            "Deveria conter a mensagem de username duplicado."
+        );
+
+        _userManagerMock.Verify(manager =>
+            manager.CreateAsync(It.IsAny<User>(), It.IsAny<string>()),
+            Times.Never);
+
+        _userManagerMock.Verify(manager =>
+            manager.AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>()),
+            Times.Never);
+
+        _tokenProviderMock.Verify(provider =>
+            provider.CreateAcessToken(It.IsAny<User>()),
+            Times.Never);
+    }
+
+    [TestMethod]
+    public async Task Handle_Should_Return_InvalidRequest_When_Email_Already_Exists()
+    {
+        // arrange
+        var command = new RegisterUserCommand(
+            UserName: "newuser",
+            Email: "duplicate@test.com",
+            Password: "Senha123!"
+        );
+
+        var existingUser = new User
+        {
+            UserName = "otheruser",
+            Email = command.Email
+        };
+
+        // username ainda não existe
+        _userManagerMock
+            .Setup(manager => manager.FindByNameAsync(command.UserName))
+            .ReturnsAsync((User?)null);
+
+        // e-mail já está cadastrado
+        _userManagerMock
+            .Setup(manager => manager.FindByEmailAsync(command.Email))
+            .ReturnsAsync(existingUser);
+
+        // act
+        Result<AccessToken> result = await _handler.Handle(command, CancellationToken.None);
+
+        // assert
+        Assert.IsTrue(result.IsFailed, "O resultado deveria ter falhado.");
+
+        var error = result.Errors.Single();
+
+        Assert.IsTrue(
+            error.Metadata.TryGetValue("ErrorType", out object? errorType) &&
+            string.Equals(errorType?.ToString(), "InvalidRequest", StringComparison.Ordinal),
+            "ErrorType deveria ser 'InvalidRequest'."
+        );
+
+        Assert.IsTrue(
+            error.Reasons.Any(reason =>
+                reason.Message.Contains("Já existe um usuário cadastrado com este e-mail.", StringComparison.CurrentCulture)),
+            "Deveria conter a mensagem de e-mail duplicado."
+        );
+
+        _userManagerMock.Verify(manager =>
+            manager.CreateAsync(It.IsAny<User>(), It.IsAny<string>()),
+            Times.Never);
+
+        _userManagerMock.Verify(manager =>
+            manager.AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>()),
+            Times.Never);
+
+        _tokenProviderMock.Verify(provider =>
+            provider.CreateAcessToken(It.IsAny<User>()),
+            Times.Never);
+    }
 }

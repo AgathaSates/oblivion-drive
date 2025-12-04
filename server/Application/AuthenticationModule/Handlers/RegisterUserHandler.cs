@@ -2,6 +2,7 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens.Experimental;
 using OblivionDrive.Application.AuthenticationModule.Commands;
 using OblivionDrive.Application.AuthenticationModule.DTOs;
 using OblivionDrive.Application.AuthenticationModule.Extensions;
@@ -26,6 +27,18 @@ public class RegisterUserHandler(
                 .ToList();
 
             return Result.Fail(ErrorResults.InvalidRequestError(validationErrors));
+        }
+
+        User? existingUserByName = await userManager.FindByNameAsync(command.UserName);
+        if (existingUserByName is not null)
+        {
+            return Result.Fail(ErrorResults.InvalidRequestError("Já existe um usuário cadastrado com este nome de usuário."));
+        }
+
+        User? existingUserByEmail = await userManager.FindByEmailAsync(command.Email);
+        if (existingUserByEmail is not null)
+        {
+            return Result.Fail(ErrorResults.InvalidRequestError("Já existe um usuário cadastrado com este e-mail."));
         }
 
         User newUser = new User

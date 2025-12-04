@@ -58,6 +58,20 @@ public class UpdateEmployeeByCompanyHandler(
             if (employee.CompanyId != currentCompanyId)
                 return Result.Fail(ErrorResults.UnauthorizedError("Não é permitido editar funcionários de outra empresa."));
 
+            string formattedName = NameFormatter.FormatName(command.Name);
+
+            if (!string.Equals(employee.Name, formattedName, StringComparison.CurrentCultureIgnoreCase))
+            {
+                bool nameAlreadyExists =
+                    await employeeRepository.ExistsByNameAsync(command.Name, employee.Id);
+
+                if (nameAlreadyExists)
+                {
+                    return Result.Fail(
+                        ErrorResults.InvalidRequestError("Já existe um funcionário cadastrado com este nome para esta empresa."));
+                }
+            }
+
             Employee updateEntity = CreateUpdatedEmployee(command);
 
             await employeeRepository.UpdateAsync(employee, updateEntity);

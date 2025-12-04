@@ -65,6 +65,10 @@ public class UpdateOwnEmployeeProfileHandlerTests
             .Setup(r => r.UpdateOwnProfileNameAsync(It.IsAny<Employee>(), It.IsAny<string>()))
             .ReturnsAsync((Employee employee, string _) => employee);
 
+        _employeeRepositoryMock
+            .Setup(r => r.ExistsByNameAsync(It.IsAny<string>(), It.IsAny<Guid>()))
+            .ReturnsAsync(false);
+
         _validatorMock = new Mock<IValidator<UpdateOwnEmployeeProfileCommand>>();
         _validatorMock
             .Setup(v => v.ValidateAsync(It.IsAny<UpdateOwnEmployeeProfileCommand>(), It.IsAny<CancellationToken>()))
@@ -470,4 +474,120 @@ public class UpdateOwnEmployeeProfileHandlerTests
         _unitOfWorkMock.Verify(u =>
             u.RollbackAsync(), Times.Never);
     }
+
+    [TestMethod]
+    public async Task Handle_Should_Not_Check_Duplicated_Name_When_Name_Did_Not_Change()
+    {
+        // arrange
+        var command = CreateValidCommand();
+
+        Guid currentUserId = Guid.NewGuid();
+        Guid employeeId = Guid.NewGuid();
+
+        _tenantProviderMock
+            .Setup(tp => tp.UserId)
+            .Returns(currentUserId);
+
+        User employeeUser = CreateEmployeeUser(currentUserId, employeeId);
+
+        _userManagerMock
+            .Setup(m => m.FindByIdAsync(currentUserId.ToString()))
+            .ReturnsAsync(employeeUser);
+
+        Employee existingEmployee = CreateEmployee(employeeId, currentUserId);
+        string formattedName = NameFormatter.FormatName(command.Name);
+        existingEmployee.UpdateOwnProfileName(formattedName);
+
+        _employeeRepositoryMock
+            .Setup(r => r.GetByIdAsync(employeeId))
+            .ReturnsAsync(existingEmployee);
+
+        var expectedDto = new UpdatedEmployeeDTO(
+            UpdatedSuccessfully: true,
+            Name: formattedName,
+            HireDate: existingEmployee.HireDate,
+            Salary: existingEmployee.Salary
+        );
+
+        _mapperMock
+            .Setup(m => m.Map<UpdatedEmployeeDTO>(existingEmployee))
+            .Returns(expectedDto);
+
+        // act
+        Result<UpdatedEmployeeDTO> result = await _handler.Handle(command, CancellationToken.None);
+
+        // assert
+        Assert.IsTrue(result.IsSuccess);
+        Assert.IsNotNull(result.Value);
+
+        _employeeRepositoryMock.Verify(r =>
+            r.ExistsByNameAsync(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never);
+
+        _employeeRepositoryMock.Verify(r =>
+            r.UpdateOwnProfileNameAsync(existingEmployee, It.IsAny<string>()), Times.Once);
+
+        _unitOfWorkMock.Verify(u => u.CommitAsync(), Times.Once);
+        _unitOfWorkMock.Verify(u => u.RollbackAsync(), Times.Never);
+    }
+
+    [TestMethod]
+    public async Task Handle_Should_Return_InvalidRequest_When_Employee_Name_Already_Exists()
+    {
+        // arrange
+        var command = CreateValidCommand();
+
+        Guid currentUserId = Guid.NewGuid();
+        Guid employeeId = Guid.NewGuid();
+
+        _tenantProviderMock
+            .Setup(tp => tp.UserId)
+            .Returns(currentUserId);
+
+        User employeeUser = CreateEmployeeUser(currentUserId, employeeId);
+
+        _userManagerMock
+            .Setup(m => m.FindByIdAsync(currentUserId.ToString()))
+            .ReturnsAsync(employeeUser);
+
+        Employee existingEmployee = CreateEmployee(employeeId, currentUserId);
+        existingEmployee.UpdateOwnProfileName("Nome Antigo Diferente");
+
+        _employeeRepositoryMock
+            .Setup(r => r.GetByIdAsync(employeeId))
+            .ReturnsAsync(existingEmployee);
+
+        _employeeRepositoryMock
+            .Setup(r => r.ExistsByNameAsync(command.Name, existingEmployee.Id))
+            .ReturnsAsync(true);
+
+        // act
+        Result<UpdatedEmployeeDTO> result = await _handler.Handle(command, CancellationToken.None);
+
+        // assert
+        Assert.IsTrue(result.IsFailed);
+
+        var error = result.Errors.Single();
+
+        Assert.IsTrue(
+            error.Metadata.TryGetValue("ErrorType", out object? errorType) &&
+            string.Equals(errorType?.ToString(), "InvalidRequest", StringComparison.Ordinal),
+            "ErrorType deveria ser 'InvalidRequest'."
+        );
+
+        Assert.IsTrue(
+            error.Reasons.Any(reason =>
+                reason.Message.Contains("Já existe um funcionário cadastrado com este nome", StringComparison.CurrentCulture)),
+            "Deveria conter a mensagem de nome de funcionário duplicado."
+        );
+
+        _employeeRepositoryMock.Verify(r =>
+            r.ExistsByNameAsync(command.Name, existingEmployee.Id), Times.Once);
+
+        _employeeRepositoryMock.Verify(r =>
+            r.UpdateOwnProfileNameAsync(It.IsAny<Employee>(), It.IsAny<string>()), Times.Never);
+
+        _unitOfWorkMock.Verify(u => u.CommitAsync(), Times.Never);
+        _unitOfWorkMock.Verify(u => u.RollbackAsync(), Times.Never);
+    }
+
 }

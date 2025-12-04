@@ -46,6 +46,17 @@ public sealed class RegisterServiceHandler(
 
         try
         {
+            string formattedName = NameFormatter.FormatName(command.Name);
+
+            bool serviceNameAlreadyExists =
+                await serviceRepository.ExistsByNameAsync(formattedName);
+
+            if (serviceNameAlreadyExists)
+            {
+                return Result.Fail(
+                    ErrorResults.InvalidRequestError("Já existe um serviço cadastrado com este nome para esta empresa."));
+            }
+
             Service service = CreateService(command, companyId);
 
             await serviceRepository.AddAsync(service);
@@ -70,9 +81,9 @@ public sealed class RegisterServiceHandler(
 
     private Service CreateService(RegisterServiceCommand command, Guid companyId)
     {
-        string formattedEmployeeName = NameFormatter.FormatName(command.Name);
+        string formattedName = NameFormatter.FormatName(command.Name);
         return new Service(
-                formattedEmployeeName,
+                formattedName,
                 command.Price,
                 command.ChargeType,
                 companyId);

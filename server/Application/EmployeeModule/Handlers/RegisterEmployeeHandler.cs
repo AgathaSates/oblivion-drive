@@ -48,6 +48,31 @@ public class RegisterEmployeeHandler(
 
         Guid companyId = currentUser.CompanyId ?? currentUser.Id;
 
+        User? existingUserByName = await userManager.FindByNameAsync(command.UserName);
+        if (existingUserByName is not null)
+        {
+            return Result.Fail(
+                ErrorResults.InvalidRequestError("Já existe um usuário cadastrado com este nome de usuário."));
+        }
+
+        User? existingUserByEmail = await userManager.FindByEmailAsync(command.Email);
+        if (existingUserByEmail is not null)
+        {
+            return Result.Fail(
+                ErrorResults.InvalidRequestError("Já existe um usuário cadastrado com este e-mail."));
+        }
+
+        string formattedEmployeeName = NameFormatter.FormatName(command.Name);
+
+        bool employeeNameAlreadyExists =
+            await employeeRepository.ExistsByNameAsync(formattedEmployeeName);
+
+        if (employeeNameAlreadyExists)
+        {
+            return Result.Fail(
+                ErrorResults.InvalidRequestError("Já existe um funcionário cadastrado com este nome para esta empresa."));
+        }
+
         try
         {
             Guid employeeId = Guid.NewGuid();

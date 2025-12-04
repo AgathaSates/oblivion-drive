@@ -53,10 +53,22 @@ public sealed class UpdateServiceHandler(
             if (existingService.CompanyId != currentCompanyId)
                 return Result.Fail(ErrorResults.UnauthorizedError("Não é permitido editar serviços de outra empresa."));
 
-            string formattedEmployeeName = NameFormatter.FormatName(command.Name);
+            string formattedServiceName = NameFormatter.FormatName(command.Name);
+
+            if (!string.Equals(existingService.Name, formattedServiceName, StringComparison.CurrentCultureIgnoreCase))
+            {
+                bool duplicatedNameExists =
+                    await serviceRepository.ExistsByNameAsync(formattedServiceName, existingService.Id);
+
+                if (duplicatedNameExists)
+                {
+                    return Result.Fail(
+                        ErrorResults.InvalidRequestError("Já existe um serviço cadastrado com este nome para esta empresa."));
+                }
+            }
 
             Service updatedData = new Service(
-                formattedEmployeeName,
+                formattedServiceName,
                 command.Price,
                 command.ChargeType,
                 existingService.CompanyId);

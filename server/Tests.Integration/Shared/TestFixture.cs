@@ -57,6 +57,8 @@ public class TestFixture
         DbContext.SaveChanges();
 
         _employeeRepository = new EmployeeOrmRepository(DbContext);
+        _fuelRepository = new FuelPriceConfigurationOrmRepository(DbContext);
+        _servicesRepository = new ServicesOrmRepository(DbContext);
 
         Environment.SetEnvironmentVariable("SQL_CONNECTION_STRING", connectionString);
         Environment.SetEnvironmentVariable("AUTOMAPPER_LICENSE_KEY", "integration-tests-automapper-license");

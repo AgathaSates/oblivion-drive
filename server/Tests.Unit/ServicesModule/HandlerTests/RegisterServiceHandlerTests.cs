@@ -69,6 +69,10 @@ public class RegisterServiceHandlerTests
             .Setup(r => r.AddAsync(It.IsAny<Service>()))
             .ReturnsAsync(Guid.NewGuid());
 
+        _serviceRepositoryMock
+            .Setup(r => r.ExistsByNameAsync(It.IsAny<string>()))
+            .ReturnsAsync(false);
+
         _unitOfWorkMock = new Mock<IUnitOfWork>();
         _unitOfWorkMock
             .Setup(u => u.CommitAsync())
@@ -320,5 +324,60 @@ public class RegisterServiceHandlerTests
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
+    }
+
+    [TestMethod]
+    public async Task Handle_Should_Return_InvalidRequest_When_Service_Name_Already_Exists()
+    {
+        // arrange
+        RegisterServiceCommand command = CreateValidCommand();
+
+        Guid currentUserId = Guid.NewGuid();
+
+        _tenantProviderMock
+            .Setup(tp => tp.UserId)
+            .Returns(currentUserId);
+
+        User companyUser = CreateCompanyUser(currentUserId);
+
+        _userManagerMock
+            .Setup(m => m.FindByIdAsync(currentUserId.ToString()))
+            .ReturnsAsync(companyUser);
+
+        _serviceRepositoryMock
+            .Setup(r => r.ExistsByNameAsync(It.IsAny<string>()))
+            .ReturnsAsync(true);
+
+        // act
+        Result<ServiceDTO> result = await _handler.Handle(command, CancellationToken.None);
+
+        // assert
+        Assert.IsTrue(result.IsFailed, "Resultado deveria ser falha quando o nome do serviço já existe.");
+
+        var error = result.Errors.Single();
+
+        Assert.IsTrue(
+            error.Metadata.TryGetValue("ErrorType", out object? errorType) &&
+            string.Equals(errorType?.ToString(), "InvalidRequest", StringComparison.Ordinal),
+            "ErrorType deveria ser 'InvalidRequest'."
+        );
+
+        Assert.IsTrue(
+            error.Reasons.Any(r =>
+                r.Message.Contains("Já existe um serviço cadastrado com este nome", StringComparison.CurrentCulture)),
+            "Mensagem de erro deveria indicar que já existe um serviço cadastrado com este nome."
+        );
+
+        _serviceRepositoryMock.Verify(r =>
+            r.ExistsByNameAsync(It.IsAny<string>()), Times.Once);
+
+        _serviceRepositoryMock.Verify(r =>
+            r.AddAsync(It.IsAny<Service>()), Times.Never);
+
+        _unitOfWorkMock.Verify(u =>
+            u.CommitAsync(), Times.Never);
+
+        _unitOfWorkMock.Verify(u =>
+            u.RollbackAsync(), Times.Never);
     }
 }

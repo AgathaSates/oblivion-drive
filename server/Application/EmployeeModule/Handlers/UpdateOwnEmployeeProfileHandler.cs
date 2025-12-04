@@ -57,6 +57,19 @@ public class UpdateOwnEmployeeProfileHandler(UserManager<User> userManager,
 
             string formattedName = NameFormatter.FormatName(command.Name);
 
+
+            if (!string.Equals(employee.Name, formattedName, StringComparison.CurrentCultureIgnoreCase))
+            {
+                bool duplicatedNameExists =
+                    await employeeRepository.ExistsByNameAsync(command.Name, employee.Id);
+
+                if (duplicatedNameExists)
+                {
+                    return Result.Fail(
+                        ErrorResults.InvalidRequestError("Já existe um funcionário cadastrado com este nome para esta empresa."));
+                }
+            }
+
             await employeeRepository.UpdateOwnProfileNameAsync(employee, formattedName);
             await unitOfWork.CommitAsync();
 

@@ -531,4 +531,233 @@ public class RegisterEmployeeHandlerTests
         _unitOfWorkMock.Verify(u => u.CommitAsync(), Times.Once);
         _unitOfWorkMock.Verify(u => u.RollbackAsync(), Times.Never);
     }
+
+    [TestMethod]
+    public async Task Handle_Should_Return_InvalidRequest_When_UserName_Already_Exists()
+    {
+        // arrange
+        RegisterEmployeeCommand command = CreateValidCommand();
+
+        Guid currentUserId = Guid.NewGuid();
+
+        _tenantProviderMock
+            .Setup(tp => tp.UserId)
+            .Returns(currentUserId);
+
+        User companyUser = CreateCompanyUser(currentUserId);
+
+        _userManagerMock
+            .Setup(m => m.FindByIdAsync(currentUserId.ToString()))
+            .ReturnsAsync(companyUser);
+
+        var existingUser = new User
+        {
+            Id = Guid.NewGuid(),
+            UserName = command.UserName,
+            Email = "other@example.com",
+            UserType = UserType.Employee
+        };
+
+        _userManagerMock
+            .Setup(m => m.FindByNameAsync(command.UserName))
+            .ReturnsAsync(existingUser);
+
+        // act
+        Result<EmployeeDTO> result = await _handler.Handle(command, CancellationToken.None);
+
+        // assert
+        Assert.IsTrue(result.IsFailed);
+
+        var error = result.Errors.Single();
+
+        Assert.IsTrue(
+            error.Metadata.TryGetValue("ErrorType", out object? errorType) &&
+            string.Equals(errorType?.ToString(), "InvalidRequest", StringComparison.Ordinal),
+            "ErrorType deveria ser 'InvalidRequest'."
+        );
+
+        Assert.IsTrue(
+            error.Reasons.Any(reason =>
+                reason.Message.Contains("Já existe um usuário cadastrado com este nome de usuário.", StringComparison.CurrentCulture)),
+            "Deveria conter a mensagem de username duplicado."
+        );
+
+        _userManagerMock.Verify(m =>
+            m.FindByIdAsync(currentUserId.ToString()), Times.Once);
+
+        _userManagerMock.Verify(m =>
+            m.FindByNameAsync(command.UserName), Times.Once);
+
+        _userManagerMock.Verify(m =>
+            m.FindByEmailAsync(It.IsAny<string>()), Times.Never);
+
+        _employeeRepositoryMock.Verify(r =>
+            r.ExistsByNameAsync(It.IsAny<string>()), Times.Never);
+
+        _userManagerMock.Verify(m =>
+            m.CreateAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
+
+        _userManagerMock.Verify(m =>
+            m.AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
+
+        _employeeRepositoryMock.Verify(r =>
+            r.AddAsync(It.IsAny<Employee>()), Times.Never);
+
+        _unitOfWorkMock.Verify(u =>
+            u.CommitAsync(), Times.Never);
+    }
+
+    [TestMethod]
+    public async Task Handle_Should_Return_InvalidRequest_When_Email_Already_Exists()
+    {
+        // arrange
+        RegisterEmployeeCommand command = CreateValidCommand();
+
+        Guid currentUserId = Guid.NewGuid();
+
+        _tenantProviderMock
+            .Setup(tp => tp.UserId)
+            .Returns(currentUserId);
+
+        User companyUser = CreateCompanyUser(currentUserId);
+
+        _userManagerMock
+            .Setup(m => m.FindByIdAsync(currentUserId.ToString()))
+            .ReturnsAsync(companyUser);
+
+        _userManagerMock
+            .Setup(m => m.FindByNameAsync(command.UserName))
+            .ReturnsAsync((User?)null);
+
+        var existingUserByEmail = new User
+        {
+            Id = Guid.NewGuid(),
+            UserName = "otheruser",
+            Email = command.Email,
+            UserType = UserType.Employee
+        };
+
+        _userManagerMock
+            .Setup(m => m.FindByEmailAsync(command.Email))
+            .ReturnsAsync(existingUserByEmail);
+
+        // act
+        Result<EmployeeDTO> result = await _handler.Handle(command, CancellationToken.None);
+
+        // assert
+        Assert.IsTrue(result.IsFailed);
+
+        var error = result.Errors.Single();
+
+        Assert.IsTrue(
+            error.Metadata.TryGetValue("ErrorType", out object? errorType) &&
+            string.Equals(errorType?.ToString(), "InvalidRequest", StringComparison.Ordinal),
+            "ErrorType deveria ser 'InvalidRequest'."
+        );
+
+        Assert.IsTrue(
+            error.Reasons.Any(reason =>
+                reason.Message.Contains("Já existe um usuário cadastrado com este e-mail.", StringComparison.CurrentCulture)),
+            "Deveria conter a mensagem de e-mail duplicado."
+        );
+
+        _userManagerMock.Verify(m =>
+            m.FindByIdAsync(currentUserId.ToString()), Times.Once);
+
+        _userManagerMock.Verify(m =>
+            m.FindByNameAsync(command.UserName), Times.Once);
+
+        _userManagerMock.Verify(m =>
+            m.FindByEmailAsync(command.Email), Times.Once);
+
+        _employeeRepositoryMock.Verify(r =>
+            r.ExistsByNameAsync(It.IsAny<string>()), Times.Never);
+
+        _userManagerMock.Verify(m =>
+            m.CreateAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
+
+        _userManagerMock.Verify(m =>
+            m.AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
+
+        _employeeRepositoryMock.Verify(r =>
+            r.AddAsync(It.IsAny<Employee>()), Times.Never);
+
+        _unitOfWorkMock.Verify(u =>
+            u.CommitAsync(), Times.Never);
+    }
+
+    [TestMethod]
+    public async Task Handle_Should_Return_InvalidRequest_When_Employee_Name_Already_Exists()
+    {
+        // arrange
+        RegisterEmployeeCommand command = CreateValidCommand();
+
+        Guid currentUserId = Guid.NewGuid();
+
+        _tenantProviderMock
+            .Setup(tp => tp.UserId)
+            .Returns(currentUserId);
+
+        User companyUser = CreateCompanyUser(currentUserId);
+
+        _userManagerMock
+            .Setup(m => m.FindByIdAsync(currentUserId.ToString()))
+            .ReturnsAsync(companyUser);
+
+        _userManagerMock
+            .Setup(m => m.FindByNameAsync(command.UserName))
+            .ReturnsAsync((User?)null);
+
+        _userManagerMock
+            .Setup(m => m.FindByEmailAsync(command.Email))
+            .ReturnsAsync((User?)null);
+
+        _employeeRepositoryMock
+            .Setup(r => r.ExistsByNameAsync(command.Name))
+            .ReturnsAsync(true);
+
+        // act
+        Result<EmployeeDTO> result = await _handler.Handle(command, CancellationToken.None);
+
+        // assert
+        Assert.IsTrue(result.IsFailed);
+
+        var error = result.Errors.Single();
+
+        Assert.IsTrue(
+            error.Metadata.TryGetValue("ErrorType", out object? errorType) &&
+            string.Equals(errorType?.ToString(), "InvalidRequest", StringComparison.Ordinal),
+            "ErrorType deveria ser 'InvalidRequest'."
+        );
+
+        Assert.IsTrue(
+            error.Reasons.Any(reason =>
+                reason.Message.Contains("Já existe um funcionário cadastrado com este nome", StringComparison.CurrentCulture)),
+            "Deveria conter a mensagem de nome de funcionário duplicado."
+        );
+
+        _userManagerMock.Verify(m =>
+            m.FindByIdAsync(currentUserId.ToString()), Times.Once);
+
+        _userManagerMock.Verify(m =>
+            m.FindByNameAsync(command.UserName), Times.Once);
+
+        _userManagerMock.Verify(m =>
+            m.FindByEmailAsync(command.Email), Times.Once);
+
+        _employeeRepositoryMock.Verify(r =>
+            r.ExistsByNameAsync(command.Name), Times.Once);
+
+        _userManagerMock.Verify(m =>
+            m.CreateAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
+
+        _userManagerMock.Verify(m =>
+            m.AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
+
+        _employeeRepositoryMock.Verify(r =>
+            r.AddAsync(It.IsAny<Employee>()), Times.Never);
+
+        _unitOfWorkMock.Verify(u =>
+            u.CommitAsync(), Times.Never);
+    }
 }

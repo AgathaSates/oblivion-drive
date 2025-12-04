@@ -471,4 +471,133 @@ public class UpdateEmployeeByCompanyHandlerTests
         _unitOfWorkMock.Verify(u =>
             u.RollbackAsync(), Times.Never);
     }
+
+    [TestMethod]
+    public async Task Handle_Should_Not_Check_Duplicated_Name_When_Name_Did_Not_Change()
+    {
+        // arrange
+        var command = CreateValidCommand();
+
+        Guid currentUserId = Guid.NewGuid();
+        _tenantProviderMock
+            .Setup(tp => tp.UserId)
+            .Returns(currentUserId);
+
+        User companyUser = CreateCompanyUser(currentUserId);
+        Guid currentCompanyId = companyUser.CompanyId ?? companyUser.Id;
+
+        _userManagerMock
+            .Setup(m => m.FindByIdAsync(currentUserId.ToString()))
+            .ReturnsAsync(companyUser);
+
+        Guid identityUserId = Guid.NewGuid();
+        var identityUser = new User
+        {
+            Id = identityUserId,
+            UserName = "employeeUser",
+            Email = "employee@example.com",
+            UserType = UserType.Employee,
+            CompanyId = currentCompanyId
+        };
+
+        var existingEmployee = new Employee(
+            command.EmployeeId,
+            currentCompanyId,
+            identityUser,
+            identityUserId,
+            NameFormatter.FormatName(command.Name),
+            new DateOnly(2020, 1, 1),
+            1500m
+        );
+
+        _employeeRepositoryMock
+            .Setup(r => r.GetByIdAsync(command.EmployeeId))
+            .ReturnsAsync(existingEmployee);
+
+        var expectedDto = new UpdatedEmployeeDTO(
+            UpdatedSuccessfully: true,
+            Name: NameFormatter.FormatName(command.Name),
+            HireDate: command.HireDate,
+            Salary: command.Salary
+        );
+
+        _mapperMock
+            .Setup(m => m.Map<UpdatedEmployeeDTO>(existingEmployee))
+            .Returns(expectedDto);
+
+        // act
+        Result<UpdatedEmployeeDTO> result = await _handler.Handle(command, CancellationToken.None);
+
+        // assert
+        Assert.IsTrue(result.IsSuccess);
+        Assert.IsNotNull(result.Value);
+
+        _employeeRepositoryMock.Verify(r =>
+            r.ExistsByNameAsync(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never);
+
+        _employeeRepositoryMock.Verify(r =>
+            r.UpdateAsync(existingEmployee, It.IsAny<Employee>()), Times.Once);
+
+        _unitOfWorkMock.Verify(u => u.CommitAsync(), Times.Once);
+        _unitOfWorkMock.Verify(u => u.RollbackAsync(), Times.Never);
+    }
+
+    [TestMethod]
+    public async Task Handle_Should_Return_InvalidRequest_When_Employee_Name_Already_Exists()
+    {
+        // arrange
+        var command = CreateValidCommand();
+
+        Guid currentUserId = Guid.NewGuid();
+        _tenantProviderMock
+            .Setup(tp => tp.UserId)
+            .Returns(currentUserId);
+
+        User companyUser = CreateCompanyUser(currentUserId);
+        Guid currentCompanyId = companyUser.CompanyId ?? companyUser.Id;
+
+        _userManagerMock
+            .Setup(m => m.FindByIdAsync(currentUserId.ToString()))
+            .ReturnsAsync(companyUser);
+
+        Employee existingEmployee = CreateEmployee(command.EmployeeId, currentCompanyId);
+
+        _employeeRepositoryMock
+            .Setup(r => r.GetByIdAsync(command.EmployeeId))
+            .ReturnsAsync(existingEmployee);
+
+        _employeeRepositoryMock
+            .Setup(r => r.ExistsByNameAsync(It.IsAny<string>(), existingEmployee.Id))
+            .ReturnsAsync(true);
+
+        // act
+        Result<UpdatedEmployeeDTO> result = await _handler.Handle(command, CancellationToken.None);
+
+        // assert
+        Assert.IsTrue(result.IsFailed);
+
+        var error = result.Errors.Single();
+
+        Assert.IsTrue(
+            error.Metadata.TryGetValue("ErrorType", out object? errorType) &&
+            string.Equals(errorType?.ToString(), "InvalidRequest", StringComparison.Ordinal),
+            "ErrorType deveria ser 'InvalidRequest'."
+        );
+
+        Assert.IsTrue(
+            error.Reasons.Any(reason =>
+                reason.Message.Contains("Já existe um funcionário cadastrado com este nome", StringComparison.CurrentCulture)),
+            "Deveria conter a mensagem de nome de funcionário duplicado."
+        );
+
+        _employeeRepositoryMock.Verify(r =>
+            r.ExistsByNameAsync(It.IsAny<string>(), existingEmployee.Id), Times.Once);
+
+        _employeeRepositoryMock.Verify(r =>
+            r.UpdateAsync(It.IsAny<Employee>(), It.IsAny<Employee>()), Times.Never);
+
+        _unitOfWorkMock.Verify(u => u.CommitAsync(), Times.Never);
+        _unitOfWorkMock.Verify(u => u.RollbackAsync(), Times.Never);
+    }
+
 }

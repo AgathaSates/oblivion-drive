@@ -436,4 +436,131 @@ public class UpdateServiceHandlerTests
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
     }
+
+    [TestMethod]
+    public async Task Handle_Should_Not_Check_DuplicatedName_When_Name_Did_Not_Change()
+    {
+        // arrange
+        UpdateServiceCommand command = CreateValidCommand();
+
+        Guid currentUserId = Guid.NewGuid();
+        Guid companyId = Guid.NewGuid();
+
+        User companyUser = CreateCompanyUser(currentUserId, companyId);
+
+        _tenantProviderMock
+            .Setup(tp => tp.UserId)
+            .Returns(currentUserId);
+
+        _userManagerMock
+            .Setup(m => m.FindByIdAsync(currentUserId.ToString()))
+            .ReturnsAsync(companyUser);
+
+        string formattedName = NameFormatter.FormatName(command.Name);
+
+        Service existingService = new Service(
+            name: formattedName,
+            price: 150m,
+            chargeType: command.ChargeType,
+            companyId: companyId);
+
+        _serviceRepositoryMock
+            .Setup(r => r.GetByIdAsync(command.ServiceId))
+            .ReturnsAsync(existingService);
+
+        _serviceRepositoryMock
+            .Setup(r => r.UpdateAsync(existingService, It.IsAny<Service>()))
+            .ReturnsAsync(existingService);
+
+        UpdatedServiceDTO expectedDto = new(
+            UpdatedSuccessfully: true,
+            Name: formattedName,
+            Price: command.Price,
+            ChargeType: command.ChargeType);
+
+        _mapperMock
+            .Setup(m => m.Map<UpdatedServiceDTO>(existingService))
+            .Returns(expectedDto);
+
+        // act
+        Result<UpdatedServiceDTO> result = await _handler.Handle(command, CancellationToken.None);
+
+        // assert
+        Assert.IsTrue(result.IsSuccess);
+        Assert.IsNotNull(result.Value);
+        Assert.AreEqual(expectedDto, result.Value);
+
+        _serviceRepositoryMock.Verify(r =>
+            r.ExistsByNameAsync(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never);
+
+        _serviceRepositoryMock.Verify(r =>
+            r.UpdateAsync(existingService, It.IsAny<Service>()), Times.Once);
+
+        _unitOfWorkMock.Verify(u => u.CommitAsync(), Times.Once);
+        _unitOfWorkMock.Verify(u => u.RollbackAsync(), Times.Never);
+    }
+
+    [TestMethod]
+    public async Task Handle_Should_Return_InvalidRequest_When_Service_Name_Already_Exists_For_Another_Service()
+    {
+        // arrange
+        UpdateServiceCommand command = CreateValidCommand();
+
+        Guid currentUserId = Guid.NewGuid();
+        Guid companyId = Guid.NewGuid();
+
+        User companyUser = CreateCompanyUser(currentUserId, companyId);
+
+        _tenantProviderMock
+            .Setup(tp => tp.UserId)
+            .Returns(currentUserId);
+
+        _userManagerMock
+            .Setup(m => m.FindByIdAsync(currentUserId.ToString()))
+            .ReturnsAsync(companyUser);
+
+        Service existingService = new Service(
+            name: "Serviço Original",
+            price: 150m,
+            chargeType: command.ChargeType,
+            companyId: companyId);
+
+        _serviceRepositoryMock
+            .Setup(r => r.GetByIdAsync(command.ServiceId))
+            .ReturnsAsync(existingService);
+
+        _serviceRepositoryMock
+            .Setup(r => r.ExistsByNameAsync(It.IsAny<string>(), existingService.Id))
+            .ReturnsAsync(true);
+
+        // act
+        Result<UpdatedServiceDTO> result = await _handler.Handle(command, CancellationToken.None);
+
+        // assert
+        Assert.IsTrue(result.IsFailed, "Resultado deveria ser falha quando o nome do serviço já existe para outro registro.");
+
+        var error = result.Errors.Single();
+
+        Assert.IsTrue(
+            error.Metadata.TryGetValue("ErrorType", out object? errorType) &&
+            string.Equals(errorType?.ToString(), "InvalidRequest", StringComparison.Ordinal),
+            "ErrorType deveria ser 'InvalidRequest'."
+        );
+
+        Assert.IsTrue(
+            error.Reasons.Any(r =>
+                r.Message.Contains("Já existe um serviço cadastrado com este nome", StringComparison.CurrentCulture)),
+            "Mensagem de erro deveria indicar que já existe um serviço cadastrado com este nome para esta empresa."
+        );
+
+        _serviceRepositoryMock.Verify(r =>
+            r.ExistsByNameAsync(It.IsAny<string>(), existingService.Id), Times.Once);
+
+        _serviceRepositoryMock.Verify(r =>
+            r.UpdateAsync(It.IsAny<Service>(), It.IsAny<Service>()), Times.Never);
+
+        _unitOfWorkMock.Verify(u => u.CommitAsync(), Times.Never);
+        _unitOfWorkMock.Verify(u => u.RollbackAsync(), Times.Never);
+    }
+
 }
