@@ -1,0 +1,7 @@
+@use 'colors' as *;
+
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  background-color: $color-background;
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+}
