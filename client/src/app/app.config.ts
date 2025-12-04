@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { CanActivateFn, provideRouter, Router, Routes } from '@angular/router';
 import { provideAuth } from './components/modules/auth/models/auth.provider';
-import { provideNotifications } from './components/shared/notification/notificacao.provider';
+import { provideNotifications } from './components/shared/notification/notification.provider';
 import { take, map } from 'rxjs';
 import { AuthService } from './components/modules/auth/services/auth.service';
 
