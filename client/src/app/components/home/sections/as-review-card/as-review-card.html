@@ -1,0 +1,22 @@
+<article class="review-card">
+  <header class="review-card__header">
+    <img [src]="review.avatarUrl" [alt]="'Foto de ' + review.name" class="review-card__avatar" />
+
+    <div class="review-card__info">
+      <h3 class="review-card__name">{{ review.name }}</h3>
+
+      <div class="review-card__stars">
+        @for (star of fullStars; track $index) {
+          <mat-icon>star</mat-icon>
+        }
+        @if (hasHalfStar) {
+          <mat-icon>star_half</mat-icon>
+        }
+      </div>
+    </div>
+  </header>
+
+  <p class="review-card__text">
+    {{ review.text }}
+  </p>
+</article>

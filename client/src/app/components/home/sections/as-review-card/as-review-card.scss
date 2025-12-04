@@ -1,0 +1,70 @@
+@use 'colors' as *;
+
+.review-card {
+  background-color: $color-background-2;
+  border-radius: 18px;
+  padding: 1.5rem 1.4rem 1.7rem;
+  width: 270px;
+  min-height: 220px;
+  height: 100%;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: $color-text;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition:
+    transform 0.15s ease-out,
+    box-shadow 0.15s ease-out,
+    border-color 0.15s ease-out,
+    background-color 0.15s ease-out;
+}
+
+.review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.75);
+  border-color: rgba($color-primary, 0.6);
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.review-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.review-card__avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid $color-primary;
+}
+
+.review-card__info {
+  flex: 1;
+}
+
+.review-card__name {
+  margin: 0 0 0.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.review-card__stars {
+  display: flex;
+  gap: 2px;
+  color: #ffc857;
+}
+
+.review-card__stars mat-icon {
+  font-size: 18px;
+}
+
+.review-card__text {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: rgba($color-text, 0.9);
+}

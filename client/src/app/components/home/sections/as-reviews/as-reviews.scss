@@ -1,0 +1,62 @@
+@use 'colors' as *;
+
+.reviews-section {
+  padding: 4rem 0 4.5rem;
+  background: linear-gradient(180deg, $color-background 0%, darken($color-background, 2%) 100%);
+}
+
+.reviews-title {
+  text-align: center;
+  font-size: 2.1rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem;
+  color: $color-text;
+}
+
+.reviews-subtitle {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 2.5rem;
+  font-size: 0.98rem;
+  color: rgba($color-text, 0.9);
+}
+
+.reviews-grid {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: nowrap;
+}
+
+.reviews-grid--top {
+  margin-bottom: 1.5rem;
+}
+
+.reviews-grid--bottom {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1200px) {
+  .reviews-grid {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .reviews-section {
+    padding: 3rem 0 3.5rem;
+  }
+
+  .reviews-title {
+    font-size: 1.8rem;
+  }
+
+  .reviews-grid--bottom {
+    max-width: 100%;
+  }
+
+  .reviews-grid {
+    justify-content: center;
+  }
+}

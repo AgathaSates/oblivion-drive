@@ -1,0 +1,21 @@
+<section class="reviews-section">
+  <div class="container">
+    <h2 class="reviews-title">O que nossos clientes estão falando sobre a Oblivion Drive</h2>
+
+    <p class="reviews-subtitle">
+      Experiências reais de quem já alugou com a gente e hoje dirige com muito mais tranquilidade.
+    </p>
+
+    <div class="reviews-grid reviews-grid--top">
+      @for (review of reviewsTop; track review.id) {
+        <as-review-card [review]="review"></as-review-card>
+      }
+    </div>
+
+    <div class="reviews-grid reviews-grid--bottom">
+      @for (review of reviewsBottom; track review.id) {
+        <as-review-card [review]="review"></as-review-card>
+      }
+    </div>
+  </div>
+</section>
