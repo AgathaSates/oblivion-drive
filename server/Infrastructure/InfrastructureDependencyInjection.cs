@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OblivionDrive.Domain.BillingPlanModule;
+using OblivionDrive.Domain.ClientModule;
+using OblivionDrive.Domain.DriverModule;
 using OblivionDrive.Domain.EmployeeModule;
 using OblivionDrive.Domain.FuelPriceConfigurationModule;
 using OblivionDrive.Domain.ServicesModule;
@@ -9,6 +11,8 @@ using OblivionDrive.Domain.Shared;
 using OblivionDrive.Domain.VehicleGroupModule;
 using OblivionDrive.Domain.VehicleModule;
 using OblivionDrive.Infrastructure.Orm.BillingPlanModule;
+using OblivionDrive.Infrastructure.Orm.ClientModule;
+using OblivionDrive.Infrastructure.Orm.DriverModule;
 using OblivionDrive.Infrastructure.Orm.EmployeeModule;
 using OblivionDrive.Infrastructure.Orm.FuelPriceConfigurationModule;
 using OblivionDrive.Infrastructure.Orm.ServicesModule;
@@ -29,6 +33,8 @@ public static class InfrastructureDependencyInjection
         services.AddScoped<IRepositoryVehicleGroup, VehicleGroupOrmRepository>();
         services.AddScoped<IRepositoryBillingPlan, BillingPlanOrmRepository>();
         services.AddScoped<IRepositoryVehicle, VehicleOrmRepository>();
+        services.AddScoped<IRepositoryClient, ClientOrmRepository>();
+        services.AddScoped<IRepositoryDriver, DriverOrmRepository>();
 
 
         services.AddEntityFrameworkConfig(configuration);
