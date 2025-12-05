@@ -1,4 +1,4 @@
-﻿namespace OblivionDrive.Api.Models.FuelPriceConfigurationModule;
+﻿namespace OblivionDrive.Api.Models.FuelPriceConfigurationModule.Requests;
 
 public record UpdateFuelPriceConfigurationRequest(
     decimal Gasoline,

@@ -1,4 +1,4 @@
-﻿namespace OblivionDrive.Api.Models.EmployeeModule;
+﻿namespace OblivionDrive.Api.Models.EmployeeModule.Responses;
 
 public record UpdateOwnEmployeeResponse(
     bool UpdatedSuccessfully,

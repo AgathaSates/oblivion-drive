@@ -1,9 +1,9 @@
 ﻿using OblivionDrive.Domain.FuelPriceConfigurationModule;
 
-namespace OblivionDrive.Api.Models.VehicleModule;
+namespace OblivionDrive.Api.Models.VehicleModule.Requests;
 
-public record RegisterVehicleRequest(
-    string LicensePlate,
+public record UpdateVehicleRequest(
+    Guid VehicleId,
     string Brand,
     string Model,
     string Color,
@@ -11,5 +11,5 @@ public record RegisterVehicleRequest(
     decimal FuelTankCapacityInLiters,
     int Year,
     Guid VehicleGroupId,
-    byte[] PhotoBytes
+    byte[]? PhotoBytes
 );

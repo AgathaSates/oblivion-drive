@@ -1,9 +1,9 @@
 ﻿using OblivionDrive.Domain.FuelPriceConfigurationModule;
 
-namespace OblivionDrive.Api.Models.VehicleModule;
+namespace OblivionDrive.Api.Models.VehicleModule.Responses;
 
-public record UpdateVehicleResponse(
-    bool UpdatedSuccessfully,
+public record RegisterVehicleResponse(
+    bool CreatedSuccessfully,
     string LicensePlate,
     string Brand,
     string Model,

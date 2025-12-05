@@ -1,6 +1,8 @@
 ﻿using System.Collections.Immutable;
 using AutoMapper;
 using OblivionDrive.Api.Models.VehicleGroupModule;
+using OblivionDrive.Api.Models.VehicleGroupModule.Requests;
+using OblivionDrive.Api.Models.VehicleGroupModule.Responses;
 using OblivionDrive.Application.VehicleGroupModule.commands;
 using OblivionDrive.Application.VehicleGroupModule.DTOs;
 using OblivionDrive.Application.VehicleGroupModule.Querys;

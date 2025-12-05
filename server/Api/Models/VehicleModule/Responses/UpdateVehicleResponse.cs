@@ -1,8 +1,9 @@
 ﻿using OblivionDrive.Domain.FuelPriceConfigurationModule;
 
-namespace OblivionDrive.Api.Models.VehicleModule;
-public record GetVehicleByIdResponse(
-    Guid Id,
+namespace OblivionDrive.Api.Models.VehicleModule.Responses;
+
+public record UpdateVehicleResponse(
+    bool UpdatedSuccessfully,
     string LicensePlate,
     string Brand,
     string Model,

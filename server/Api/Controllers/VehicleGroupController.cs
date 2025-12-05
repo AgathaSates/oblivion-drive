@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OblivionDrive.Api.Helpers;
 using OblivionDrive.Api.Models.VehicleGroupModule;
+using OblivionDrive.Api.Models.VehicleGroupModule.Requests;
+using OblivionDrive.Api.Models.VehicleGroupModule.Responses;
 using OblivionDrive.Application.VehicleGroupModule.commands;
 using OblivionDrive.Application.VehicleGroupModule.Querys;
 using Swashbuckle.AspNetCore.Annotations;

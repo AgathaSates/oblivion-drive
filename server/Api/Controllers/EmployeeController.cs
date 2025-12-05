@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OblivionDrive.Api.Helpers;
 using OblivionDrive.Api.Models.EmployeeModule;
+using OblivionDrive.Api.Models.EmployeeModule.Requests;
+using OblivionDrive.Api.Models.EmployeeModule.Responses;
 using OblivionDrive.Application.EmployeeModule.Commands;
 using OblivionDrive.Application.EmployeeModule.Querys;
 using Swashbuckle.AspNetCore.Annotations;

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using OblivionDrive.Api.Models.FuelPriceConfigurationModule;
+using OblivionDrive.Api.Models.FuelPriceConfigurationModule.Requests;
+using OblivionDrive.Api.Models.FuelPriceConfigurationModule.Responses;
 using OblivionDrive.Application.FuelPriceConfigurationModule.Commands;
 using OblivionDrive.Application.FuelPriceConfigurationModule.DTOs;
 

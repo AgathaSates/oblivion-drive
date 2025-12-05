@@ -1,6 +1,6 @@
 ﻿using OblivionDrive.Domain.ServicesModule;
 
-namespace OblivionDrive.Api.Models.ServicesModule;
+namespace OblivionDrive.Api.Models.ServicesModule.Responses;
 
 public record UpdateServiceResponse(
     bool UpdatedSuccessfully,

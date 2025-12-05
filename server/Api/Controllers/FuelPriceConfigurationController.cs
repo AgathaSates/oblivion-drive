@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OblivionDrive.Api.Helpers;
 using OblivionDrive.Api.Models.FuelPriceConfigurationModule;
+using OblivionDrive.Api.Models.FuelPriceConfigurationModule.Requests;
+using OblivionDrive.Api.Models.FuelPriceConfigurationModule.Responses;
 using OblivionDrive.Application.FuelPriceConfigurationModule.Commands;
 using OblivionDrive.Application.FuelPriceConfigurationModule.Querys;
 using Swashbuckle.AspNetCore.Annotations;

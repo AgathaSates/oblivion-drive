@@ -1,4 +1,4 @@
-﻿namespace OblivionDrive.Api.Models.EmployeeModule;
+﻿namespace OblivionDrive.Api.Models.EmployeeModule.Requests;
 
 public record RegisterEmployeeRequest(
     string UserName,
@@ -6,4 +6,4 @@ public record RegisterEmployeeRequest(
     string Password,
     string Name,
     DateOnly HireDate,
-    Decimal Salary);
+    decimal Salary);

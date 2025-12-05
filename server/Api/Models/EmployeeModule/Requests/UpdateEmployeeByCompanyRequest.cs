@@ -1,4 +1,4 @@
-﻿namespace OblivionDrive.Api.Models.EmployeeModule;
+﻿namespace OblivionDrive.Api.Models.EmployeeModule.Requests;
 
 public record UpdateEmployeeByCompanyRequest(
     string Name,
