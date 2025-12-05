@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OblivionDrive.Domain.FuelPriceConfigurationModule;
 using OblivionDrive.Domain.VehicleGroupModule;
+using OblivionDrive.Infrastructure.Orm.BillingPlanModule;
 using OblivionDrive.Infrastructure.Orm.EmployeeModule;
 using OblivionDrive.Infrastructure.Orm.FuelPriceConfigurationModule;
 using OblivionDrive.Infrastructure.Orm.ServicesModule;
@@ -19,6 +20,7 @@ public class TestFixture
     protected FuelPriceConfigurationOrmRepository? _fuelRepository;
     protected ServicesOrmRepository? _servicesRepository;
     protected VehicleGroupOrmRepository? _vehicleGroupRepository;
+    protected BillingPlanOrmRepository? _billingPlanRepository;
 
     protected static MsSqlContainer? DatabaseContainer;
 
@@ -57,6 +59,7 @@ public class TestFixture
         DbContext.fuelPrices.RemoveRange(DbContext.fuelPrices);
         DbContext.Services.RemoveRange(DbContext.Services);
         DbContext.VehicleGroups.RemoveRange(DbContext.VehicleGroups);
+        DbContext.BillingPlans.RemoveRange(DbContext.BillingPlans);
 
         DbContext.SaveChanges();
 
@@ -64,6 +67,7 @@ public class TestFixture
         _fuelRepository = new FuelPriceConfigurationOrmRepository(DbContext);
         _servicesRepository = new ServicesOrmRepository(DbContext);
         _vehicleGroupRepository = new VehicleGroupOrmRepository(DbContext);
+        _billingPlanRepository = new BillingPlanOrmRepository(DbContext);
 
         Environment.SetEnvironmentVariable("SQL_CONNECTION_STRING", connectionString);
         Environment.SetEnvironmentVariable("AUTOMAPPER_LICENSE_KEY", "integration-tests-automapper-license");
