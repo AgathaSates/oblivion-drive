@@ -56,6 +56,10 @@ public class RegisterVehicleCommandValidator : AbstractValidator<RegisterVehicle
             .MaximumLength(MaximumColorLength)
                 .WithMessage($"A cor do veículo deve ter no máximo {MaximumColorLength} caracteres.");
 
+        RuleFor(c => c.FuelType)
+            .IsInEnum()
+                .WithMessage("O tipo de combustível informado é inválido.");
+
         RuleFor(c => c.FuelTankCapacityInLiters)
             .GreaterThanOrEqualTo(MinimumFuelTankCapacity)
                 .WithMessage($"A capacidade do tanque deve ser maior ou igual a {MinimumFuelTankCapacity}.")
@@ -71,6 +75,7 @@ public class RegisterVehicleCommandValidator : AbstractValidator<RegisterVehicle
                 .WithMessage("O identificador do grupo de veículos é obrigatório.");
 
         RuleFor(c => c.PhotoBytes)
+            .Cascade(CascadeMode.Stop)
             .NotNull()
                 .WithMessage("A foto do veículo é obrigatória.")
             .Must(bytes => bytes.Length > 0)

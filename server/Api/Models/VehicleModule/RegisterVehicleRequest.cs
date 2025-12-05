@@ -3,6 +3,7 @@
 namespace OblivionDrive.Api.Models.VehicleModule;
 
 public record RegisterVehicleRequest(
+    string LicensePlate,
     string Brand,
     string Model,
     string Color,

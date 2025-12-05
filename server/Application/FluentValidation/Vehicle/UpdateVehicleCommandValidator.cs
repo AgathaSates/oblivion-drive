@@ -49,6 +49,10 @@ public class UpdateVehicleCommandValidator : AbstractValidator<UpdateVehicleComm
             .MaximumLength(MaximumColorLength)
                 .WithMessage($"A cor do veículo deve ter no máximo {MaximumColorLength} caracteres.");
 
+        RuleFor(c => c.FuelType)
+            .IsInEnum()
+                .WithMessage("O tipo de combustível informado é inválido.");
+
         RuleFor(c => c.FuelTankCapacityInLiters)
             .GreaterThanOrEqualTo(MinimumFuelTankCapacity)
                 .WithMessage($"A capacidade do tanque deve ser maior ou igual a {MinimumFuelTankCapacity}.")
