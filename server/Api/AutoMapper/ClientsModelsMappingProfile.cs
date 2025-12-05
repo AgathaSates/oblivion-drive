@@ -12,7 +12,7 @@ public sealed class ClientsModelsMappingProfile : Profile
 {
     public ClientsModelsMappingProfile()
     {
-        CreateMap<RegisterClientRequest, CreateClientCommand>();
+        CreateMap<RegisterClientRequest, RegisterClientCommand>();
         CreateMap<ClientDTO, RegisterClientResponse>();
 
         CreateMap<(Guid, UpdateClientRequest), UpdateClientCommand>()
