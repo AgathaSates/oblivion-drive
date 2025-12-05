@@ -1,29 +1,34 @@
-﻿using FluentResults;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using FluentResults;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using OblivionDrive.Application.ServicesModule.Commands;
-using OblivionDrive.Application.ServicesModule.Handlers;
+using OblivionDrive.Application.BillingPlanModule.Commands;
+using OblivionDrive.Application.BillingPlanModule.Handlers;
 using OblivionDrive.Domain.AuthenticationModule;
-using OblivionDrive.Domain.ServicesModule;
+using OblivionDrive.Domain.BillingPlanModule;
 using OblivionDrive.Domain.Shared;
 
-namespace OblivionDrive.Tests.Unit.ServicesModule.HandlerTests;
+namespace OblivionDrive.Tests.Unit.BillingPlanModule.HandlerTests;
 
 [TestClass]
-[TestCategory("Service - DeleteServiceHandler Unit Tests")]
-public class DeleteServiceHandlerTests
+[TestCategory("BillingPlan - DeleteBillingPlanHandler Unit Tests")]
+public class DeleteBillingPlanHandlerTests
 {
     private Mock<UserManager<User>> _userManagerMock = default!;
     private Mock<ITenantProvider> _tenantProviderMock = default!;
-    private Mock<IRepositoryServices> _serviceRepositoryMock = default!;
-    private Mock<IValidator<DeleteServiceCommand>> _validatorMock = default!;
+    private Mock<IRepositoryBillingPlan> _billingPlanRepositoryMock = default!;
+    private Mock<IValidator<DeleteBillingPlanCommand>> _validatorMock = default!;
     private Mock<IUnitOfWork> _unitOfWorkMock = default!;
-    private Mock<ILogger<DeleteServiceHandler>> _loggerMock = default!;
-    private DeleteServiceHandler _handler = default!;
+    private Mock<ILogger<DeleteBillingPlanHandler>> _loggerMock = default!;
+    private DeleteBillingPlanHandler _handler = default!;
 
     [TestInitialize]
     public void Setup()
@@ -55,10 +60,15 @@ public class DeleteServiceHandlerTests
             .Setup(tp => tp.UserId)
             .Returns(Guid.NewGuid());
 
-        _serviceRepositoryMock = new Mock<IRepositoryServices>();
-        _serviceRepositoryMock
-            .Setup(r => r.DeleteAsync(It.IsAny<Service>()))
+        _billingPlanRepositoryMock = new Mock<IRepositoryBillingPlan>();
+        _billingPlanRepositoryMock
+            .Setup(r => r.DeleteAsync(It.IsAny<BillingPlan>()))
             .ReturnsAsync(true);
+
+        _validatorMock = new Mock<IValidator<DeleteBillingPlanCommand>>();
+        _validatorMock
+            .Setup(v => v.ValidateAsync(It.IsAny<DeleteBillingPlanCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ValidationResult());
 
         _unitOfWorkMock = new Mock<IUnitOfWork>();
         _unitOfWorkMock
@@ -68,28 +78,23 @@ public class DeleteServiceHandlerTests
             .Setup(u => u.RollbackAsync())
             .Returns(Task.CompletedTask);
 
-        _validatorMock = new Mock<IValidator<DeleteServiceCommand>>();
-        _validatorMock
-            .Setup(v => v.ValidateAsync(It.IsAny<DeleteServiceCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new ValidationResult());
+        _loggerMock = new Mock<ILogger<DeleteBillingPlanHandler>>();
 
-        _loggerMock = new Mock<ILogger<DeleteServiceHandler>>();
-
-        _handler = new DeleteServiceHandler(
+        _handler = new DeleteBillingPlanHandler(
             _userManagerMock.Object,
             _tenantProviderMock.Object,
-            _serviceRepositoryMock.Object,
+            _billingPlanRepositoryMock.Object,
             _validatorMock.Object,
             _unitOfWorkMock.Object,
             _loggerMock.Object
         );
     }
 
-    private static DeleteServiceCommand CreateValidCommand()
-        => new DeleteServiceCommand(Guid.NewGuid());
+    private static DeleteBillingPlanCommand CreateValidCommand()
+        => new DeleteBillingPlanCommand(Guid.NewGuid());
 
     private static User CreateCompanyUser(Guid id, Guid? companyId = null)
-        => new User
+        => new()
         {
             Id = id,
             UserName = "companyUser",
@@ -98,22 +103,32 @@ public class DeleteServiceHandlerTests
             CompanyId = companyId ?? id
         };
 
-    private static Service CreateService(Guid companyId)
-        => new Service(
-            name: "Serviço para exclusão",
-            price: 100m,
-            chargeType: (ChargeType)1,
-            companyId: companyId);
+    private static BillingPlan CreateBillingPlan(Guid companyId, Guid? vehicleGroupId = null)
+    {
+        Guid vgId = vehicleGroupId ?? Guid.NewGuid();
+
+        var daily = new DailyBillingPlanConfig(100m, 1.5m);
+        var controlled = new ControlledBillingPlanConfig(80m, 2.0m);
+        var free = new FreeBillingPlanConfig(200m);
+
+        return new BillingPlan(
+            name: "Plano de cobrança teste",
+            companyId: companyId,
+            vehicleGroupId: vgId,
+            dailyPlan: daily,
+            controlledPlan: controlled,
+            freePlan: free);
+    }
 
     [TestMethod]
     public async Task Handle_Should_Return_InvalidRequest_When_Validation_Fails()
     {
         // arrange
-        DeleteServiceCommand command = CreateValidCommand();
+        DeleteBillingPlanCommand command = CreateValidCommand();
 
         var failures = new List<ValidationFailure>
         {
-            new(nameof(DeleteServiceCommand.ServiceId), "O identificador do serviço é obrigatório.")
+            new(nameof(DeleteBillingPlanCommand.BillingPlanId), "O identificador do plano de cobrança é obrigatório.")
         };
 
         _validatorMock
@@ -132,10 +147,10 @@ public class DeleteServiceHandlerTests
         _tenantProviderMock.VerifyGet(tp => tp.UserId, Times.Never);
         _userManagerMock.Verify(m =>
             m.FindByIdAsync(It.IsAny<string>()), Times.Never);
-        _serviceRepositoryMock.Verify(r =>
+        _billingPlanRepositoryMock.Verify(r =>
             r.GetByIdAsync(It.IsAny<Guid>()), Times.Never);
-        _serviceRepositoryMock.Verify(r =>
-            r.DeleteAsync(It.IsAny<Service>()), Times.Never);
+        _billingPlanRepositoryMock.Verify(r =>
+            r.DeleteAsync(It.IsAny<BillingPlan>()), Times.Never);
         _unitOfWorkMock.Verify(u =>
             u.CommitAsync(), Times.Never);
         _unitOfWorkMock.Verify(u =>
@@ -146,7 +161,7 @@ public class DeleteServiceHandlerTests
     public async Task Handle_Should_Return_Unauthorized_When_UserId_Is_Null()
     {
         // arrange
-        DeleteServiceCommand command = CreateValidCommand();
+        DeleteBillingPlanCommand command = CreateValidCommand();
 
         _tenantProviderMock
             .Setup(tp => tp.UserId)
@@ -160,10 +175,10 @@ public class DeleteServiceHandlerTests
 
         _userManagerMock.Verify(m =>
             m.FindByIdAsync(It.IsAny<string>()), Times.Never);
-        _serviceRepositoryMock.Verify(r =>
+        _billingPlanRepositoryMock.Verify(r =>
             r.GetByIdAsync(It.IsAny<Guid>()), Times.Never);
-        _serviceRepositoryMock.Verify(r =>
-            r.DeleteAsync(It.IsAny<Service>()), Times.Never);
+        _billingPlanRepositoryMock.Verify(r =>
+            r.DeleteAsync(It.IsAny<BillingPlan>()), Times.Never);
         _unitOfWorkMock.Verify(u =>
             u.CommitAsync(), Times.Never);
         _unitOfWorkMock.Verify(u =>
@@ -174,7 +189,7 @@ public class DeleteServiceHandlerTests
     public async Task Handle_Should_Return_Unauthorized_When_CurrentUser_Is_Not_Found()
     {
         // arrange
-        DeleteServiceCommand command = CreateValidCommand();
+        DeleteBillingPlanCommand command = CreateValidCommand();
 
         Guid currentUserId = Guid.NewGuid();
 
@@ -195,10 +210,10 @@ public class DeleteServiceHandlerTests
         _userManagerMock.Verify(m =>
             m.FindByIdAsync(currentUserId.ToString()), Times.Once);
 
-        _serviceRepositoryMock.Verify(r =>
+        _billingPlanRepositoryMock.Verify(r =>
             r.GetByIdAsync(It.IsAny<Guid>()), Times.Never);
-        _serviceRepositoryMock.Verify(r =>
-            r.DeleteAsync(It.IsAny<Service>()), Times.Never);
+        _billingPlanRepositoryMock.Verify(r =>
+            r.DeleteAsync(It.IsAny<BillingPlan>()), Times.Never);
         _unitOfWorkMock.Verify(u =>
             u.CommitAsync(), Times.Never);
         _unitOfWorkMock.Verify(u =>
@@ -206,10 +221,10 @@ public class DeleteServiceHandlerTests
     }
 
     [TestMethod]
-    public async Task Handle_Should_Return_RecordNotFound_When_Service_Does_Not_Exist()
+    public async Task Handle_Should_Return_RecordNotFound_When_BillingPlan_Does_Not_Exist()
     {
         // arrange
-        DeleteServiceCommand command = CreateValidCommand();
+        DeleteBillingPlanCommand command = CreateValidCommand();
 
         Guid currentUserId = Guid.NewGuid();
         User companyUser = CreateCompanyUser(currentUserId);
@@ -222,9 +237,9 @@ public class DeleteServiceHandlerTests
             .Setup(m => m.FindByIdAsync(currentUserId.ToString()))
             .ReturnsAsync(companyUser);
 
-        _serviceRepositoryMock
-            .Setup(r => r.GetByIdAsync(command.ServiceId))
-            .ReturnsAsync((Service?)null);
+        _billingPlanRepositoryMock
+            .Setup(r => r.GetByIdAsync(command.BillingPlanId))
+            .ReturnsAsync((BillingPlan?)null);
 
         // act
         Result result = await _handler.Handle(command, CancellationToken.None);
@@ -232,10 +247,10 @@ public class DeleteServiceHandlerTests
         // assert
         Assert.IsTrue(result.IsFailed);
 
-        _serviceRepositoryMock.Verify(r =>
-            r.GetByIdAsync(command.ServiceId), Times.Once);
-        _serviceRepositoryMock.Verify(r =>
-            r.DeleteAsync(It.IsAny<Service>()), Times.Never);
+        _billingPlanRepositoryMock.Verify(r =>
+            r.GetByIdAsync(command.BillingPlanId), Times.Once);
+        _billingPlanRepositoryMock.Verify(r =>
+            r.DeleteAsync(It.IsAny<BillingPlan>()), Times.Never);
 
         _unitOfWorkMock.Verify(u =>
             u.CommitAsync(), Times.Never);
@@ -244,17 +259,17 @@ public class DeleteServiceHandlerTests
     }
 
     [TestMethod]
-    public async Task Handle_Should_Return_Unauthorized_When_Service_Belongs_To_Other_Company()
+    public async Task Handle_Should_Return_Unauthorized_When_BillingPlan_Belongs_To_Other_Company()
     {
         // arrange
-        DeleteServiceCommand command = CreateValidCommand();
+        DeleteBillingPlanCommand command = CreateValidCommand();
 
         Guid currentUserId = Guid.NewGuid();
         Guid companyId = Guid.NewGuid();
         Guid otherCompanyId = Guid.NewGuid();
 
         User companyUser = CreateCompanyUser(currentUserId, companyId);
-        Service serviceFromOtherCompany = CreateService(otherCompanyId);
+        BillingPlan billingPlanFromOtherCompany = CreateBillingPlan(otherCompanyId);
 
         _tenantProviderMock
             .Setup(tp => tp.UserId)
@@ -264,9 +279,9 @@ public class DeleteServiceHandlerTests
             .Setup(m => m.FindByIdAsync(currentUserId.ToString()))
             .ReturnsAsync(companyUser);
 
-        _serviceRepositoryMock
-            .Setup(r => r.GetByIdAsync(command.ServiceId))
-            .ReturnsAsync(serviceFromOtherCompany);
+        _billingPlanRepositoryMock
+            .Setup(r => r.GetByIdAsync(command.BillingPlanId))
+            .ReturnsAsync(billingPlanFromOtherCompany);
 
         // act
         Result result = await _handler.Handle(command, CancellationToken.None);
@@ -274,10 +289,10 @@ public class DeleteServiceHandlerTests
         // assert
         Assert.IsTrue(result.IsFailed);
 
-        _serviceRepositoryMock.Verify(r =>
-            r.GetByIdAsync(command.ServiceId), Times.Once);
-        _serviceRepositoryMock.Verify(r =>
-            r.DeleteAsync(It.IsAny<Service>()), Times.Never);
+        _billingPlanRepositoryMock.Verify(r =>
+            r.GetByIdAsync(command.BillingPlanId), Times.Once);
+        _billingPlanRepositoryMock.Verify(r =>
+            r.DeleteAsync(It.IsAny<BillingPlan>()), Times.Never);
 
         _unitOfWorkMock.Verify(u =>
             u.CommitAsync(), Times.Never);
@@ -286,16 +301,16 @@ public class DeleteServiceHandlerTests
     }
 
     [TestMethod]
-    public async Task Handle_Should_Delete_Service_And_Return_Success()
+    public async Task Handle_Should_Delete_BillingPlan_And_Return_Success()
     {
         // arrange
-        DeleteServiceCommand command = CreateValidCommand();
+        DeleteBillingPlanCommand command = CreateValidCommand();
 
         Guid currentUserId = Guid.NewGuid();
         Guid companyId = Guid.NewGuid();
 
         User companyUser = CreateCompanyUser(currentUserId, companyId);
-        Service existingService = CreateService(companyId);
+        BillingPlan existingBillingPlan = CreateBillingPlan(companyId);
 
         _tenantProviderMock
             .Setup(tp => tp.UserId)
@@ -305,9 +320,13 @@ public class DeleteServiceHandlerTests
             .Setup(m => m.FindByIdAsync(currentUserId.ToString()))
             .ReturnsAsync(companyUser);
 
-        _serviceRepositoryMock
-            .Setup(r => r.GetByIdAsync(command.ServiceId))
-            .ReturnsAsync(existingService);
+        _billingPlanRepositoryMock
+            .Setup(r => r.GetByIdAsync(command.BillingPlanId))
+            .ReturnsAsync(existingBillingPlan);
+
+        _billingPlanRepositoryMock
+            .Setup(r => r.DeleteAsync(It.IsAny<BillingPlan>()))
+            .ReturnsAsync(true);
 
         // act
         Result result = await _handler.Handle(command, CancellationToken.None);
@@ -315,10 +334,10 @@ public class DeleteServiceHandlerTests
         // assert
         Assert.IsTrue(result.IsSuccess);
 
-        _serviceRepositoryMock.Verify(r =>
-            r.GetByIdAsync(command.ServiceId), Times.Once);
-        _serviceRepositoryMock.Verify(r =>
-            r.DeleteAsync(existingService), Times.Once);
+        _billingPlanRepositoryMock.Verify(r =>
+            r.GetByIdAsync(command.BillingPlanId), Times.Once);
+        _billingPlanRepositoryMock.Verify(r =>
+            r.DeleteAsync(existingBillingPlan), Times.Once);
 
         _unitOfWorkMock.Verify(u =>
             u.CommitAsync(), Times.Once);
@@ -330,13 +349,13 @@ public class DeleteServiceHandlerTests
     public async Task Handle_Should_Rollback_And_Return_Failure_When_Exception_Occurs()
     {
         // arrange
-        DeleteServiceCommand command = CreateValidCommand();
+        DeleteBillingPlanCommand command = CreateValidCommand();
 
         Guid currentUserId = Guid.NewGuid();
         Guid companyId = Guid.NewGuid();
 
         User companyUser = CreateCompanyUser(currentUserId, companyId);
-        Service existingService = CreateService(companyId);
+        BillingPlan existingBillingPlan = CreateBillingPlan(companyId);
 
         _tenantProviderMock
             .Setup(tp => tp.UserId)
@@ -346,12 +365,12 @@ public class DeleteServiceHandlerTests
             .Setup(m => m.FindByIdAsync(currentUserId.ToString()))
             .ReturnsAsync(companyUser);
 
-        _serviceRepositoryMock
-            .Setup(r => r.GetByIdAsync(command.ServiceId))
-            .ReturnsAsync(existingService);
+        _billingPlanRepositoryMock
+            .Setup(r => r.GetByIdAsync(command.BillingPlanId))
+            .ReturnsAsync(existingBillingPlan);
 
-        _serviceRepositoryMock
-            .Setup(r => r.DeleteAsync(existingService))
+        _billingPlanRepositoryMock
+            .Setup(r => r.DeleteAsync(existingBillingPlan))
             .ThrowsAsync(new Exception("Erro de banco"));
 
         // act
@@ -369,8 +388,8 @@ public class DeleteServiceHandlerTests
             logger => logger.Log(
                 LogLevel.Error,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, _) =>
-                    v.ToString()!.Contains("Ocorreu um erro durante a exclusão de serviço")),
+                It.Is<It.IsAnyType>((value, _) =>
+                    value.ToString()!.Contains("Ocorreu um erro durante a exclusão de plano de cobrança")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);

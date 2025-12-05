@@ -562,5 +562,4 @@ public class UpdateServiceHandlerTests
         _unitOfWorkMock.Verify(u => u.CommitAsync(), Times.Never);
         _unitOfWorkMock.Verify(u => u.RollbackAsync(), Times.Never);
     }
-
 }
