@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using OblivionDrive.Api.Models.AuthenticationModule;
 using OblivionDrive.Api.Models.ServicesModule;
+using OblivionDrive.Api.Models.ServicesModule.Requests;
 using OblivionDrive.Api.Models.ServicesModule.Responses;
 using OblivionDrive.Application.AuthenticationModule.DTOs;
 using OblivionDrive.Application.Shared;
