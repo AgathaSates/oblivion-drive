@@ -3,7 +3,7 @@ using MediatR;
 using OblivionDrive.Application.DriverModule.DTOs;
 
 namespace OblivionDrive.Application.DriverModule.Commands;
-public record CreateDriverCommand(
+public record RegisterDriverCommand(
     string Name,
     string Email,
     string PhoneNumber,

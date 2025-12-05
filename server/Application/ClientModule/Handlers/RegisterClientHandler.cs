@@ -16,10 +16,10 @@ namespace OblivionDrive.Application.ClientModule.Handlers;
 
 public class RegisterClientHandler(
     UserManager<User> userManager, ITenantProvider tenantProvider, IRepositoryClient clientRepository,
-    IUnitOfWork unitOfWork, IValidator<CreateClientCommand> validator, ILogger<CreateClientCommand> logger,
-    IMapper mapper) : IRequestHandler<CreateClientCommand, Result<ClientDTO>>
+    IUnitOfWork unitOfWork, IValidator<RegisterClientCommand> validator, ILogger<RegisterClientCommand> logger,
+    IMapper mapper) : IRequestHandler<RegisterClientCommand, Result<ClientDTO>>
 {
-    public async Task<Result<ClientDTO>> Handle(CreateClientCommand command, CancellationToken cancellationToken)
+    public async Task<Result<ClientDTO>> Handle(RegisterClientCommand command, CancellationToken cancellationToken)
     {
         ValidationResult validationResult = await validator.ValidateAsync(command, cancellationToken);
 
@@ -124,7 +124,7 @@ public class RegisterClientHandler(
         }
     }
 
-    private static Client CreateClient(CreateClientCommand command, Guid companyId, string formattedName)
+    private static Client CreateClient(RegisterClientCommand command, Guid companyId, string formattedName)
     {
         Address address = new(
             state: command.State,

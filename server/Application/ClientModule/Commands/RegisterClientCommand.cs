@@ -4,7 +4,7 @@ using OblivionDrive.Application.ClientModule.DTOs;
 using OblivionDrive.Domain.ClientModule;
 
 namespace OblivionDrive.Application.ClientModule.Commands;
-public record CreateClientCommand(
+public record RegisterClientCommand(
     string Name,
     string Email,
     string PhoneNumber,
