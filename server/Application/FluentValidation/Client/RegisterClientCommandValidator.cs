@@ -3,7 +3,7 @@ using OblivionDrive.Application.ClientModule.Commands;
 using OblivionDrive.Domain.ClientModule;
 
 namespace OblivionDrive.Application.FluentValidation.Client;
-public class CreateClientCommandValidator : AbstractValidator<CreateClientCommand>
+public class RegisterClientCommandValidator : AbstractValidator<CreateClientCommand>
 {
     private const int MinimumNameLength = 2;
     private const int MaximumNameLength = 200;
@@ -22,7 +22,7 @@ public class CreateClientCommandValidator : AbstractValidator<CreateClientComman
     private const int MaximumStreetLength = 200;
     private const int MaximumNumberLength = 20;
 
-    public CreateClientCommandValidator()
+    public RegisterClientCommandValidator()
     {
         RuleFor(c => c.Name)
             .NotEmpty()
