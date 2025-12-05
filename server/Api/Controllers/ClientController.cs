@@ -23,7 +23,7 @@ public class ClientController(IMediator mediator, IMapper mapper) : ControllerBa
     )]
     public async Task<ActionResult<RegisterClientResponse>> Create(RegisterClientRequest request, CancellationToken cancellationToken)
     {
-        var command = mapper.Map<CreateClientCommand>(request);
+        var command = mapper.Map<RegisterClientCommand>(request);
 
         var result = await mediator.Send(command, cancellationToken);
 
