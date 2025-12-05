@@ -8,11 +8,13 @@ using OblivionDrive.Domain.FuelPriceConfigurationModule;
 using OblivionDrive.Domain.ServicesModule;
 using OblivionDrive.Domain.Shared;
 using OblivionDrive.Domain.VehicleGroupModule;
+using OblivionDrive.Domain.VehicleModule;
 using OblivionDrive.Infrastructure.Orm.BillingPlanModule;
 using OblivionDrive.Infrastructure.Orm.EmployeeModule;
 using OblivionDrive.Infrastructure.Orm.FuelPriceConfigurationModule;
 using OblivionDrive.Infrastructure.Orm.ServicesModule;
 using OblivionDrive.Infrastructure.Orm.VehicleGroupModule;
+using OblivionDrive.Infrastructure.Orm.VehicleModule;
 
 namespace OblivionDrive.Infrastructure.Orm.Shared;
 public class OblivionDriveDbContext : IdentityDbContext<User, Role, Guid>, IUnitOfWork
@@ -23,6 +25,7 @@ public class OblivionDriveDbContext : IdentityDbContext<User, Role, Guid>, IUnit
     public DbSet<Service> Services => Set<Service>();
     public DbSet<VehicleGroup> VehicleGroups => Set<VehicleGroup>();
     public DbSet<BillingPlan> BillingPlans => Set<BillingPlan>();
+    public DbSet<Vehicle> Vehicles => Set<Vehicle>();
 
     private readonly ITenantProvider? _tenantProvider;
     public Guid? CurrentCompanyId { get; }
@@ -58,6 +61,10 @@ public class OblivionDriveDbContext : IdentityDbContext<User, Role, Guid>, IUnit
             modelBuilder.Entity<BillingPlan>()
                 .HasQueryFilter(p =>
                 !CurrentCompanyId.HasValue || p.CompanyId == CurrentCompanyId);
+
+            modelBuilder.Entity<Vehicle>()
+                .HasQueryFilter(p =>
+                !CurrentCompanyId.HasValue || p.CompanyId == CurrentCompanyId);
         }
 
         // adicionar todas os mapeadores
@@ -67,6 +74,7 @@ public class OblivionDriveDbContext : IdentityDbContext<User, Role, Guid>, IUnit
         modelBuilder.ApplyConfiguration(new ServicesOrmMapper());
         modelBuilder.ApplyConfiguration(new VehicleGroupOrmMapper());
         modelBuilder.ApplyConfiguration(new BillingPlanOrmMapper());
+        modelBuilder.ApplyConfiguration(new VehicleOrmMapper());
 
         modelBuilder.Entity<TestEntity>(builder =>
         {

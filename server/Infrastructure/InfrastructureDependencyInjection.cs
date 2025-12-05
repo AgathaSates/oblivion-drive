@@ -7,12 +7,14 @@ using OblivionDrive.Domain.FuelPriceConfigurationModule;
 using OblivionDrive.Domain.ServicesModule;
 using OblivionDrive.Domain.Shared;
 using OblivionDrive.Domain.VehicleGroupModule;
+using OblivionDrive.Domain.VehicleModule;
 using OblivionDrive.Infrastructure.Orm.BillingPlanModule;
 using OblivionDrive.Infrastructure.Orm.EmployeeModule;
 using OblivionDrive.Infrastructure.Orm.FuelPriceConfigurationModule;
 using OblivionDrive.Infrastructure.Orm.ServicesModule;
 using OblivionDrive.Infrastructure.Orm.Shared;
 using OblivionDrive.Infrastructure.Orm.VehicleGroupModule;
+using OblivionDrive.Infrastructure.Orm.VehicleModule;
 
 namespace OblivionDrive.Infrastructure.Orm;
 public static class InfrastructureDependencyInjection
@@ -26,6 +28,7 @@ public static class InfrastructureDependencyInjection
         services.AddScoped<IRepositoryServices, ServicesOrmRepository>();
         services.AddScoped<IRepositoryVehicleGroup, VehicleGroupOrmRepository>();
         services.AddScoped<IRepositoryBillingPlan, BillingPlanOrmRepository>();
+        services.AddScoped<IRepositoryVehicle, VehicleOrmRepository>();
 
 
         services.AddEntityFrameworkConfig(configuration);
