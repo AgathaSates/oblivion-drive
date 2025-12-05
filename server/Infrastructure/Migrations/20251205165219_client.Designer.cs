@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OblivionDrive.Infrastructure.Orm.Shared;
 
@@ -11,9 +12,11 @@ using OblivionDrive.Infrastructure.Orm.Shared;
 namespace OblivionDrive.Infrastructure.Orm.Migrations
 {
     [DbContext(typeof(OblivionDriveDbContext))]
-    partial class OblivionDriveDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251205165219_client")]
+    partial class client
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

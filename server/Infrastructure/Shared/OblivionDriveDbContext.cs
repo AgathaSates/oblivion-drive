@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using OblivionDrive.Domain.AuthenticationModule;
 using OblivionDrive.Domain.BillingPlanModule;
+using OblivionDrive.Domain.ClientModule;
+using OblivionDrive.Domain.DriverModule;
 using OblivionDrive.Domain.EmployeeModule;
 using OblivionDrive.Domain.FuelPriceConfigurationModule;
 using OblivionDrive.Domain.ServicesModule;
@@ -10,6 +12,8 @@ using OblivionDrive.Domain.Shared;
 using OblivionDrive.Domain.VehicleGroupModule;
 using OblivionDrive.Domain.VehicleModule;
 using OblivionDrive.Infrastructure.Orm.BillingPlanModule;
+using OblivionDrive.Infrastructure.Orm.ClientModule;
+using OblivionDrive.Infrastructure.Orm.DriverModule;
 using OblivionDrive.Infrastructure.Orm.EmployeeModule;
 using OblivionDrive.Infrastructure.Orm.FuelPriceConfigurationModule;
 using OblivionDrive.Infrastructure.Orm.ServicesModule;
@@ -26,6 +30,8 @@ public class OblivionDriveDbContext : IdentityDbContext<User, Role, Guid>, IUnit
     public DbSet<VehicleGroup> VehicleGroups => Set<VehicleGroup>();
     public DbSet<BillingPlan> BillingPlans => Set<BillingPlan>();
     public DbSet<Vehicle> Vehicles => Set<Vehicle>();
+    public DbSet<Client> Clients => Set<Client>();
+    public DbSet<Driver> Drivers => Set<Driver>();
 
     private readonly ITenantProvider? _tenantProvider;
     public Guid? CurrentCompanyId { get; }
@@ -65,6 +71,14 @@ public class OblivionDriveDbContext : IdentityDbContext<User, Role, Guid>, IUnit
             modelBuilder.Entity<Vehicle>()
                 .HasQueryFilter(p =>
                 !CurrentCompanyId.HasValue || p.CompanyId == CurrentCompanyId);
+
+            modelBuilder.Entity<Client>()
+                .HasQueryFilter(p => 
+                !CurrentCompanyId.HasValue || p.CompanyId == CurrentCompanyId);
+
+            modelBuilder.Entity<Driver>()
+               .HasQueryFilter(p =>
+               !CurrentCompanyId.HasValue || p.CompanyId == CurrentCompanyId);
         }
 
         // adicionar todas os mapeadores
@@ -75,6 +89,8 @@ public class OblivionDriveDbContext : IdentityDbContext<User, Role, Guid>, IUnit
         modelBuilder.ApplyConfiguration(new VehicleGroupOrmMapper());
         modelBuilder.ApplyConfiguration(new BillingPlanOrmMapper());
         modelBuilder.ApplyConfiguration(new VehicleOrmMapper());
+        modelBuilder.ApplyConfiguration(new ClientOrmMapper());
+        modelBuilder.ApplyConfiguration(new DriverOrmMapper());
 
         modelBuilder.Entity<TestEntity>(builder =>
         {
