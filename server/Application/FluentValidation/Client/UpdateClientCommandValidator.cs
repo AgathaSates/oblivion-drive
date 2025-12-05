@@ -22,6 +22,11 @@ public class UpdateClientCommandValidator : AbstractValidator<UpdateClientComman
     private const int MaximumStreetLength = 200;
     private const int MaximumNumberLength = 20;
 
+    private const string NamePattern = @"^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$";
+    private const string DigitsOnlyPattern = @"^[0-9]+$";
+    private const string CpfPattern = @"^[0-9]{11}$";
+    private const string CnpjPattern = @"^[0-9]{14}$";
+
     public UpdateClientCommandValidator()
     {
         RuleFor(c => c.ClientId)
@@ -34,7 +39,9 @@ public class UpdateClientCommandValidator : AbstractValidator<UpdateClientComman
             .MinimumLength(MinimumNameLength)
                 .WithMessage($"O nome do cliente deve ter pelo menos {MinimumNameLength} caracteres.")
             .MaximumLength(MaximumNameLength)
-                .WithMessage($"O nome do cliente deve ter no máximo {MaximumNameLength} caracteres.");
+                .WithMessage($"O nome do cliente deve ter no máximo {MaximumNameLength} caracteres.")
+            .Matches(NamePattern)
+                .WithMessage("O nome do cliente deve conter apenas letras e espaços.");
 
         RuleFor(c => c.Email)
             .NotEmpty()
@@ -48,7 +55,9 @@ public class UpdateClientCommandValidator : AbstractValidator<UpdateClientComman
             .NotEmpty()
                 .WithMessage("O telefone do cliente é obrigatório.")
             .MaximumLength(MaximumPhoneLength)
-                .WithMessage($"O telefone do cliente deve ter no máximo {MaximumPhoneLength} caracteres.");
+                .WithMessage($"O telefone do cliente deve ter no máximo {MaximumPhoneLength} caracteres.")
+            .Matches(DigitsOnlyPattern)
+                .WithMessage("O telefone do cliente deve conter apenas números.");
 
         RuleFor(c => c.ClientType)
             .IsInEnum()
@@ -60,19 +69,25 @@ public class UpdateClientCommandValidator : AbstractValidator<UpdateClientComman
                 .NotEmpty()
                     .WithMessage("O CPF do cliente é obrigatório para clientes do tipo Pessoa Física.")
                 .MaximumLength(MaximumCpfLength)
-                    .WithMessage($"O CPF do cliente deve ter no máximo {MaximumCpfLength} caracteres.");
+                    .WithMessage($"O CPF do cliente deve ter no máximo {MaximumCpfLength} caracteres.")
+                .Matches(CpfPattern)
+                    .WithMessage("O CPF do cliente deve conter exatamente 11 dígitos numéricos.");
 
             RuleFor(c => c.Rg)
                 .NotEmpty()
                     .WithMessage("O RG do cliente é obrigatório para clientes do tipo Pessoa Física.")
                 .MaximumLength(MaximumRgLength)
-                    .WithMessage($"O RG do cliente deve ter no máximo {MaximumRgLength} caracteres.");
+                    .WithMessage($"O RG do cliente deve ter no máximo {MaximumRgLength} caracteres.")
+                .Matches(DigitsOnlyPattern)
+                    .WithMessage("O RG do cliente deve conter apenas números.");
 
             RuleFor(c => c.Cnh)
                 .NotEmpty()
                     .WithMessage("A CNH do cliente é obrigatória para clientes do tipo Pessoa Física.")
                 .MaximumLength(MaximumCnhLength)
-                    .WithMessage($"A CNH do cliente deve ter no máximo {MaximumCnhLength} caracteres.");
+                    .WithMessage($"A CNH do cliente deve ter no máximo {MaximumCnhLength} caracteres.")
+                .Matches(DigitsOnlyPattern)
+                    .WithMessage("A CNH do cliente deve conter apenas números.");
         });
 
         When(c => c.ClientType == ClientType.LegalEntity, () =>
@@ -81,7 +96,9 @@ public class UpdateClientCommandValidator : AbstractValidator<UpdateClientComman
                 .NotEmpty()
                     .WithMessage("O CNPJ do cliente é obrigatório para clientes do tipo Pessoa Jurídica.")
                 .MaximumLength(MaximumCnpjLength)
-                    .WithMessage($"O CNPJ do cliente deve ter no máximo {MaximumCnpjLength} caracteres.");
+                    .WithMessage($"O CNPJ do cliente deve ter no máximo {MaximumCnpjLength} caracteres.")
+                .Matches(CnpjPattern)
+                    .WithMessage("O CNPJ do cliente deve conter exatamente 14 dígitos numéricos.");
         });
 
         RuleFor(c => c.State)
