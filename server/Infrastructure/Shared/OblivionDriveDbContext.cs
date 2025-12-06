@@ -4,18 +4,22 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using OblivionDrive.Domain.AuthenticationModule;
 using OblivionDrive.Domain.BillingPlanModule;
 using OblivionDrive.Domain.ClientModule;
+using OblivionDrive.Domain.CouponModule;
 using OblivionDrive.Domain.DriverModule;
 using OblivionDrive.Domain.EmployeeModule;
 using OblivionDrive.Domain.FuelPriceConfigurationModule;
+using OblivionDrive.Domain.PartnerModule;
 using OblivionDrive.Domain.ServicesModule;
 using OblivionDrive.Domain.Shared;
 using OblivionDrive.Domain.VehicleGroupModule;
 using OblivionDrive.Domain.VehicleModule;
 using OblivionDrive.Infrastructure.Orm.BillingPlanModule;
 using OblivionDrive.Infrastructure.Orm.ClientModule;
+using OblivionDrive.Infrastructure.Orm.CouponModule;
 using OblivionDrive.Infrastructure.Orm.DriverModule;
 using OblivionDrive.Infrastructure.Orm.EmployeeModule;
 using OblivionDrive.Infrastructure.Orm.FuelPriceConfigurationModule;
+using OblivionDrive.Infrastructure.Orm.PartnerModule;
 using OblivionDrive.Infrastructure.Orm.ServicesModule;
 using OblivionDrive.Infrastructure.Orm.VehicleGroupModule;
 using OblivionDrive.Infrastructure.Orm.VehicleModule;
@@ -32,6 +36,8 @@ public class OblivionDriveDbContext : IdentityDbContext<User, Role, Guid>, IUnit
     public DbSet<Vehicle> Vehicles => Set<Vehicle>();
     public DbSet<Client> Clients => Set<Client>();
     public DbSet<Driver> Drivers => Set<Driver>();
+    public DbSet<Partner> Partners => Set<Partner>();
+    public DbSet<Coupon> Coupons => Set<Coupon>();
 
     private readonly ITenantProvider? _tenantProvider;
     public Guid? CurrentCompanyId { get; }
@@ -79,6 +85,15 @@ public class OblivionDriveDbContext : IdentityDbContext<User, Role, Guid>, IUnit
             modelBuilder.Entity<Driver>()
                .HasQueryFilter(p =>
                !CurrentCompanyId.HasValue || p.CompanyId == CurrentCompanyId);
+
+            modelBuilder.Entity<Partner>()
+                .HasQueryFilter(p =>
+                !CurrentCompanyId.HasValue || p.CompanyId == CurrentCompanyId);
+
+            modelBuilder.Entity<Coupon>()
+                .HasQueryFilter(p =>
+                !CurrentCompanyId.HasValue || p.CompanyId == CurrentCompanyId);
+
         }
 
         // adicionar todas os mapeadores
@@ -91,6 +106,8 @@ public class OblivionDriveDbContext : IdentityDbContext<User, Role, Guid>, IUnit
         modelBuilder.ApplyConfiguration(new VehicleOrmMapper());
         modelBuilder.ApplyConfiguration(new ClientOrmMapper());
         modelBuilder.ApplyConfiguration(new DriverOrmMapper());
+        modelBuilder.ApplyConfiguration(new PartnerOrmMapper());
+        modelBuilder.ApplyConfiguration(new CouponOrmMapper());
 
         modelBuilder.Entity<TestEntity>(builder =>
         {
