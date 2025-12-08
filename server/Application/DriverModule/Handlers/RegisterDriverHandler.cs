@@ -54,6 +54,14 @@ public class RegisterDriverHandler(
             if (client.CompanyId != companyId)
                 return Result.Fail(ErrorResults.UnauthorizedError("Não é permitido vincular condutores a clientes de outra empresa."));
 
+            if (client.ClientType == ClientType.LegalEntity && command.IsClientAlsoDriver)
+            {
+                return Result.Fail(
+                    ErrorResults.InvalidRequestError(
+                        "Clientes do tipo pessoa jurídica não podem ser cadastrados como condutor. " +
+                        "Selecione um condutor pessoa física."));
+            }
+
             bool emailAlreadyExists = await driverRepository.ExistsByEmailAsync(command.Email);
 
             if (emailAlreadyExists)
