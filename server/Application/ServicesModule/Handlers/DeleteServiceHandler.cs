@@ -7,12 +7,14 @@ using Microsoft.Extensions.Logging;
 using OblivionDrive.Application.ServicesModule.Commands;
 using OblivionDrive.Application.Shared;
 using OblivionDrive.Domain.AuthenticationModule;
+using OblivionDrive.Domain.RentalModule;
 using OblivionDrive.Domain.ServicesModule;
 using OblivionDrive.Domain.Shared;
 
 namespace OblivionDrive.Application.ServicesModule.Handlers;
 public sealed class DeleteServiceHandler(
-    UserManager<User> userManager, ITenantProvider tenantProvider, IRepositoryServices serviceRepository,
+    UserManager<User> userManager, ITenantProvider tenantProvider,
+    IRepositoryServices serviceRepository, IRepositoryRental rentalRepository,
     IValidator<DeleteServiceCommand> validator, IUnitOfWork unitOfWork, ILogger<DeleteServiceHandler> logger)
     : IRequestHandler<DeleteServiceCommand, Result>
 {
@@ -50,6 +52,13 @@ public sealed class DeleteServiceHandler(
 
             if (service.CompanyId != currentCompanyId)
                 return Result.Fail(ErrorResults.UnauthorizedError("Não é permitido excluir serviços de outra empresa."));
+
+            bool serviceUsedInOpenRental = await rentalRepository.ExistsOpenRentalUsingServiceAsync(service.Id);
+
+            if (serviceUsedInOpenRental)
+                return Result.Fail(
+                    ErrorResults.InvalidRequestError(
+                        "Não é permitido excluir serviços que estejam relacionados a aluguéis em andamento."));
 
             await serviceRepository.DeleteAsync(service);
             await unitOfWork.CommitAsync();

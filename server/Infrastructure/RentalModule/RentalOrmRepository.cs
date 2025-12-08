@@ -22,4 +22,29 @@ public class RentalOrmRepository(OblivionDriveDbContext context) : BaseRepositor
                 !rental.IsCompleted &&
                 rental.Id != rentalIdToIgnore);
     }
+
+    public async Task<bool> ExistsForVehicleGroupAsync(Guid vehicleGroupId)
+    {
+        return await context.Rentals
+            .Include(rental => rental.Vehicle)
+            .AnyAsync(rental => rental.Vehicle.VehicleGroupId == vehicleGroupId);
+    }
+
+    public async Task<bool> ExistsOpenRentalForClientAsync(Guid clientId)
+    {
+        return await context.Rentals
+             .AnyAsync(rental => rental.ClientId == clientId && !rental.IsCompleted);
+    }
+
+    public async Task<bool> ExistsOpenRentalForDriverAsync(Guid driverId)
+    {
+        return await context.Rentals
+            .AnyAsync(rental => rental.DriverId == driverId && !rental.IsCompleted);
+    }
+    public async Task<bool> ExistsOpenRentalUsingServiceAsync(Guid serviceId)
+    {
+        return await context.Rentals
+            .Where(rental => !rental.IsCompleted)
+            .AnyAsync(rental => rental.ServiceIds.Contains(serviceId));
+    }
 }

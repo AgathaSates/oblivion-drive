@@ -8,11 +8,13 @@ using OblivionDrive.Application.DriverModule.Commands;
 using OblivionDrive.Application.Shared;
 using OblivionDrive.Domain.AuthenticationModule;
 using OblivionDrive.Domain.DriverModule;
+using OblivionDrive.Domain.RentalModule;
 using OblivionDrive.Domain.Shared;
 
 namespace OblivionDrive.Application.DriverModule.Handlers;
 public class DeleteDriverHandler(
-    UserManager<User> userManager, ITenantProvider tenantProvider, IRepositoryDriver driverRepository,
+    UserManager<User> userManager, ITenantProvider tenantProvider,
+    IRepositoryDriver driverRepository, IRepositoryRental rentalRepository,
     IValidator<DeleteDriverCommand> validator, IUnitOfWork unitOfWork, ILogger<DeleteDriverHandler> logger)
     : IRequestHandler<DeleteDriverCommand, Result>
 {
@@ -50,6 +52,13 @@ public class DeleteDriverHandler(
 
             if (driver.CompanyId != currentCompanyId)
                 return Result.Fail(ErrorResults.UnauthorizedError("Não é permitido excluir condutores de outra empresa."));
+
+            bool driverHasOpenRental = await rentalRepository.ExistsOpenRentalForDriverAsync(driver.Id);
+
+            if (driverHasOpenRental)
+                return Result.Fail(
+                    ErrorResults.InvalidRequestError(
+                        "Não é permitido excluir condutores que possuam aluguéis em andamento."));
 
             await driverRepository.DeleteAsync(driver);
             await unitOfWork.CommitAsync();

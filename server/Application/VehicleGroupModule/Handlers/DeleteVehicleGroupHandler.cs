@@ -10,11 +10,13 @@ using OblivionDrive.Domain.AuthenticationModule;
 using OblivionDrive.Domain.BillingPlanModule;
 using OblivionDrive.Domain.Shared;
 using OblivionDrive.Domain.VehicleGroupModule;
+using OblivionDrive.Domain.VehicleModule;
 
 namespace OblivionDrive.Application.VehicleGroupModule.Handlers;
 public class DeleteVehicleGroupHandler(
     UserManager<User> userManager, ITenantProvider tenantProvider, IRepositoryVehicleGroup vehicleGroupRepository,
-    IRepositoryBillingPlan billingPlanRepository, IValidator<DeleteVehicleGroupCommand> validator,
+    IRepositoryBillingPlan billingPlanRepository, IRepositoryVehicle vehicleRepository,
+    IValidator<DeleteVehicleGroupCommand> validator,
     IUnitOfWork unitOfWork, ILogger<DeleteVehicleGroupHandler> logger) : IRequestHandler<DeleteVehicleGroupCommand, Result>
 {
     public async Task<Result> Handle(DeleteVehicleGroupCommand command, CancellationToken cancellationToken)
@@ -52,11 +54,18 @@ public class DeleteVehicleGroupHandler(
             if (vehicleGroup.CompanyId != currentCompanyId)
                 return Result.Fail(ErrorResults.UnauthorizedError("Não é permitido excluir grupos de veículos de outra empresa."));
 
+            bool groupUsedByVehicles = await vehicleRepository.ExistsForVehicleGroupAsync(vehicleGroup.Id);
+
+            if (groupUsedByVehicles)
+                return Result.Fail(
+                    ErrorResults.InvalidRequestError(
+                        "Não é permitido excluir grupos de veículos que estejam vinculados a veículos cadastrados."));
+
             bool groupUsedByBillingPlans = await billingPlanRepository.ExistsForVehicleGroupAsync(vehicleGroup.Id);
 
             if (groupUsedByBillingPlans)
                 return Result.Fail(ErrorResults.InvalidRequestError(
-                    "Não é permitido excluir grupos de veículos que estejam vinculados a planos de cobrança."));           
+                    "Não é permitido excluir grupos de veículos que estejam vinculados a planos de cobrança."));
 
             await vehicleGroupRepository.DeleteAsync(vehicleGroup);
             await unitOfWork.CommitAsync();

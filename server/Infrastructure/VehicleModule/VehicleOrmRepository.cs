@@ -17,4 +17,10 @@ public class VehicleOrmRepository(OblivionDriveDbContext context) : BaseReposito
         return await context.Vehicles.Where
             (vehicle => vehicle.VehicleGroupId == vehicleGroupId).ToListAsync();
     }
+
+    public async Task<bool> ExistsForVehicleGroupAsync(Guid vehicleGroupId)
+    {
+        return await context.Vehicles
+            .AnyAsync(v => v.VehicleGroupId == vehicleGroupId);
+    }
 }

@@ -8,12 +8,14 @@ using OblivionDrive.Application.ClientModule.Commands;
 using OblivionDrive.Application.Shared;
 using OblivionDrive.Domain.AuthenticationModule;
 using OblivionDrive.Domain.ClientModule;
+using OblivionDrive.Domain.RentalModule;
 using OblivionDrive.Domain.Shared;
 
 namespace OblivionDrive.Application.ClientModule.Handlers;
 
 public class DeleteClientHandler(
-    UserManager<User> userManager, ITenantProvider tenantProvider, IRepositoryClient clientRepository,
+    UserManager<User> userManager, ITenantProvider tenantProvider,
+    IRepositoryClient clientRepository, IRepositoryRental rentalRepository,
     IValidator<DeleteClientCommand> validator, IUnitOfWork unitOfWork, ILogger<DeleteClientHandler> logger)
     : IRequestHandler<DeleteClientCommand, Result>
 {
@@ -38,8 +40,7 @@ public class DeleteClientHandler(
         User? currentUser = await userManager.FindByIdAsync(currentUserId.ToString());
 
         if (currentUser is null)
-            return Result.Fail(
-                ErrorResults.UnauthorizedError("Usuário autenticado não foi encontrado."));
+            return Result.Fail(ErrorResults.UnauthorizedError("Usuário autenticado não foi encontrado."));
 
         Guid currentCompanyId = currentUser.CompanyId ?? currentUser.Id;
 
@@ -53,6 +54,14 @@ public class DeleteClientHandler(
             if (client.CompanyId != currentCompanyId)
                 return Result.Fail(
                     ErrorResults.UnauthorizedError("Não é permitido excluir clientes de outra empresa."));
+
+            bool clientHasOpenRental =
+               await rentalRepository.ExistsOpenRentalForClientAsync(client.Id);
+
+            if (clientHasOpenRental)
+                return Result.Fail(
+                    ErrorResults.InvalidRequestError(
+                        "Não é permitido excluir clientes que possuam aluguéis em andamento."));
 
             await clientRepository.DeleteAsync(client);
             await unitOfWork.CommitAsync();

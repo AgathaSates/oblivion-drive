@@ -5,4 +5,5 @@ public interface IRepositoryVehicle : IRepository<Vehicle>
 {
     Task AddPhotoAsync(Guid vehicleId, byte[] photoByte);
     Task<List<Vehicle>> GetByVehicleGroupAsync(Guid vehicleGroupId);
+    Task<bool> ExistsForVehicleGroupAsync(Guid vehicleGroupId);
 }

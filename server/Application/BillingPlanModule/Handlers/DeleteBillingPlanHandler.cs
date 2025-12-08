@@ -8,14 +8,15 @@ using OblivionDrive.Application.BillingPlanModule.Commands;
 using OblivionDrive.Application.Shared;
 using OblivionDrive.Domain.AuthenticationModule;
 using OblivionDrive.Domain.BillingPlanModule;
+using OblivionDrive.Domain.RentalModule;
 using OblivionDrive.Domain.Shared;
 
 namespace OblivionDrive.Application.BillingPlanModule.Handlers;
 
 public class DeleteBillingPlanHandler(
     UserManager<User> userManager, ITenantProvider tenantProvider, IRepositoryBillingPlan billingPlanRepository,
-    IValidator<DeleteBillingPlanCommand> validator, IUnitOfWork unitOfWork, ILogger<DeleteBillingPlanHandler> logger)
-    : IRequestHandler<DeleteBillingPlanCommand, Result>
+    IRepositoryRental rentalRepository, IValidator<DeleteBillingPlanCommand> validator, IUnitOfWork unitOfWork,
+    ILogger<DeleteBillingPlanHandler> logger) : IRequestHandler<DeleteBillingPlanCommand, Result>
 {
     public async Task<Result> Handle(DeleteBillingPlanCommand command, CancellationToken cancellationToken)
     {
@@ -51,6 +52,13 @@ public class DeleteBillingPlanHandler(
 
             if (billingPlan.CompanyId != currentCompanyId)
                 return Result.Fail(ErrorResults.UnauthorizedError("Não é permitido excluir planos de cobrança de outra empresa."));
+
+            bool billingPlanUsedInRentals = await rentalRepository.ExistsForVehicleGroupAsync(billingPlan.VehicleGroupId);
+
+            if (billingPlanUsedInRentals)
+                return Result.Fail(
+                    ErrorResults.InvalidRequestError(
+                        "Não é permitido excluir planos de cobrança que já foram utilizados em aluguéis."));
 
             await billingPlanRepository.DeleteAsync(billingPlan);
             await unitOfWork.CommitAsync();

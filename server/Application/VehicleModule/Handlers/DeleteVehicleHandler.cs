@@ -7,12 +7,14 @@ using Microsoft.Extensions.Logging;
 using OblivionDrive.Application.Shared;
 using OblivionDrive.Application.VehicleModule.Commands;
 using OblivionDrive.Domain.AuthenticationModule;
+using OblivionDrive.Domain.RentalModule;
 using OblivionDrive.Domain.Shared;
 using OblivionDrive.Domain.VehicleModule;
 
 namespace OblivionDrive.Application.VehicleModule.Handlers;
 public class DeleteVehicleHandler(
-    UserManager<User> userManager, ITenantProvider tenantProvider, IRepositoryVehicle vehicleRepository,
+    UserManager<User> userManager, ITenantProvider tenantProvider,
+    IRepositoryVehicle vehicleRepository, IRepositoryRental rentalRepository,
     IValidator<DeleteVehicleCommand> validator, IUnitOfWork unitOfWork, ILogger<DeleteVehicleHandler> logger)
     : IRequestHandler<DeleteVehicleCommand, Result>
 {
@@ -52,6 +54,12 @@ public class DeleteVehicleHandler(
             if (vehicle.CompanyId != currentCompanyId)
                 return Result.Fail(ErrorResults.UnauthorizedError("Não é permitido excluir veículos de outra empresa."));
 
+            bool vehicleHasOpenRental = await rentalRepository.ExistsOpenRentalForVehicleAsync(vehicle.Id);
+
+            if (vehicleHasOpenRental)
+                return Result.Fail(
+                    ErrorResults.InvalidRequestError(
+                        "Não é permitido excluir veículos que estejam vinculados a aluguéis em andamento."));
 
             await vehicleRepository.DeleteAsync(vehicle);
             await unitOfWork.CommitAsync();
