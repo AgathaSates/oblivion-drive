@@ -7,4 +7,5 @@ public interface IRepositoryBillingPlan : IRepository<BillingPlan>
     Task<bool> ExistsForVehicleGroupAsync(Guid vehicleGroupId);
     Task<bool> ExistsByNameAsync(string vehicleGroupName);
     Task<bool> ExistsByNameAsync(string vehicleGroupName, Guid vehicleGroupIdToIgnore);
+    Task<BillingPlan?> GetByVehicleGroupIdAsync(Guid vehicleGroupId);
 }
