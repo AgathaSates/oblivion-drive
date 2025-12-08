@@ -27,4 +27,10 @@ public class BillingPlanOrmRepository(OblivionDriveDbContext context) : BaseRepo
         return await context.BillingPlans
         .AnyAsync(billingPlan => billingPlan.VehicleGroupId == vehicleGroupId);
     }
+
+    public async Task<BillingPlan?> GetByVehicleGroupIdAsync(Guid vehicleGroupId)
+    {
+        return await context.BillingPlans
+            .FirstOrDefaultAsync(plan => plan.VehicleGroupId == vehicleGroupId);
+    }
 }

@@ -9,6 +9,7 @@ using OblivionDrive.Domain.DriverModule;
 using OblivionDrive.Domain.EmployeeModule;
 using OblivionDrive.Domain.FuelPriceConfigurationModule;
 using OblivionDrive.Domain.PartnerModule;
+using OblivionDrive.Domain.RentalModule;
 using OblivionDrive.Domain.ServicesModule;
 using OblivionDrive.Domain.Shared;
 using OblivionDrive.Domain.VehicleGroupModule;
@@ -20,6 +21,7 @@ using OblivionDrive.Infrastructure.Orm.DriverModule;
 using OblivionDrive.Infrastructure.Orm.EmployeeModule;
 using OblivionDrive.Infrastructure.Orm.FuelPriceConfigurationModule;
 using OblivionDrive.Infrastructure.Orm.PartnerModule;
+using OblivionDrive.Infrastructure.Orm.RentalModule;
 using OblivionDrive.Infrastructure.Orm.ServicesModule;
 using OblivionDrive.Infrastructure.Orm.VehicleGroupModule;
 using OblivionDrive.Infrastructure.Orm.VehicleModule;
@@ -38,6 +40,8 @@ public class OblivionDriveDbContext : IdentityDbContext<User, Role, Guid>, IUnit
     public DbSet<Driver> Drivers => Set<Driver>();
     public DbSet<Partner> Partners => Set<Partner>();
     public DbSet<Coupon> Coupons => Set<Coupon>();
+    public DbSet<Rental> Rentals => Set<Rental>();
+
 
     private readonly ITenantProvider? _tenantProvider;
     public Guid? CurrentCompanyId { get; }
@@ -53,7 +57,6 @@ public class OblivionDriveDbContext : IdentityDbContext<User, Role, Guid>, IUnit
     {
         if (_tenantProvider is not null)
         {
-            // adicionar todas as entidades com filtro de empresa
             modelBuilder.Entity<Employee>()
             .HasQueryFilter(p =>
                 !CurrentCompanyId.HasValue || p.CompanyId == CurrentCompanyId);
@@ -94,9 +97,11 @@ public class OblivionDriveDbContext : IdentityDbContext<User, Role, Guid>, IUnit
                 .HasQueryFilter(p =>
                 !CurrentCompanyId.HasValue || p.CompanyId == CurrentCompanyId);
 
-        }
+            modelBuilder.Entity<Rental>()
+                .HasQueryFilter(p =>
+                !CurrentCompanyId.HasValue || p.CompanyId == CurrentCompanyId);
 
-        // adicionar todas os mapeadores
+        }
 
         modelBuilder.ApplyConfiguration(new EmployeeOrmMApper());
         modelBuilder.ApplyConfiguration(new FuelPriceConfigurationOrmMapper());
@@ -108,6 +113,7 @@ public class OblivionDriveDbContext : IdentityDbContext<User, Role, Guid>, IUnit
         modelBuilder.ApplyConfiguration(new DriverOrmMapper());
         modelBuilder.ApplyConfiguration(new PartnerOrmMapper());
         modelBuilder.ApplyConfiguration(new CouponOrmMapper());
+        modelBuilder.ApplyConfiguration(new RentalOrmMapper());
 
         modelBuilder.Entity<TestEntity>(builder =>
         {

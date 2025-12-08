@@ -8,6 +8,7 @@ using OblivionDrive.Domain.DriverModule;
 using OblivionDrive.Domain.EmployeeModule;
 using OblivionDrive.Domain.FuelPriceConfigurationModule;
 using OblivionDrive.Domain.PartnerModule;
+using OblivionDrive.Domain.RentalModule;
 using OblivionDrive.Domain.ServicesModule;
 using OblivionDrive.Domain.Shared;
 using OblivionDrive.Domain.VehicleGroupModule;
@@ -19,6 +20,7 @@ using OblivionDrive.Infrastructure.Orm.DriverModule;
 using OblivionDrive.Infrastructure.Orm.EmployeeModule;
 using OblivionDrive.Infrastructure.Orm.FuelPriceConfigurationModule;
 using OblivionDrive.Infrastructure.Orm.PartnerModule;
+using OblivionDrive.Infrastructure.Orm.RentalModule;
 using OblivionDrive.Infrastructure.Orm.ServicesModule;
 using OblivionDrive.Infrastructure.Orm.Shared;
 using OblivionDrive.Infrastructure.Orm.VehicleGroupModule;
@@ -40,6 +42,9 @@ public static class InfrastructureDependencyInjection
         services.AddScoped<IRepositoryDriver, DriverOrmRepository>();
         services.AddScoped<IRepositoryPartner, PartnerOrmRepository>();
         services.AddScoped<IRepositoryCoupon, CouponOrmRepository>();
+        services.AddScoped<IRepositoryRental, RentalOrmRepository>();
+
+        services.AddScoped<RentalPricingCalculator>();
 
 
         services.AddEntityFrameworkConfig(configuration);

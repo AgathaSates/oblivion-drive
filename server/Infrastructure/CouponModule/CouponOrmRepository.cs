@@ -17,4 +17,10 @@ public class CouponOrmRepository(OblivionDriveDbContext context) : BaseRepositor
         return await context.Coupons
             .AnyAsync(c => c.Name == couponName && c.Id != couponIdToIgnore);
     }
+
+    public async Task<Coupon?> GetByNameAsync(string couponName)
+    {
+        return await context.Coupons
+            .FirstOrDefaultAsync(c => c.Name == couponName);
+    }
 }
