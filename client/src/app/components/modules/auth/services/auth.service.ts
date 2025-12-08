@@ -103,19 +103,4 @@ export class AuthService {
 
     return JSON.parse(jsonString);
   }
-
-  public updateUserName(newName: string): void {
-    const current = this.accessTokenSubject$.value;
-    if (!current) return;
-
-    const updated: AccessTokenModel = {
-      ...current,
-      authenticatedUser: {
-        ...current.authenticatedUser,
-        name: newName,
-      },
-    };
-
-    this.accessTokenSubject$.next(updated);
-  }
 }

@@ -17,7 +17,7 @@ export interface AccessTokenModel {
 
 export interface AuthenticatedUserModel {
   id: string;
-  name: string;
+  userName: string;
   email: string;
   userType: UserTypeModel;
 }
