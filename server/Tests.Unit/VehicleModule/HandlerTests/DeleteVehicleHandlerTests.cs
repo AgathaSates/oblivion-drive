@@ -9,6 +9,7 @@ using OblivionDrive.Application.VehicleModule.Commands;
 using OblivionDrive.Application.VehicleModule.Handlers;
 using OblivionDrive.Domain.AuthenticationModule;
 using OblivionDrive.Domain.FuelPriceConfigurationModule;
+using OblivionDrive.Domain.RentalModule;
 using OblivionDrive.Domain.Shared;
 using OblivionDrive.Domain.VehicleModule;
 
@@ -25,6 +26,7 @@ public class DeleteVehicleHandlerTests
     private Mock<IUnitOfWork> _unitOfWorkMock = default!;
     private Mock<ILogger<DeleteVehicleHandler>> _loggerMock = default!;
     private DeleteVehicleHandler _handler = default!;
+    private Mock<IRepositoryRental> _rentalRepositoryMock = default!;
 
     [TestInitialize]
     public void Setup()
@@ -58,6 +60,8 @@ public class DeleteVehicleHandlerTests
 
         _vehicleRepositoryMock = new Mock<IRepositoryVehicle>();
 
+        _rentalRepositoryMock = new Mock<IRepositoryRental>();
+
         _validatorMock = new Mock<IValidator<DeleteVehicleCommand>>();
         _validatorMock
             .Setup(v => v.ValidateAsync(It.IsAny<DeleteVehicleCommand>(), It.IsAny<CancellationToken>()))
@@ -77,6 +81,7 @@ public class DeleteVehicleHandlerTests
             _userManagerMock.Object,
             _tenantProviderMock.Object,
             _vehicleRepositoryMock.Object,
+            _rentalRepositoryMock.Object,
             _validatorMock.Object,
             _unitOfWorkMock.Object,
             _loggerMock.Object
@@ -101,7 +106,6 @@ public class DeleteVehicleHandlerTests
             CompanyId = companyId ?? id
         };
     }
-
     private static Vehicle CreateVehicle(Guid companyId)
     {
         Guid vehicleGroupId = Guid.NewGuid();

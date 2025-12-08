@@ -8,6 +8,7 @@ using Moq;
 using OblivionDrive.Application.ServicesModule.Commands;
 using OblivionDrive.Application.ServicesModule.Handlers;
 using OblivionDrive.Domain.AuthenticationModule;
+using OblivionDrive.Domain.RentalModule;
 using OblivionDrive.Domain.ServicesModule;
 using OblivionDrive.Domain.Shared;
 
@@ -24,6 +25,7 @@ public class DeleteServiceHandlerTests
     private Mock<IUnitOfWork> _unitOfWorkMock = default!;
     private Mock<ILogger<DeleteServiceHandler>> _loggerMock = default!;
     private DeleteServiceHandler _handler = default!;
+    private Mock<IRepositoryRental> _rentalRepositoryMock = default!;
 
     [TestInitialize]
     public void Setup()
@@ -60,6 +62,8 @@ public class DeleteServiceHandlerTests
             .Setup(r => r.DeleteAsync(It.IsAny<Service>()))
             .ReturnsAsync(true);
 
+        _rentalRepositoryMock = new Mock<IRepositoryRental>();
+
         _unitOfWorkMock = new Mock<IUnitOfWork>();
         _unitOfWorkMock
             .Setup(u => u.CommitAsync())
@@ -79,6 +83,7 @@ public class DeleteServiceHandlerTests
             _userManagerMock.Object,
             _tenantProviderMock.Object,
             _serviceRepositoryMock.Object,
+            _rentalRepositoryMock.Object,
             _validatorMock.Object,
             _unitOfWorkMock.Object,
             _loggerMock.Object

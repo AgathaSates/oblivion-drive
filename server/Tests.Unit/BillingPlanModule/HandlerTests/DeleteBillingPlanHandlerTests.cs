@@ -14,6 +14,7 @@ using OblivionDrive.Application.BillingPlanModule.Commands;
 using OblivionDrive.Application.BillingPlanModule.Handlers;
 using OblivionDrive.Domain.AuthenticationModule;
 using OblivionDrive.Domain.BillingPlanModule;
+using OblivionDrive.Domain.RentalModule;
 using OblivionDrive.Domain.Shared;
 
 namespace OblivionDrive.Tests.Unit.BillingPlanModule.HandlerTests;
@@ -29,6 +30,7 @@ public class DeleteBillingPlanHandlerTests
     private Mock<IUnitOfWork> _unitOfWorkMock = default!;
     private Mock<ILogger<DeleteBillingPlanHandler>> _loggerMock = default!;
     private DeleteBillingPlanHandler _handler = default!;
+    private Mock<IRepositoryRental> _rentalRepositoryMock = default!;
 
     [TestInitialize]
     public void Setup()
@@ -80,10 +82,13 @@ public class DeleteBillingPlanHandlerTests
 
         _loggerMock = new Mock<ILogger<DeleteBillingPlanHandler>>();
 
+        _rentalRepositoryMock = new Mock<IRepositoryRental>();
+
         _handler = new DeleteBillingPlanHandler(
             _userManagerMock.Object,
             _tenantProviderMock.Object,
             _billingPlanRepositoryMock.Object,
+            _rentalRepositoryMock.Object,
             _validatorMock.Object,
             _unitOfWorkMock.Object,
             _loggerMock.Object

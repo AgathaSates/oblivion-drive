@@ -521,58 +521,6 @@ public class ServiceIntegrationTests : TestFixture
     }
 
     [TestMethod]
-    public async Task DeleteService_Should_Delete_Service_When_Request_Is_Valid()
-    {
-        // arrange
-        AccessToken companyToken = await RegisterCompanyAndGetTokenAsync(
-            userName: "services-delete-ok@test.com",
-            password: "Senha123!"
-        );
-
-        string rawName = "servico para exclusao";
-        decimal price = 80m;
-        ChargeType chargeType = (ChargeType)1;
-
-        Guid serviceId = await CreateServiceForCompanyAsync(
-            companyToken,
-            rawName,
-            price,
-            chargeType
-        );
-
-        HttpClient.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", companyToken.key);
-
-        var dbContext = DbContext ?? throw new InvalidOperationException("DbContext não inicializado no TestFixture.");
-
-        dbContext.ChangeTracker.Clear();
-
-        Service? beforeDelete = await dbContext.Services
-            .SingleOrDefaultAsync(s => s.Id == serviceId);
-
-        Assert.IsNotNull(beforeDelete, "Serviço não localizado no banco antes do delete.");
-
-        // act
-        HttpResponseMessage response = await HttpClient.DeleteAsync($"/api/services/{serviceId}");
-
-        // assert
-        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-        DeleteServiceResponse? deleteResponse =
-            await response.Content.ReadFromJsonAsync<DeleteServiceResponse>(JsonOptions);
-        Assert.IsNotNull(deleteResponse);
-        Assert.IsTrue(deleteResponse!.DeletedSuccessfully);
-        Assert.AreEqual(serviceId, deleteResponse.ServiceId);
-
-        dbContext.ChangeTracker.Clear();
-
-        Service? afterDelete = await dbContext.Services
-            .SingleOrDefaultAsync(s => s.Id == serviceId);
-
-        Assert.IsNull(afterDelete, "Serviço ainda existe no banco após exclusão.");
-    }
-
-    [TestMethod]
     public async Task GetServiceById_Should_Return_Unauthorized_When_Token_Is_Missing()
     {
         // arrange

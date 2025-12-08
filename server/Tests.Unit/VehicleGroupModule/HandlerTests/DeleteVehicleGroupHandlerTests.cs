@@ -11,6 +11,7 @@ using OblivionDrive.Domain.AuthenticationModule;
 using OblivionDrive.Domain.BillingPlanModule;
 using OblivionDrive.Domain.Shared;
 using OblivionDrive.Domain.VehicleGroupModule;
+using OblivionDrive.Domain.VehicleModule;
 
 namespace OblivionDrive.Tests.Unit.VehicleGroupModule.HandlerTests;
 
@@ -26,6 +27,7 @@ public class DeleteVehicleGroupHandlerTests
     private Mock<IUnitOfWork> _unitOfWorkMock = default!;
     private Mock<ILogger<DeleteVehicleGroupHandler>> _loggerMock = default!;
     private DeleteVehicleGroupHandler _handler = default!;
+    private Mock<IRepositoryVehicle> _vehicleRepositoryMock = default!;
 
     [TestInitialize]
     public void Setup()
@@ -64,6 +66,8 @@ public class DeleteVehicleGroupHandlerTests
             .Setup(r => r.ExistsForVehicleGroupAsync(It.IsAny<Guid>()))
             .ReturnsAsync(false);
 
+        _vehicleRepositoryMock = new Mock<IRepositoryVehicle>();
+
         _validatorMock = new Mock<IValidator<DeleteVehicleGroupCommand>>();
         _validatorMock
             .Setup(v => v.ValidateAsync(It.IsAny<DeleteVehicleGroupCommand>(), It.IsAny<CancellationToken>()))
@@ -84,6 +88,7 @@ public class DeleteVehicleGroupHandlerTests
             _tenantProviderMock.Object,
             _vehicleGroupRepositoryMock.Object,
             _billingPlanRepositoryMock.Object,
+            _vehicleRepositoryMock.Object,
             _validatorMock.Object,
             _unitOfWorkMock.Object,
             _loggerMock.Object
