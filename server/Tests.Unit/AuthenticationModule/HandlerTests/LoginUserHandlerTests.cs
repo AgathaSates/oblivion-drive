@@ -253,7 +253,7 @@ public class LoginUserHandlerTests
             expiration: DateTime.UtcNow.AddMinutes(15),
             authenticatedUser: new AuthenticatedUser(
                 Id: existingUser.Id,
-                Name: existingUser.UserName!,
+                UserName: existingUser.UserName!,
                 Email: existingUser.Email ?? string.Empty,
                 UserType: existingUser.UserType)
         );

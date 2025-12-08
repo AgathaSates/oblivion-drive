@@ -3,7 +3,7 @@
 namespace OblivionDrive.Application.AuthenticationModule.DTOs;
 public record AuthenticatedUser(
     Guid Id,
-    string Name,
+    string UserName,
     string Email,
     UserType UserType
 );

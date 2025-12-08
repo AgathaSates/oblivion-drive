@@ -84,7 +84,7 @@ public class RegisterUserHandlerTests
             expiration: DateTime.UtcNow.AddMinutes(15),
             authenticatedUser: new AuthenticatedUser(
                 Id: Guid.NewGuid(),
-                Name: "validUser",
+                UserName: "validUser",
                 Email: "user@example.com",
                 UserType: UserType.Company)
         );
