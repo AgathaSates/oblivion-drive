@@ -84,6 +84,12 @@ export const routes: Routes = [
       ),
     canActivate: [AuthenticatedUserGuard],
   },
+  {
+    path: 'parceiros',
+    loadChildren: () =>
+      import('./components/modules/partners/partner.routes').then((m) => m.partnerRoutes),
+    canActivate: [AuthenticatedUserGuard],
+  },
 ];
 
 export const appConfig: ApplicationConfig = {
