@@ -1,0 +1,93 @@
+<section class="row justify-content-center app-form-container">
+  <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+    <header class="app-form-header">
+      <h2 class="app-form-title">
+        Cadastro de Serviço
+        <mat-icon class="app-form-title__icon">cleaning_services</mat-icon>
+      </h2>
+      <hr class="app-form-divider" />
+    </header>
+
+    <mat-card class="app-form-card">
+      <form [formGroup]="registerServiceForm" (ngSubmit)="registerService()">
+        <mat-card-header>
+          <mat-card-title>Preencha o formulário de cadastro</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="app-form-fields">
+            <mat-form-field appearance="outline">
+              <mat-label>Nome do serviço</mat-label>
+              <input matInput formControlName="name" type="text" />
+
+              @if (nameControl?.touched && nameControl?.errors?.['required']) {
+                <mat-error>O nome do serviço é obrigatório.</mat-error>
+              } @else if (nameControl?.touched && nameControl?.errors?.['minlength']) {
+                <mat-error>O nome do serviço deve ter pelo menos 2 caracteres.</mat-error>
+              } @else if (nameControl?.touched && nameControl?.errors?.['maxlength']) {
+                <mat-error>O nome do serviço deve ter no máximo 200 caracteres.</mat-error>
+              }
+            </mat-form-field>
+
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Preço</mat-label>
+                  <input matInput type="number" formControlName="price" min="0.01" step="0.01" />
+
+                  @if (priceControl?.touched && priceControl?.errors?.['required']) {
+                    <mat-error>O preço é obrigatório.</mat-error>
+                  } @else if (priceControl?.touched && priceControl?.errors?.['min']) {
+                    <mat-error>O preço deve ser maior que zero.</mat-error>
+                  } @else if (priceControl?.touched && priceControl?.errors?.['max']) {
+                    <mat-error>O preço não pode ser maior que R$ 1.000.000,00.</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <div class="col-12 col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Tipo de cobrança</mat-label>
+                  <mat-select formControlName="chargeType">
+                    @for (option of chargeTypeOptions; track option.value) {
+                      <mat-option [value]="option.value">
+                        {{ option.label }}
+                      </mat-option>
+                    }
+                  </mat-select>
+
+                  @if (chargeTypeControl?.touched && chargeTypeControl?.errors?.['required']) {
+                    <mat-error>O tipo de cobrança é obrigatório.</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <div class="app-form-actions">
+            <button
+              type="button"
+              mat-stroked-button
+              class="app-secondary-button"
+              (click)="goBack()"
+            >
+              Voltar
+            </button>
+
+            <button
+              type="submit"
+              mat-flat-button
+              class="app-primary-button"
+              [disabled]="registerServiceForm.invalid"
+            >
+              <mat-icon>check</mat-icon>
+              Cadastrar
+            </button>
+          </div>
+        </mat-card-actions>
+      </form>
+    </mat-card>
+  </div>
+</section>
