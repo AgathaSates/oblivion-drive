@@ -68,6 +68,22 @@ export const routes: Routes = [
       import('./components/modules/services/services.routes').then((m) => m.servicesRoutes),
     canActivate: [AuthenticatedUserGuard],
   },
+  {
+    path: 'categorias',
+    loadChildren: () =>
+      import('./components/modules/vehicle-groups/vehicle-group.routes').then(
+        (m) => m.vehicleGroupRoutes,
+      ),
+    canActivate: [AuthenticatedUserGuard],
+  },
+  {
+    path: 'combustiveis',
+    loadChildren: () =>
+      import('./components/modules/fuel-price-configuration/fuel-price-configuration.routes').then(
+        (m) => m.fuelPriceConfigurationRoutes,
+      ),
+    canActivate: [AuthenticatedUserGuard],
+  },
 ];
 
 export const appConfig: ApplicationConfig = {
