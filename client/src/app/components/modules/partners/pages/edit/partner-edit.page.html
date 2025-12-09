@@ -1,0 +1,52 @@
+<section class="row justify-content-center app-form-container">
+  <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+    <div class="app-form-header">
+      <h2 class="app-form-title">
+        Edição de Parceiro
+        <mat-icon class="app-form-title__icon">groups</mat-icon>
+      </h2>
+      <hr class="app-form-divider" />
+    </div>
+
+    <mat-card class="app-form-card" *ngIf="partner$ | async">
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <mat-card-header>
+          <mat-card-title>Atualize os dados do parceiro</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="app-form-fields">
+            <mat-form-field appearance="outline">
+              <mat-label>Nome do parceiro*</mat-label>
+              <input matInput formControlName="name" />
+
+              @if (nameControl?.touched && nameControl?.errors?.['required']) {
+                <mat-error>O nome é obrigatório.</mat-error>
+              } @else if (nameControl?.touched && nameControl?.errors?.['minlength']) {
+                <mat-error>O nome deve ter pelo menos 2 caracteres.</mat-error>
+              } @else if (nameControl?.touched && nameControl?.errors?.['maxlength']) {
+                <mat-error>O nome deve ter no máximo 200 caracteres.</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button type="button" mat-stroked-button class="app-secondary-button" (click)="goBack()">
+            Voltar
+          </button>
+
+          <button
+            type="submit"
+            mat-flat-button
+            class="app-primary-button"
+            [disabled]="form.invalid"
+          >
+            <mat-icon>check</mat-icon>
+            Salvar
+          </button>
+        </mat-card-actions>
+      </form>
+    </mat-card>
+  </div>
+</section>
