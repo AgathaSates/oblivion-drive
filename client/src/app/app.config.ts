@@ -9,6 +9,7 @@ import { provideAuth } from './components/modules/auth/models/auth.provider';
 import { provideNotifications } from './components/shared/notification/notification.provider';
 import { take, map } from 'rxjs';
 import { AuthService } from './components/modules/auth/services/auth.service';
+import { EmployeeService } from './components/modules/employee/services/employee.service';
 
 const UnknownUserGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
@@ -45,6 +46,21 @@ export const routes: Routes = [
     path: 'auth',
     loadChildren: () => import('./components/modules/auth/auth.routes').then((m) => m.authRoutes),
     canActivate: [UnknownUserGuard],
+  },
+  {
+    path: 'funcionarios',
+    loadChildren: () =>
+      import('./components/modules/employee/employee.routes').then((m) => m.employeeRoutes),
+    canActivate: [AuthenticatedUserGuard],
+  },
+  {
+    path: 'meu-perfil',
+    loadComponent: () =>
+      import('./components/modules/employee/pages/profile/employee-profile.page').then(
+        (m) => m.EmployeeProfilePage,
+      ),
+    canActivate: [AuthenticatedUserGuard],
+    providers: [EmployeeService],
   },
 ];
 
