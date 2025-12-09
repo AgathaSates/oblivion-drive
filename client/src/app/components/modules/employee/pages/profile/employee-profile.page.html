@@ -1,0 +1,58 @@
+<section class="app-form-container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+      <div class="app-form-header">
+        <h2 class="app-form-title">
+          Meu perfil
+          <mat-icon class="app-form-title__icon">person</mat-icon>
+        </h2>
+      </div>
+
+      <hr class="app-form-divider" />
+
+      <mat-card class="app-form-card">
+        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+          <mat-card-header>
+            <mat-card-title>Atualize seus dados de perfil</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content class="app-form-fields">
+            <mat-form-field appearance="outline">
+              <mat-label>Nome do funcionário</mat-label>
+              <input matInput type="text" formControlName="name" />
+
+              @if (nameControl?.errors?.['required'] && nameControl?.touched) {
+                <mat-error>O nome do funcionário é obrigatório.</mat-error>
+              }
+
+              @if (nameControl?.errors?.['minlength'] && nameControl?.touched) {
+                <mat-error>O nome do funcionário deve conter no mínimo 3 caracteres.</mat-error>
+              }
+            </mat-form-field>
+          </mat-card-content>
+
+          <mat-card-actions class="app-form-actions">
+            <button
+              type="button"
+              mat-stroked-button
+              class="app-secondary-button"
+              (click)="goBack()"
+            >
+              Voltar
+            </button>
+
+            <button
+              type="submit"
+              mat-flat-button
+              class="app-primary-button"
+              [disabled]="profileForm.invalid"
+            >
+              <mat-icon>check</mat-icon>
+              Salvar
+            </button>
+          </mat-card-actions>
+        </form>
+      </mat-card>
+    </div>
+  </div>
+</section>
