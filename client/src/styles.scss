@@ -446,6 +446,26 @@ button[mat-mini-fab].mat-primary {
   }
 }
 
+.mat-mdc-select-panel {
+  background-color: $color-background-2 !important;
+  color: $color-text !important;
+}
+
+.mat-mdc-option {
+  background-color: $color-background-2 !important;
+  color: $color-text !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected {
+  background-color: rgba($color-primary, 0.2) !important;
+  color: $color-primary !important;
+}
+
+.mat-mdc-option:hover {
+  background-color: rgba($color-primary, 0.12) !important;
+  color: $color-text !important;
+}
+
 @media (min-width: 960px) {
   .app-footer.app-footer--with-shell {
     justify-content: center;

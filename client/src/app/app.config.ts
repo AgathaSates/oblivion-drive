@@ -62,6 +62,12 @@ export const routes: Routes = [
     canActivate: [AuthenticatedUserGuard],
     providers: [EmployeeService],
   },
+  {
+    path: 'servicos',
+    loadChildren: () =>
+      import('./components/modules/services/services.routes').then((m) => m.servicesRoutes),
+    canActivate: [AuthenticatedUserGuard],
+  },
 ];
 
 export const appConfig: ApplicationConfig = {

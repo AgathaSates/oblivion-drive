@@ -41,10 +41,13 @@ public class RentalOrmRepository(OblivionDriveDbContext context) : BaseRepositor
         return await context.Rentals
             .AnyAsync(rental => rental.DriverId == driverId && !rental.IsCompleted);
     }
+
     public async Task<bool> ExistsOpenRentalUsingServiceAsync(Guid serviceId)
     {
-        return await context.Rentals
-            .Where(rental => !rental.IsCompleted)
-            .AnyAsync(rental => rental.ServiceIds.Contains(serviceId));
+        return context.Rentals
+            .Where(r => !r.IsCompleted)
+            .AsEnumerable()
+            .Any(r => r.ServiceIds.Contains(serviceId));
+
     }
 }
