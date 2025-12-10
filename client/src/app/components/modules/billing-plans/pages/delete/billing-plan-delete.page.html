@@ -1,0 +1,46 @@
+<section class="row justify-content-center app-form-container">
+  <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+    <div class="app-form-header">
+      <h2 class="app-form-title">
+        Exclusão de Plano de Cobrança
+        <mat-icon class="app-form-title__icon">request_quote</mat-icon>
+      </h2>
+      <hr class="app-form-divider" />
+    </div>
+
+    <mat-card class="mb-2 app-form-card">
+      @if (billingPlan$ | async; as billingPlan) {
+        <form (ngSubmit)="confirmDelete()">
+          <mat-card-header>
+            <mat-card-title class="mb-3"> Confirme a exclusão do registro </mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p class="fs-6">
+              Você deseja realmente excluir o plano de cobrança "<strong>{{
+                billingPlan.name
+              }}</strong
+              >"? Esta ação é irreversível.
+            </p>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button
+              type="button"
+              mat-stroked-button
+              class="app-secondary-button"
+              (click)="goBack()"
+            >
+              Voltar
+            </button>
+
+            <button type="submit" mat-flat-button class="app-primary-button">
+              <mat-icon>check</mat-icon>
+              Confirmar
+            </button>
+          </mat-card-actions>
+        </form>
+      }
+    </mat-card>
+  </div>
+</section>
