@@ -1,0 +1,171 @@
+<section class="row justify-content-center app-form-container">
+  <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+    <div class="app-form-header">
+      <h2 class="app-form-title">
+        Edição de Condutor
+        <mat-icon class="app-form-title__icon">directions_car</mat-icon>
+      </h2>
+      <hr class="app-form-divider" />
+    </div>
+
+    <mat-card class="mb-2 app-form-card">
+      @if (driver$ | async) {
+        <form [formGroup]="driverForm" (ngSubmit)="save()">
+          <mat-card-header>
+            <mat-card-title>Preencha o formulário de edição</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="app-form-fields">
+              <div class="row g-3 align-items-center">
+                <div class="col-12 col-md-7">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Cliente*</mat-label>
+                    <mat-select formControlName="clientId">
+                      @for (client of clients; track client.id) {
+                        <mat-option [value]="client.id">
+                          {{ client.name }}
+                        </mat-option>
+                      }
+                    </mat-select>
+
+                    @if (clientIdControl?.touched && clientIdControl?.errors?.['required']) {
+                      <mat-error>O cliente é obrigatório.</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                @if (isIndividualClientSelected) {
+                  <div class="col-12 col-md-5">
+                    <mat-checkbox formControlName="isClientAlsoDriver">
+                      Este cliente é o condutor
+                    </mat-checkbox>
+                  </div>
+                }
+              </div>
+
+              <div class="row g-3">
+                <div class="col-12 col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Nome do condutor*</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      formControlName="name"
+                      [readonly]="isClientAlsoDriverControl?.value"
+                    />
+
+                    @if (nameControl?.touched && nameControl?.errors?.['required']) {
+                      <mat-error>O nome é obrigatório.</mat-error>
+                    } @else if (nameControl?.touched && nameControl?.errors?.['minlength']) {
+                      <mat-error>O nome deve ter ao menos 2 caracteres.</mat-error>
+                    } @else if (nameControl?.touched && nameControl?.errors?.['maxlength']) {
+                      <mat-error>O nome deve ter no máximo 200 caracteres.</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Email*</mat-label>
+                    <input
+                      matInput
+                      type="email"
+                      formControlName="email"
+                      [readonly]="isClientAlsoDriverControl?.value"
+                    />
+
+                    @if (emailControl?.touched && emailControl?.errors?.['required']) {
+                      <mat-error>O email é obrigatório.</mat-error>
+                    } @else if (emailControl?.touched && emailControl?.errors?.['email']) {
+                      <mat-error>Informe um email válido.</mat-error>
+                    } @else if (emailControl?.touched && emailControl?.errors?.['maxlength']) {
+                      <mat-error>O email deve ter no máximo 254 caracteres.</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row g-3">
+                <div class="col-12 col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>CPF*</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      formControlName="cpf"
+                      [readonly]="isClientAlsoDriverControl?.value"
+                    />
+
+                    @if (cpfControl?.touched && cpfControl?.errors?.['required']) {
+                      <mat-error>O CPF é obrigatório.</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Telefone*</mat-label>
+                    <input matInput type="tel" formControlName="phoneNumber" />
+
+                    @if (phoneNumberControl?.touched && phoneNumberControl?.errors?.['required']) {
+                      <mat-error>O telefone é obrigatório.</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row g-3">
+                <div class="col-12 col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>CNH*</mat-label>
+                    <input matInput type="text" formControlName="cnh" />
+
+                    @if (cnhControl?.touched && cnhControl?.errors?.['required']) {
+                      <mat-error>A CNH é obrigatória.</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Validade da CNH*</mat-label>
+                    <input matInput type="date" formControlName="cnhExpirationDate" />
+
+                    @if (
+                      cnhExpirationDateControl?.touched &&
+                      cnhExpirationDateControl?.errors?.['required']
+                    ) {
+                      <mat-error>A validade da CNH é obrigatória.</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button
+              type="button"
+              mat-stroked-button
+              class="app-secondary-button"
+              (click)="goBack()"
+            >
+              Voltar
+            </button>
+
+            <button
+              type="submit"
+              mat-flat-button
+              class="app-primary-button"
+              [disabled]="driverForm.invalid"
+            >
+              <mat-icon>check</mat-icon>
+              Salvar
+            </button>
+          </mat-card-actions>
+        </form>
+      }
+    </mat-card>
+  </div>
+</section>
