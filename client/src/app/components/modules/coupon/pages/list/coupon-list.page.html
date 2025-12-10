@@ -1,0 +1,70 @@
+<section class="row justify-content-center app-list-page">
+  <div class="col-md-11 col-xl-8">
+    <h2>
+      Listagem de Cupons
+      <mat-icon>local_activity</mat-icon>
+    </h2>
+
+    <div class="row g-1 mt-3">
+      <a mat-flat-button class="col-md-6 col-xl-2 app-accent-button" routerLink="cadastrar">
+        <mat-icon>add</mat-icon>
+        Cadastrar
+      </a>
+    </div>
+
+    <hr />
+
+    <div class="row g-3">
+      @for (coupon of coupons$ | async; track $index) {
+        <div class="col-md-6 col-xl-4">
+          <mat-card class="mb-2 app-list-card">
+            <mat-card-header>
+              <mat-card-title [matTooltip]="coupon.name">
+                <strong>Nome:</strong>
+                {{ coupon.name.length > 18 ? (coupon.name | slice: 0 : 18) + '…' : coupon.name }}
+              </mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content class="mt-2">
+              <div class="d-flex align-items-center mb-1">
+                <mat-icon class="me-2" aria-hidden="true">attach_money</mat-icon>
+                <span class="text-monospace">
+                  <strong>Valor:</strong>
+                  {{ coupon.value | currency: 'BRL' : 'symbol' : '1.2-2' }}
+                </span>
+              </div>
+
+              <div class="d-flex align-items-center mb-1">
+                <mat-icon class="me-2" aria-hidden="true">event</mat-icon>
+                <span class="text-monospace">
+                  <strong>Validade:</strong>
+                  {{ coupon.expirationDate ? (coupon.expirationDate | date: 'dd/MM/yyyy') : '' }}
+                </span>
+              </div>
+
+              <div class="d-flex align-items-center mb-1">
+                <mat-icon class="me-2" aria-hidden="true">groups</mat-icon>
+                <span class="text-monospace">
+                  <strong>Parceiro:</strong>
+                  {{ coupon.partnerName }}
+                </span>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions align="end">
+              <a [routerLink]="['editar', coupon.id]" mat-icon-button class="app-accent-button">
+                <mat-icon>edit</mat-icon>
+              </a>
+
+              <a [routerLink]="['excluir', coupon.id]" mat-icon-button class="app-accent-button">
+                <mat-icon>delete</mat-icon>
+              </a>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      } @empty {
+        <div class="col-12 text-center text-muted py-5">Nenhum cupom cadastrado ainda.</div>
+      }
+    </div>
+  </div>
+</section>
