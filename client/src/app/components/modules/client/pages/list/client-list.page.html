@@ -41,24 +41,17 @@
               <div class="mb-0">
                 <strong>Documentos:</strong>
 
-                @if (client.cpf) {
-                  <div class="ms-2">CPF: {{ client.cpf }}</div>
-                }
-
-                @if (client.rg) {
-                  <div class="ms-2">RG: {{ client.rg }}</div>
-                }
-
-                @if (client.cnh) {
-                  <div class="ms-2">CNH: {{ client.cnh }}</div>
-                }
-
-                @if (client.cnpj) {
-                  <div class="ms-2">CNPJ: {{ client.cnpj }}</div>
-                }
-
-                @if (!client.cpf && !client.rg && !client.cnh && !client.cnpj) {
-                  <div class="ms-2 text-muted">Nenhum documento informado</div>
+                @if (client.clientType === ClientType.Individual) {
+                  <span class="ms-1">CPF: {{ client.cpf }}</span
+                  ><br />
+                  <span class="ms-2">RG: {{ client.rg }}</span
+                  ><br />
+                  <span class="ms-2">CNH: {{ client.cnh }}</span>
+                } @else {
+                  <span class="ms-1">CNPJ: {{ client.cnpj }}</span
+                  ><br />
+                  <span class="ms-2">&nbsp;</span><br />
+                  <span class="ms-2">&nbsp;</span>
                 }
               </div>
             </mat-card-content>

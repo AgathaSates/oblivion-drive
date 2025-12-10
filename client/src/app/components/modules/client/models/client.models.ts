@@ -1,6 +1,6 @@
 export enum ClientType {
-  Individual = 1,
-  LegalEntity = 2,
+  Individual = 'Individual',
+  LegalEntity = 'LegalEntity',
 }
 
 export interface ClientDetailModel {
