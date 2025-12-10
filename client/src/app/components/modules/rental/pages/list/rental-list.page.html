@@ -1,0 +1,98 @@
+<section class="row justify-content-center app-list-page">
+  <div class="col-md-11 col-xl-8">
+    <h2>
+      Listagem de Aluguéis
+      <mat-icon>receipt_long</mat-icon>
+    </h2>
+
+    <div class="row mt-3 align-items-end">
+      <div class="col-auto">
+        <a mat-flat-button class="app-accent-button" routerLink="cadastrar">
+          <mat-icon>add</mat-icon>
+          Cadastrar
+        </a>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="row g-3">
+      @for (rental of rentals$ | async; track rental.id) {
+        <div class="col-md-6 col-xl-4">
+          <mat-card class="mb-2 app-list-card">
+            <mat-card-header>
+              <mat-card-title [matTooltip]="rental.driverName">
+                <strong>Condutor:</strong>
+                {{
+                  rental.driverName.length > 22
+                    ? (rental.driverName | slice: 0 : 22) + '…'
+                    : rental.driverName
+                }}
+              </mat-card-title>
+
+              <mat-card-subtitle>
+                <strong>Plano:</strong> {{ rental.planTypeLabel }}
+              </mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content class="mt-2">
+              <div class="d-flex align-items-center mb-1">
+                <mat-icon class="me-2" aria-hidden="true">directions_car</mat-icon>
+                <span class="text-monospace">
+                  <strong>Veículo:</strong> {{ rental.vehicleLabel }}
+                </span>
+              </div>
+
+              <div class="d-flex align-items-center mb-1">
+                <mat-icon class="me-2" aria-hidden="true">calendar_today</mat-icon>
+                <span class="text-monospace">
+                  <strong>Saída:</strong>
+                  {{ rental.startDateFormatted | date: 'dd/MM/yyyy' }}
+                </span>
+              </div>
+
+              <div class="d-flex align-items-center mb-1">
+                <mat-icon class="me-2" aria-hidden="true">calendar_month</mat-icon>
+                <span class="text-monospace">
+                  <strong>Retorno previsto:</strong>
+                  {{ rental.expectedReturnDateFormatted | date: 'dd/MM/yyyy' }}
+                </span>
+              </div>
+
+              <div class="d-flex align-items-center mb-1">
+                <mat-icon class="me-2" aria-hidden="true">attach_money</mat-icon>
+                <span class="text-monospace">
+                  <strong>Valor total:</strong>
+                  {{ rental.estimatedRentalAmount | currency: 'BRL' : 'symbol-narrow' }}
+                </span>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions align="end">
+              @if (!rental.isCompleted) {
+                <a [routerLink]="['editar', rental.id]" mat-icon-button class="app-accent-button">
+                  <mat-icon>edit</mat-icon>
+                </a>
+
+                <a
+                  [routerLink]="['devolver', rental.id]"
+                  mat-icon-button
+                  class="app-accent-button"
+                  matTooltip="Registrar devolução"
+                >
+                  <mat-icon>assignment_turned_in</mat-icon>
+                </a>
+              }
+
+              <a [routerLink]="['excluir', rental.id]" mat-icon-button class="app-accent-button">
+                <mat-icon>delete</mat-icon>
+              </a>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      } @empty {
+        <div class="col-12 text-center text-muted py-5">Nenhum aluguel cadastrado ainda.</div>
+      }
+    </div>
+  </div>
+</section>
