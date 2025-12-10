@@ -53,12 +53,14 @@ public class DeleteDriverHandler(
             if (driver.CompanyId != currentCompanyId)
                 return Result.Fail(ErrorResults.UnauthorizedError("Não é permitido excluir condutores de outra empresa."));
 
-            bool driverHasOpenRental = await rentalRepository.ExistsOpenRentalForDriverAsync(driver.Id);
+            bool driverHasAnyRental = await rentalRepository.ExistsAnyRentalForDriverAsync(driver.Id);
 
-            if (driverHasOpenRental)
+            if (driverHasAnyRental)
+            {
                 return Result.Fail(
                     ErrorResults.InvalidRequestError(
-                        "Não é permitido excluir condutores que possuam aluguéis em andamento."));
+                        "Não é permitido excluir condutores que possuam aluguéis, mesmo finalizados."));
+            }
 
             await driverRepository.DeleteAsync(driver);
             await unitOfWork.CommitAsync();
