@@ -90,6 +90,26 @@ export const routes: Routes = [
       import('./components/modules/partners/partner.routes').then((m) => m.partnerRoutes),
     canActivate: [AuthenticatedUserGuard],
   },
+  {
+    path: 'cupons',
+    loadChildren: () =>
+      import('./components/modules/coupon/coupon.routes').then((m) => m.couponRoutes),
+    canActivate: [AuthenticatedUserGuard],
+  },
+  {
+    path: 'planos-de-cobranca',
+    loadChildren: () =>
+      import('./components/modules/billing-plans/billing-plan.routes').then(
+        (m) => m.billingPlanRoutes,
+      ),
+    canActivate: [AuthenticatedUserGuard],
+  },
+  {
+    path: 'veiculos',
+    loadChildren: () =>
+      import('./components/modules/vehicle/vehicle.routes').then((m) => m.vehicleRoutes),
+    canActivate: [AuthenticatedUserGuard],
+  },
 ];
 
 export const appConfig: ApplicationConfig = {
