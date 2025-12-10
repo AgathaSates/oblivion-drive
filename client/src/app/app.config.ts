@@ -116,6 +116,18 @@ export const routes: Routes = [
       import('./components/modules/client/client.routes').then((m) => m.clientRoutes),
     canActivate: [AuthenticatedUserGuard],
   },
+  {
+    path: 'condutores',
+    loadChildren: () =>
+      import('./components/modules/driver/driver.routes').then((m) => m.driverRoutes),
+    canActivate: [AuthenticatedUserGuard],
+  },
+  {
+    path: 'alugueis',
+    loadChildren: () =>
+      import('./components/modules/rental/rental.routes').then((m) => m.rentalRoutes),
+    canActivate: [AuthenticatedUserGuard],
+  },
 ];
 
 export const appConfig: ApplicationConfig = {
