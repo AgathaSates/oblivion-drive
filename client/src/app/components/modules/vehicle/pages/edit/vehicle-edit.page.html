@@ -1,0 +1,192 @@
+<section class="row justify-content-center app-form-container">
+  <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+    <div class="app-form-header">
+      <h2 class="app-form-title">
+        Edição de Veículo
+        <mat-icon class="app-form-title__icon">garage</mat-icon>
+      </h2>
+      <hr class="app-form-divider" />
+    </div>
+
+    @if (vehicle$ | async; as vehicle) {
+      <mat-card class="app-form-card">
+        <form [formGroup]="form" (ngSubmit)="save()">
+          <mat-card-header>
+            <mat-card-title>Atualize os dados do veículo</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="app-form-fields">
+              <div class="row g-3">
+                <div class="col-12 col-md-6">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Placa</mat-label>
+                    <input matInput [value]="vehicle.licensePlate" disabled />
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Categoria de veículo*</mat-label>
+                    <mat-select formControlName="vehicleGroupId">
+                      @for (group of vehicleGroups$ | async; track group.id) {
+                        <mat-option [value]="group.id">{{ group.name }}</mat-option>
+                      }
+                    </mat-select>
+
+                    @if (
+                      vehicleGroupIdControl?.touched && vehicleGroupIdControl?.errors?.['required']
+                    ) {
+                      <mat-error>A categoria de veículo é obrigatória.</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Marca*</mat-label>
+                    <input matInput formControlName="brand" type="text" />
+
+                    @if (brandControl?.touched && brandControl?.errors?.['required']) {
+                      <mat-error>A marca é obrigatória.</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Modelo*</mat-label>
+                    <input matInput formControlName="model" type="text" />
+
+                    @if (modelControl?.touched && modelControl?.errors?.['required']) {
+                      <mat-error>O modelo é obrigatório.</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Cor*</mat-label>
+                    <input matInput formControlName="color" type="text" />
+
+                    @if (colorControl?.touched && colorControl?.errors?.['required']) {
+                      <mat-error>A cor é obrigatória.</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Tipo de combustível*</mat-label>
+                    <mat-select formControlName="fuelType">
+                      @for (type of fuelTypes; track type) {
+                        <mat-option [value]="type">
+                          {{ fuelTypeLabels[type] }}
+                        </mat-option>
+                      }
+                    </mat-select>
+
+                    @if (fuelTypeControl?.touched && fuelTypeControl?.errors?.['required']) {
+                      <mat-error>O tipo de combustível é obrigatório.</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Capacidade do tanque (L)*</mat-label>
+                    <input
+                      matInput
+                      formControlName="fuelTankCapacityInLiters"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                    />
+
+                    @if (
+                      fuelTankCapacityInLitersControl?.touched &&
+                      fuelTankCapacityInLitersControl?.errors?.['required']
+                    ) {
+                      <mat-error>A capacidade do tanque é obrigatória.</mat-error>
+                    } @else if (
+                      fuelTankCapacityInLitersControl?.touched &&
+                      fuelTankCapacityInLitersControl?.errors?.['min']
+                    ) {
+                      <mat-error>O valor não pode ser negativo.</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Ano*</mat-label>
+                    <input matInput formControlName="year" type="number" min="0" />
+
+                    @if (yearControl?.touched && yearControl?.errors?.['required']) {
+                      <mat-error>O ano é obrigatório.</mat-error>
+                    } @else if (yearControl?.touched && yearControl?.errors?.['min']) {
+                      <mat-error>O valor não pode ser negativo.</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                <div class="app-form-photo-section">
+                  <div class="app-form-photo-section__title mb-3">Foto atual do veículo</div>
+
+                  @if (photoPreviewUrl) {
+                    <div class="app-form-photo-section__preview">
+                      <img
+                        [src]="photoPreviewUrl"
+                        alt="Foto do veículo"
+                        class="app-form-photo-preview__image"
+                      />
+                    </div>
+                  }
+
+                  <button
+                    type="button"
+                    mat-stroked-button
+                    class="app-secondary-button app-form-photo-section__upload-button mt-3"
+                    (click)="fileInput.click()"
+                  >
+                    <mat-icon>upload</mat-icon>
+                    Alterar foto
+                  </button>
+
+                  <input
+                    #fileInput
+                    type="file"
+                    class="app-form-photo-section__file-input"
+                    accept="image/*"
+                    (change)="onPhotoSelected($event)"
+                  />
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button
+              type="button"
+              mat-stroked-button
+              class="app-secondary-button"
+              (click)="goBack()"
+            >
+              Voltar
+            </button>
+
+            <button
+              type="submit"
+              mat-flat-button
+              class="app-primary-button"
+              [disabled]="form.invalid"
+            >
+              <mat-icon>check</mat-icon>
+              Salvar
+            </button>
+          </mat-card-actions>
+        </form>
+      </mat-card>
+    }
+  </div>
+</section>
