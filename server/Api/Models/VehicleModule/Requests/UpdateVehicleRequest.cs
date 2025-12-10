@@ -3,7 +3,6 @@
 namespace OblivionDrive.Api.Models.VehicleModule.Requests;
 
 public record UpdateVehicleRequest(
-    Guid VehicleId,
     string Brand,
     string Model,
     string Color,

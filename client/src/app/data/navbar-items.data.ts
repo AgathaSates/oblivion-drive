@@ -13,13 +13,13 @@ export const NAVBAR_ITEMS: readonly NavbarItem[] = [
   { name: 'Clientes', route: '/clientes', icon: 'groups' },
   { name: 'Condutores', route: '/condutores', icon: 'sports_motorsports' },
   { name: 'Categorias', route: '/categorias', icon: 'category' },
-  { name: 'Automóveis', route: '/automoveis', icon: 'directions_car' },
+  { name: 'Veículos', route: '/veiculos', icon: 'directions_car' },
   { name: 'Planos', route: '/planos-de-cobranca', icon: 'request_quote' },
   { name: 'Serviços', route: '/servicos', icon: 'cleaning_services' },
   { name: 'Aluguéis', route: '/alugueis', icon: 'assignment' },
   { name: 'Combustível', route: '/combustiveis', icon: 'local_gas_station' },
   { name: 'Parceiros', route: '/parceiros', icon: 'handshake' },
-  { name: 'Cupons', route: '/cupons', icon: 'local_offer' },
+  { name: 'Cupons', route: '/cupons', icon: 'local_activity' },
 
   {
     name: 'Meu perfil',
