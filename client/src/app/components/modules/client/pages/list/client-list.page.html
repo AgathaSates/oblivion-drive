@@ -1,0 +1,82 @@
+<section class="row justify-content-center app-list-page">
+  <div class="col-md-11 col-xl-8">
+    <h2>
+      Listagem de Clientes
+      <mat-icon>groups</mat-icon>
+    </h2>
+
+    <div class="row g-1 mt-3">
+      <a mat-flat-button class="col-md-6 col-xl-2 app-accent-button" routerLink="cadastrar">
+        <mat-icon>add</mat-icon>
+        Cadastrar
+      </a>
+    </div>
+
+    <hr />
+
+    <div class="row g-3">
+      @for (client of clients$ | async; track $index) {
+        <div class="col-md-6 col-xl-4">
+          <mat-card class="mb-2 app-list-card">
+            <mat-card-header>
+              <mat-card-title [matTooltip]="client.name">
+                <strong>Nome:</strong>
+                {{ client.name.length > 18 ? (client.name | slice: 0 : 18) + '…' : client.name }}
+              </mat-card-title>
+
+              <mat-card-subtitle>
+                <strong>Tipo:</strong>
+                {{
+                  client.clientType === ClientType.Individual ? 'Pessoa Física' : 'Pessoa Jurídica'
+                }}
+              </mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+              <p class="mb-1">
+                <strong>Telefone:</strong>
+                {{ client.phoneNumber | phoneNumberFormat }}
+              </p>
+
+              <div class="mb-0">
+                <strong>Documentos:</strong>
+
+                @if (client.cpf) {
+                  <div class="ms-2">CPF: {{ client.cpf }}</div>
+                }
+
+                @if (client.rg) {
+                  <div class="ms-2">RG: {{ client.rg }}</div>
+                }
+
+                @if (client.cnh) {
+                  <div class="ms-2">CNH: {{ client.cnh }}</div>
+                }
+
+                @if (client.cnpj) {
+                  <div class="ms-2">CNPJ: {{ client.cnpj }}</div>
+                }
+
+                @if (!client.cpf && !client.rg && !client.cnh && !client.cnpj) {
+                  <div class="ms-2 text-muted">Nenhum documento informado</div>
+                }
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions align="end">
+              <a [routerLink]="['editar', client.id]" mat-icon-button class="app-accent-button">
+                <mat-icon>edit</mat-icon>
+              </a>
+
+              <a [routerLink]="['excluir', client.id]" mat-icon-button class="app-accent-button">
+                <mat-icon>delete</mat-icon>
+              </a>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      } @empty {
+        <div class="col-12 text-center text-muted py-5">Nenhum cliente cadastrado ainda.</div>
+      }
+    </div>
+  </div>
+</section>
