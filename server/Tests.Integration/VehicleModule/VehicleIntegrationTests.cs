@@ -263,7 +263,6 @@ public class VehicleIntegrationTests : TestFixture
         Guid vehicleId = Guid.NewGuid();
 
         var request = new UpdateVehicleRequest(
-            VehicleId: vehicleId,
             Brand: "Fiat",
             Model: "Uno",
             Color: "Prata",
@@ -294,7 +293,6 @@ public class VehicleIntegrationTests : TestFixture
         Guid emptyId = Guid.Empty;
 
         var request = new UpdateVehicleRequest(
-            VehicleId: emptyId,
             Brand: string.Empty,
             Model: string.Empty,
             Color: string.Empty,
@@ -331,7 +329,6 @@ public class VehicleIntegrationTests : TestFixture
         Guid nonExistingId = Guid.NewGuid();
 
         var request = new UpdateVehicleRequest(
-            VehicleId: nonExistingId,
             Brand: "Fiat",
             Model: "Uno",
             Color: "Prata",
@@ -383,7 +380,6 @@ public class VehicleIntegrationTests : TestFixture
             new AuthenticationHeaderValue("Bearer", companyBToken.key);
 
         var request = new UpdateVehicleRequest(
-            VehicleId: vehicleId,
             Brand: "VW",
             Model: "Gol",
             Color: "Preto",
@@ -431,7 +427,6 @@ public class VehicleIntegrationTests : TestFixture
             new AuthenticationHeaderValue("Bearer", companyToken.key);
 
         var request = new UpdateVehicleRequest(
-            VehicleId: vehicleId,
             Brand: "VW",
             Model: "Gol",
             Color: "Prata",
