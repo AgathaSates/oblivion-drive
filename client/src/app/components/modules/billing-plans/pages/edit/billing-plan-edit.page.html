@@ -1,0 +1,177 @@
+<section class="row justify-content-center app-form-container">
+  <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+    <div class="app-form-header">
+      <h2 class="app-form-title">
+        Edição de Plano de Cobrança
+        <mat-icon class="app-form-title__icon">request_quote</mat-icon>
+      </h2>
+      <hr class="app-form-divider" />
+    </div>
+
+    <mat-card class="app-form-card" *ngIf="billingPlan$ | async">
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <mat-card-header>
+          <mat-card-title>Atualize os dados do plano de cobrança</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="app-form-fields">
+            <mat-form-field appearance="outline">
+              <mat-label>Nome do plano*</mat-label>
+              <input matInput formControlName="name" type="text" />
+
+              @if (nameControl?.touched && nameControl?.errors?.['required']) {
+                <mat-error>O nome é obrigatório.</mat-error>
+              } @else if (nameControl?.touched && nameControl?.errors?.['minlength']) {
+                <mat-error>O nome deve ter pelo menos 2 caracteres.</mat-error>
+              } @else if (nameControl?.touched && nameControl?.errors?.['maxlength']) {
+                <mat-error>O nome deve ter no máximo 200 caracteres.</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Categoria de veículo*</mat-label>
+              <mat-select formControlName="vehicleGroupId">
+                @for (group of vehicleGroups$ | async; track group.id) {
+                  <mat-option [value]="group.id">{{ group.name }}</mat-option>
+                }
+              </mat-select>
+
+              @if (vehicleGroupIdControl?.touched && vehicleGroupIdControl?.errors?.['required']) {
+                <mat-error>A categoria de veículo é obrigatória.</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Diária (Plano Diário)*</mat-label>
+              <input
+                matInput
+                formControlName="dailyPlanDailyRate"
+                type="number"
+                step="0.01"
+                min="0"
+              />
+
+              @if (
+                dailyPlanDailyRateControl?.touched &&
+                dailyPlanDailyRateControl?.errors?.['required']
+              ) {
+                <mat-error>O valor da diária do plano diário é obrigatório.</mat-error>
+              } @else if (
+                dailyPlanDailyRateControl?.touched && dailyPlanDailyRateControl?.errors?.['min']
+              ) {
+                <mat-error>O valor não pode ser negativo.</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Preço por km (Plano Diário)*</mat-label>
+              <input
+                matInput
+                formControlName="dailyPlanPricePerKilometer"
+                type="number"
+                step="0.01"
+                min="0"
+              />
+
+              @if (
+                dailyPlanPricePerKilometerControl?.touched &&
+                dailyPlanPricePerKilometerControl?.errors?.['required']
+              ) {
+                <mat-error>O preço por km do plano diário é obrigatório.</mat-error>
+              } @else if (
+                dailyPlanPricePerKilometerControl?.touched &&
+                dailyPlanPricePerKilometerControl?.errors?.['min']
+              ) {
+                <mat-error>O valor não pode ser negativo.</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Diária (Plano Controlado)*</mat-label>
+              <input
+                matInput
+                formControlName="controlledPlanDailyRate"
+                type="number"
+                step="0.01"
+                min="0"
+              />
+
+              @if (
+                controlledPlanDailyRateControl?.touched &&
+                controlledPlanDailyRateControl?.errors?.['required']
+              ) {
+                <mat-error>O valor da diária do plano controlado é obrigatório.</mat-error>
+              } @else if (
+                controlledPlanDailyRateControl?.touched &&
+                controlledPlanDailyRateControl?.errors?.['min']
+              ) {
+                <mat-error>O valor não pode ser negativo.</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Preço extra por km (Plano Controlado)*</mat-label>
+              <input
+                matInput
+                formControlName="controlledPlanExtraPricePerKilometer"
+                type="number"
+                step="0.01"
+                min="0"
+              />
+
+              @if (
+                controlledPlanExtraPricePerKilometerControl?.touched &&
+                controlledPlanExtraPricePerKilometerControl?.errors?.['required']
+              ) {
+                <mat-error>O preço extra por km do plano controlado é obrigatório.</mat-error>
+              } @else if (
+                controlledPlanExtraPricePerKilometerControl?.touched &&
+                controlledPlanExtraPricePerKilometerControl?.errors?.['min']
+              ) {
+                <mat-error>O valor não pode ser negativo.</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Diária (Plano Livre)*</mat-label>
+              <input
+                matInput
+                formControlName="freePlanDailyRate"
+                type="number"
+                step="0.01"
+                min="0"
+              />
+
+              @if (
+                freePlanDailyRateControl?.touched && freePlanDailyRateControl?.errors?.['required']
+              ) {
+                <mat-error>O valor da diária do plano livre é obrigatório.</mat-error>
+              } @else if (
+                freePlanDailyRateControl?.touched && freePlanDailyRateControl?.errors?.['min']
+              ) {
+                <mat-error>O valor não pode ser negativo.</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button type="button" mat-stroked-button class="app-secondary-button" (click)="goBack()">
+            Voltar
+          </button>
+
+          <button
+            type="submit"
+            mat-flat-button
+            class="app-primary-button"
+            [disabled]="form.invalid"
+          >
+            <mat-icon>check</mat-icon>
+            Salvar
+          </button>
+        </mat-card-actions>
+      </form>
+    </mat-card>
+  </div>
+</section>
