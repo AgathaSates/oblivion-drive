@@ -1,7 +1,6 @@
 ﻿namespace OblivionDrive.Api.Models.DriverModule.Requests;
 
 public record UpdateDriverRequest(
-    Guid DriverId,
     string Name,
     string Email,
     string PhoneNumber,
