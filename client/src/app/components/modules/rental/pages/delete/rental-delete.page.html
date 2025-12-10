@@ -1,0 +1,47 @@
+<section class="row justify-content-center app-form-container">
+  <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+    <div class="app-form-header">
+      <h2 class="app-form-title">
+        Exclusão de Aluguel
+        <mat-icon class="app-form-title__icon">receipt_long</mat-icon>
+      </h2>
+      <hr class="app-form-divider" />
+    </div>
+
+    <mat-card class="mb-2 app-form-card">
+      @if (rental$ | async; as rental) {
+        <form (ngSubmit)="confirmDelete()">
+          <mat-card-header>
+            <mat-card-title class="mb-3"> Confirme a exclusão do registro </mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p class="fs-6">
+              Você deseja realmente excluir o aluguel iniciado em
+              <strong>{{ rental.startDate | date: 'dd/MM/yyyy' }}</strong>
+              com retorno previsto para
+              <strong>{{ rental.expectedReturnDate | date: 'dd/MM/yyyy' }}</strong
+              >? Esta ação é irreversível.
+            </p>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button
+              type="button"
+              mat-stroked-button
+              class="app-secondary-button"
+              (click)="goBack()"
+            >
+              Voltar
+            </button>
+
+            <button type="submit" mat-flat-button class="app-primary-button">
+              <mat-icon>check</mat-icon>
+              Confirmar
+            </button>
+          </mat-card-actions>
+        </form>
+      }
+    </mat-card>
+  </div>
+</section>

@@ -1,0 +1,149 @@
+<section class="row justify-content-center app-form-container">
+  <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+    <header class="app-form-header">
+      <h2 class="app-form-title">
+        Devolução de Aluguel
+        <mat-icon class="app-form-title__icon">assignment_turned_in</mat-icon>
+      </h2>
+      <hr class="app-form-divider" />
+    </header>
+
+    <mat-card class="app-form-card">
+      @if (rentalView$ | async; as rental) {
+        <form [formGroup]="returnForm" (ngSubmit)="completeReturn()">
+          <mat-card-header>
+            <mat-card-title>Confirme os dados e preencha a devolução</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="mb-3">
+              <h6 class="fw-bold mb-2">Dados do aluguel</h6>
+
+              <p class="mb-1"><strong>Condutor:</strong> {{ rental.driverName }}</p>
+
+              <p class="mb-1"><strong>Veículo:</strong> {{ rental.vehicleLabel }}</p>
+
+              <p class="mb-1"><strong>Plano:</strong> {{ rental.planTypeLabel }}</p>
+
+              <p class="mb-1">
+                <strong>Saída:</strong>
+                {{ rental.startDate | date: 'dd/MM/yyyy' }}
+              </p>
+
+              <p class="mb-1">
+                <strong>Retorno previsto:</strong>
+                {{ rental.expectedReturnDate | date: 'dd/MM/yyyy' }}
+              </p>
+
+              <p class="mb-0">
+                <strong>Valor estimado:</strong>
+                {{ rental.estimatedRentalAmount | currency: 'BRL' : 'symbol-narrow' }}
+              </p>
+            </div>
+
+            <hr />
+
+            <div class="app-form-fields">
+              <div class="row g-3">
+                <div class="col-12 col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Data da devolução*</mat-label>
+                    <input matInput type="date" formControlName="actualReturnDate" />
+
+                    @if (
+                      actualReturnDateControl?.touched &&
+                      actualReturnDateControl?.errors?.['required']
+                    ) {
+                      <mat-error>A data da devolução é obrigatória.</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-3">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>KM inicial*</mat-label>
+                    <input matInput type="number" min="0" formControlName="initialOdometerInKm" />
+
+                    @if (
+                      initialOdometerInKmControl?.touched &&
+                      initialOdometerInKmControl?.errors?.['required']
+                    ) {
+                      <mat-error>O KM inicial é obrigatório.</mat-error>
+                    } @else if (
+                      initialOdometerInKmControl?.touched &&
+                      initialOdometerInKmControl?.errors?.['min']
+                    ) {
+                      <mat-error>O valor não pode ser negativo.</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12 col-md-3">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>KM final*</mat-label>
+                    <input matInput type="number" min="0" formControlName="currentOdometerInKm" />
+
+                    @if (
+                      currentOdometerInKmControl?.touched &&
+                      currentOdometerInKmControl?.errors?.['required']
+                    ) {
+                      <mat-error>O KM final é obrigatório.</mat-error>
+                    } @else if (
+                      currentOdometerInKmControl?.touched &&
+                      currentOdometerInKmControl?.errors?.['min']
+                    ) {
+                      <mat-error>O valor não pode ser negativo.</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row g-3 mt-1">
+                <div class="col-12 col-md-6">
+                  <mat-checkbox formControlName="isFuelTankFullOnReturn">
+                    Tanque cheio na devolução
+                  </mat-checkbox>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <mat-checkbox formControlName="hasDamage"> Houve danos no veículo </mat-checkbox>
+                </div>
+              </div>
+
+              <div class="row g-3 mt-1">
+                <div class="col-12">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Cupom de desconto (opcional)</mat-label>
+                    <input matInput type="text" formControlName="couponName" />
+                    <mat-hint>Informe o nome do cupom, se tiver.</mat-hint>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button
+              type="button"
+              mat-stroked-button
+              class="app-secondary-button"
+              (click)="goBack()"
+            >
+              Voltar
+            </button>
+
+            <button
+              type="submit"
+              mat-flat-button
+              class="app-primary-button"
+              [disabled]="returnForm.invalid"
+            >
+              <mat-icon>check</mat-icon>
+              Confirmar devolução
+            </button>
+          </mat-card-actions>
+        </form>
+      }
+    </mat-card>
+  </div>
+</section>
