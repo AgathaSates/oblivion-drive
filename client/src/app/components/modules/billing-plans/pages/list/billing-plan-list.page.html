@@ -1,0 +1,89 @@
+<section class="row justify-content-center app-list-page">
+  <div class="col-md-11 col-xl-8">
+    <h2>
+      Listagem de Planos de Cobrança
+      <mat-icon>request_quote</mat-icon>
+    </h2>
+
+    <div class="row g-1 mt-3">
+      <a mat-flat-button class="col-md-6 col-xl-2 app-accent-button" routerLink="cadastrar">
+        <mat-icon>add</mat-icon>
+        Cadastrar
+      </a>
+    </div>
+
+    <hr />
+
+    <div class="row g-3">
+      @for (plan of billingPlans$ | async; track plan.id) {
+        <div class="col-md-6 col-xl-4">
+          <mat-card class="mb-2 app-list-card">
+            <mat-card-header>
+              <mat-card-title [matTooltip]="plan.name">
+                <strong>Nome:</strong>
+                {{ plan.name.length > 18 ? (plan.name | slice: 0 : 18) + '…' : plan.name }}
+              </mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content class="mt-2">
+              <div class="d-flex align-items-center mb-1">
+                <mat-icon class="me-2" aria-hidden="true">directions_car</mat-icon>
+                <span class="text-monospace">
+                  <strong>Categoria:</strong>
+                  {{ plan.vehicleGroupName }}
+                </span>
+              </div>
+
+              <div class="d-flex align-items-center mb-1">
+                <mat-icon class="me-2" aria-hidden="true">today</mat-icon>
+                <span class="text-monospace">
+                  <strong>Plano Diário:</strong>
+                  {{ plan.dailyPlanDailyRate | currency: 'BRL' : 'symbol' : '1.2-2' }}
+                  / dia +
+                  {{ plan.dailyPlanPricePerKilometer | currency: 'BRL' : 'symbol' : '1.2-2' }}
+                  / km
+                </span>
+              </div>
+
+              <div class="d-flex align-items-center mb-1">
+                <mat-icon class="me-2" aria-hidden="true">speed</mat-icon>
+                <span class="text-monospace">
+                  <strong>Plano Controlado:</strong>
+                  {{ plan.controlledPlanDailyRate | currency: 'BRL' : 'symbol' : '1.2-2' }}
+                  / dia +
+                  {{
+                    plan.controlledPlanExtraPricePerKilometer | currency: 'BRL' : 'symbol' : '1.2-2'
+                  }}
+                  extra / km
+                </span>
+              </div>
+
+              <div class="d-flex align-items-center mb-1">
+                <mat-icon class="me-2" aria-hidden="true">all_inclusive</mat-icon>
+                <span class="text-monospace">
+                  <strong>Plano Livre:</strong>
+                  {{ plan.freePlanDailyRate | currency: 'BRL' : 'symbol' : '1.2-2' }}
+                  / dia
+                </span>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions align="end">
+              <a [routerLink]="['editar', plan.id]" mat-icon-button class="app-accent-button">
+                <mat-icon>edit</mat-icon>
+              </a>
+
+              <a [routerLink]="['excluir', plan.id]" mat-icon-button class="app-accent-button">
+                <mat-icon>delete</mat-icon>
+              </a>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      } @empty {
+        <div class="col-12 text-center text-muted py-5">
+          Nenhum plano de cobrança cadastrado ainda.
+        </div>
+      }
+    </div>
+  </div>
+</section>
