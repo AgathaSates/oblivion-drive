@@ -50,4 +50,10 @@ public class RentalOrmRepository(OblivionDriveDbContext context) : BaseRepositor
             .Any(r => r.ServiceIds.Contains(serviceId));
 
     }
+
+    public Task<bool> ExistsAnyRentalForVehicleAsync(Guid vehicleId)
+    {
+        return context.Rentals.AnyAsync(rental => rental.VehicleId == vehicleId);
+    }
+
 }

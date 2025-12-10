@@ -466,6 +466,59 @@ button[mat-mini-fab].mat-primary {
   color: $color-text !important;
 }
 
+.app-form-photo-section {
+  margin-top: 1.5rem;
+}
+
+.app-form-photo-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.app-form-photo-section__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.app-form-photo-section__upload-button mat-icon {
+  margin-right: 0.25rem;
+}
+
+.app-form-photo-section__file-input {
+  display: none;
+}
+
+.app-form-photo-section__preview {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.app-form-photo-preview__image {
+  max-width: 590px;
+  max-height: 590px;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.app-list-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-list-card__image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
 @media (min-width: 960px) {
   .app-footer.app-footer--with-shell {
     justify-content: center;

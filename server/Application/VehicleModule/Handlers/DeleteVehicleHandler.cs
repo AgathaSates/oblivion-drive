@@ -54,12 +54,14 @@ public class DeleteVehicleHandler(
             if (vehicle.CompanyId != currentCompanyId)
                 return Result.Fail(ErrorResults.UnauthorizedError("Não é permitido excluir veículos de outra empresa."));
 
-            bool vehicleHasOpenRental = await rentalRepository.ExistsOpenRentalForVehicleAsync(vehicle.Id);
+            bool vehicleHasAnyRental = await rentalRepository.ExistsAnyRentalForVehicleAsync(vehicle.Id);
 
-            if (vehicleHasOpenRental)
+            if (vehicleHasAnyRental)
+            {
                 return Result.Fail(
                     ErrorResults.InvalidRequestError(
-                        "Não é permitido excluir veículos que estejam vinculados a aluguéis em andamento."));
+                        "Não é permitido excluir veículos que possuam aluguéis vinculados, mesmo que já concluídos."));
+            }
 
             await vehicleRepository.DeleteAsync(vehicle);
             await unitOfWork.CommitAsync();
