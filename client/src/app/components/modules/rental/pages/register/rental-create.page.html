@@ -1,0 +1,243 @@
+<section class="row justify-content-center app-form-container">
+  <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+    <header class="app-form-header">
+      <h2 class="app-form-title">
+        Cadastro de Aluguel
+        <mat-icon class="app-form-title__icon">receipt_long</mat-icon>
+      </h2>
+      <hr class="app-form-divider" />
+    </header>
+
+    <mat-card class="app-form-card">
+      <form [formGroup]="rentalForm" (ngSubmit)="submit()">
+        <mat-card-header>
+          <mat-card-title>Preencha o formulário de cadastro</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="app-form-fields">
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Cliente*</mat-label>
+                  <mat-select formControlName="clientId">
+                    @for (client of clients; track client.id) {
+                      <mat-option [value]="client.id">{{ client.name }}</mat-option>
+                    }
+                  </mat-select>
+
+                  @if (clientIdControl?.touched && clientIdControl?.errors?.['required']) {
+                    <mat-error>O cliente é obrigatório.</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <div class="col-12 col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Condutor*</mat-label>
+                  <mat-select formControlName="driverId">
+                    @for (driver of driversForSelectedClient; track driver.id) {
+                      <mat-option [value]="driver.id">
+                        {{ driver.name }}
+                      </mat-option>
+                    }
+                  </mat-select>
+
+                  @if (driverIdControl?.touched && driverIdControl?.errors?.['required']) {
+                    <mat-error>O condutor é obrigatório.</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Grupo de veículos*</mat-label>
+                  <mat-select formControlName="vehicleGroupId">
+                    @for (group of vehicleGroups$ | async; track group.id) {
+                      <mat-option [value]="group.id">
+                        {{ group.name }}
+                      </mat-option>
+                    }
+                  </mat-select>
+
+                  @if (
+                    vehicleGroupIdControl?.touched && vehicleGroupIdControl?.errors?.['required']
+                  ) {
+                    <mat-error>O grupo de veículos é obrigatório.</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <div class="col-12 col-md-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Veículo*</mat-label>
+                  <mat-select formControlName="vehicleId">
+                    @for (vehicle of vehiclesForSelectedGroup; track vehicle.id) {
+                      <mat-option [value]="vehicle.id">
+                        {{ vehicle.brand }} {{ vehicle.model }} ({{ vehicle.licensePlate }})
+                      </mat-option>
+                    }
+                  </mat-select>
+
+                  @if (vehicleIdControl?.touched && vehicleIdControl?.errors?.['required']) {
+                    <mat-error>O veículo é obrigatório.</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-12 col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Plano*</mat-label>
+                  <mat-select formControlName="planType">
+                    @for (option of planTypeOptions; track option.value) {
+                      <mat-option [value]="option.value">
+                        {{ option.label }}
+                      </mat-option>
+                    }
+                  </mat-select>
+
+                  @if (planTypeControl?.touched && planTypeControl?.errors?.['required']) {
+                    <mat-error>O plano é obrigatório.</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <div class="col-12 col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Data de saída*</mat-label>
+                  <input matInput type="date" formControlName="startDate" />
+
+                  @if (startDateControl?.touched && startDateControl?.errors?.['required']) {
+                    <mat-error>A data de saída é obrigatória.</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <div class="col-12 col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Data de retorno (prevista)*</mat-label>
+                  <input matInput type="date" formControlName="expectedReturnDate" />
+
+                  @if (
+                    expectedReturnDateControl?.touched &&
+                    expectedReturnDateControl?.errors?.['required']
+                  ) {
+                    <mat-error>A data de retorno prevista é obrigatória.</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-12 col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Preço diário do seguro (por pessoa)*</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    formControlName="insuranceDailyPricePerPerson"
+                  />
+
+                  @if (
+                    insuranceDailyPricePerPersonControl?.touched &&
+                    insuranceDailyPricePerPersonControl?.errors?.['required']
+                  ) {
+                    <mat-error>O preço diário do seguro é obrigatório.</mat-error>
+                  } @else if (
+                    insuranceDailyPricePerPersonControl?.touched &&
+                    insuranceDailyPricePerPersonControl?.errors?.['min']
+                  ) {
+                    <mat-error>O valor não pode ser negativo.</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <div class="col-12 col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Quantidade de pessoas no seguro*</mat-label>
+                  <input matInput type="number" min="1" formControlName="insurancePersonsCount" />
+
+                  @if (
+                    insurancePersonsCountControl?.touched &&
+                    insurancePersonsCountControl?.errors?.['required']
+                  ) {
+                    <mat-error>A quantidade de pessoas é obrigatória.</mat-error>
+                  } @else if (
+                    insurancePersonsCountControl?.touched &&
+                    insurancePersonsCountControl?.errors?.['min']
+                  ) {
+                    <mat-error>Informe pelo menos 1 pessoa.</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <div class="col-12 col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Quilometragem estimada (km)</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    min="0"
+                    formControlName="estimatedTotalKilometers"
+                  />
+
+                  @if (
+                    estimatedTotalKilometersControl?.touched &&
+                    estimatedTotalKilometersControl?.errors?.['min']
+                  ) {
+                    <mat-error>O valor não pode ser negativo.</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Serviços adicionais (opcional)</mat-label>
+                  <mat-select formControlName="serviceIds" multiple>
+                    @for (service of services; track service.id) {
+                      <mat-option [value]="service.id">
+                        {{ service.name }}
+                      </mat-option>
+                    }
+                  </mat-select>
+                  <mat-hint>Você pode selecionar nenhum, um ou vários serviços.</mat-hint>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <div class="app-form-actions">
+            <button
+              type="button"
+              mat-stroked-button
+              class="app-secondary-button"
+              (click)="goBack()"
+            >
+              Voltar
+            </button>
+
+            <button
+              type="submit"
+              mat-flat-button
+              class="app-primary-button"
+              [disabled]="rentalForm.invalid"
+            >
+              <mat-icon>check</mat-icon>
+              Cadastrar
+            </button>
+          </div>
+        </mat-card-actions>
+      </form>
+    </mat-card>
+  </div>
+</section>
