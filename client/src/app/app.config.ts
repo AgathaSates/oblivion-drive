@@ -110,6 +110,12 @@ export const routes: Routes = [
       import('./components/modules/vehicle/vehicle.routes').then((m) => m.vehicleRoutes),
     canActivate: [AuthenticatedUserGuard],
   },
+  {
+    path: 'clientes',
+    loadChildren: () =>
+      import('./components/modules/client/client.routes').then((m) => m.clientRoutes),
+    canActivate: [AuthenticatedUserGuard],
+  },
 ];
 
 export const appConfig: ApplicationConfig = {

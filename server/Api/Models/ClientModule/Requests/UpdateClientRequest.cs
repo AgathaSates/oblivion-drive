@@ -3,7 +3,6 @@
 namespace OblivionDrive.Api.Models.ClientModule.Requests;
 
 public record UpdateClientRequest(
-    Guid ClientId,
     string Name,
     string Email,
     string PhoneNumber,
