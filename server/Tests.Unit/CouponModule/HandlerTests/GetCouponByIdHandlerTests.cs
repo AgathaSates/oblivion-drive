@@ -115,7 +115,7 @@ public sealed class GetCouponByIdHandlerTests
 
         var validationFailures = new List<ValidationFailure>
         {
-            new(nameof(GetCouponByIdQuery.CouponId), "O identificador do cupom é obrigatório.")
+            new(nameof(GetCouponByIdQuery.CouponId), "O identificador do cupom Ã© obrigatÃ³rio.")
         };
 
         _validatorMock
@@ -359,7 +359,7 @@ public sealed class GetCouponByIdHandlerTests
                 LogLevel.Error,
                 It.IsAny<EventId>(),
                 It.Is<It.IsAnyType>((v, _) =>
-                    v.ToString()!.Contains("Ocorreu um erro durante a obtenção de detalhes do cupom")),
+                    v.ToString()!.Contains("Ocorreu um erro durante a obtenÃ§Ã£o de detalhes do cupom")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);

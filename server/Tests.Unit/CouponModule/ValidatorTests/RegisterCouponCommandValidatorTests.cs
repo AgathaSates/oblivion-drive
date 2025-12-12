@@ -14,14 +14,14 @@ public sealed class RegisterCouponCommandValidatorTests
     private const int MaximumNameLength = 100;
     private const decimal MaximumCouponValue = 1_000_000m;
 
-    private readonly string _nameRequiredMessage = "O nome do cupom é obrigatório.";
+    private readonly string _nameRequiredMessage = "O nome do cupom Ã© obrigatÃ³rio.";
     private readonly string _nameMinMessage = $"O nome do cupom deve ter pelo menos {MinimumNameLength} caracteres.";
-    private readonly string _nameMaxMessage = $"O nome do cupom deve ter no máximo {MaximumNameLength} caracteres.";
-    private readonly string _namePatternMessage = "O nome do cupom deve conter apenas letras maiúsculas e números, sem espaços.";
+    private readonly string _nameMaxMessage = $"O nome do cupom deve ter no mÃ¡ximo {MaximumNameLength} caracteres.";
+    private readonly string _namePatternMessage = "O nome do cupom deve conter apenas letras maiÃºsculas e nÃºmeros, sem espaÃ§os.";
     private readonly string _valueGreaterThanZeroMessage = "O valor do cupom deve ser maior que zero.";
-    private readonly string _valueMaxMessage = $"O valor do cupom não pode ser maior que {MaximumCouponValue:N2}.";
-    private readonly string _expirationDateMessage = "A data de validade do cupom deve ser maior ou igual à data atual.";
-    private readonly string _partnerIdRequiredMessage = "O identificador do parceiro vinculado ao cupom é obrigatório.";
+    private readonly string _valueMaxMessage = $"O valor do cupom nÃ£o pode ser maior que {MaximumCouponValue:N2}.";
+    private readonly string _expirationDateMessage = "A data de validade do cupom deve ser maior ou igual Ã  data atual.";
+    private readonly string _partnerIdRequiredMessage = "O identificador do parceiro vinculado ao cupom Ã© obrigatÃ³rio.";
 
     [TestInitialize]
     public void Setup()

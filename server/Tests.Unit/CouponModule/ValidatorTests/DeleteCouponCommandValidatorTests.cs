@@ -36,7 +36,7 @@ public sealed class DeleteCouponCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(DeleteCouponCommand.CouponId) &&
-            e.ErrorMessage == "O identificador do cupom é obrigatório."));
+            e.ErrorMessage == "O identificador do cupom Ã© obrigatÃ³rio."));
     }
 
     [TestMethod]

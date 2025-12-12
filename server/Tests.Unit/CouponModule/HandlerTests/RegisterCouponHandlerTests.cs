@@ -138,7 +138,7 @@ public class RegisterCouponHandlerTests
 
         var validationFailures = new List<ValidationFailure>
         {
-            new(nameof(RegisterCouponCommand.Name), "O nome do cupom é obrigatório.")
+            new(nameof(RegisterCouponCommand.Name), "O nome do cupom Ã© obrigatÃ³rio.")
         };
 
         _validatorMock
@@ -519,12 +519,12 @@ public class RegisterCouponHandlerTests
         // act
         Result<CouponDTO> result = await _handler.Handle(command, CancellationToken.None);
 
-        // assert – resultado
+        // assert â€“ resultado
         Assert.IsTrue(result.IsSuccess);
         Assert.IsNotNull(result.Value);
         Assert.AreEqual(expectedDto, result.Value);
 
-        // assert – cupom criado
+        // assert â€“ cupom criado
         Assert.IsNotNull(capturedCoupon);
         Assert.AreEqual(command.Name, capturedCoupon!.Name);
         Assert.AreEqual(command.Value, capturedCoupon.Value);

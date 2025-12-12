@@ -10,7 +10,7 @@ public sealed class GetCouponByIdQueryValidatorTests
 {
     private GetCouponByIdQueryValidator _validator = null!;
 
-    private const string CouponIdRequiredMessage = "O identificador do cupom é obrigatório.";
+    private const string CouponIdRequiredMessage = "O identificador do cupom Ã© obrigatÃ³rio.";
 
     [TestInitialize]
     public void Setup()

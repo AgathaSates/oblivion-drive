@@ -115,11 +115,11 @@ public class DeleteClientHandlerTests
         };
     }
 
-    private static Client CreateClient(Guid clientId, Guid companyId, string name = "Jo„o da Silva")
+    private static Client CreateClient(Guid clientId, Guid companyId, string name = "Jo√£o da Silva")
     {
         Address address = new Address(
-            state: "S„o Paulo",
-            city: "S„o Paulo",
+            state: "S√£o Paulo",
+            city: "S√£o Paulo",
             district: "Centro",
             street: "Rua das Flores",
             number: "123"
@@ -147,7 +147,7 @@ public class DeleteClientHandlerTests
         var validationFailures = new List<ValidationFailure>
         {
             new(nameof(DeleteClientCommand.ClientId),
-                "O identificador do cliente È obrigatÛrio.")
+                "O identificador do cliente √© obrigat√≥rio.")
         };
 
         _validatorMock
@@ -462,7 +462,7 @@ public class DeleteClientHandlerTests
                 LogLevel.Error,
                 It.IsAny<EventId>(),
                 It.Is<It.IsAnyType>((v, _) =>
-                    v.ToString()!.Contains("Ocorreu um erro durante a exclus„o de cliente")),
+                    v.ToString()!.Contains("Ocorreu um erro durante a exclus√£o de cliente")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);

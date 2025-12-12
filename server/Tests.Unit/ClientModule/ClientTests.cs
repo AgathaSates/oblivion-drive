@@ -11,7 +11,7 @@ public class ClientTests
     {
         // arrange
         Guid companyId = Guid.NewGuid();
-        string name = "Jo„o da Silva";
+        string name = "Jo√£o da Silva";
         string email = "joao.silva@example.com";
         string phoneNumber = "11987654321";
         ClientType clientType = ClientType.Individual;
@@ -20,8 +20,8 @@ public class ClientTests
         string cnh = "12345678901";
 
         Address address = new Address(
-            state: "S„o Paulo",
-            city: "S„o Paulo",
+            state: "S√£o Paulo",
+            city: "S√£o Paulo",
             district: "Centro",
             street: "Rua das Flores",
             number: "123"
@@ -69,7 +69,7 @@ public class ClientTests
             state: "Rio de Janeiro",
             city: "Rio de Janeiro",
             district: "Copacabana",
-            street: "Avenida Atl‚ntica",
+            street: "Avenida Atl√¢ntica",
             number: "456"
         );
 
@@ -105,8 +105,8 @@ public class ClientTests
         Guid companyId = Guid.NewGuid();
 
         Address originalAddress = new Address(
-            state: "S„o Paulo",
-            city: "S„o Paulo",
+            state: "S√£o Paulo",
+            city: "S√£o Paulo",
             district: "Centro",
             street: "Rua das Flores",
             number: "123"
@@ -114,7 +114,7 @@ public class ClientTests
 
         Client originalClient = new Client(
             companyId: companyId,
-            name: "Jo„o da Silva",
+            name: "Jo√£o da Silva",
             phoneNumber: "11987654321",
             clientType: ClientType.Individual,
             address: originalAddress,
@@ -131,13 +131,13 @@ public class ClientTests
             state: "Rio de Janeiro",
             city: "Rio de Janeiro",
             district: "Copacabana",
-            street: "Avenida Atl‚ntica",
+            street: "Avenida Atl√¢ntica",
             number: "789"
         );
 
         Client updatedClient = new Client(
             companyId: Guid.NewGuid(),
-            name: "Jo„o Silva Santos",
+            name: "Jo√£o Silva Santos",
             phoneNumber: "11999887766",
             clientType: ClientType.Individual,
             address: updatedAddress,
@@ -177,8 +177,8 @@ public class ClientTests
         Guid companyId = Guid.NewGuid();
 
         Address originalAddress = new Address(
-            state: "S„o Paulo",
-            city: "S„o Paulo",
+            state: "S√£o Paulo",
+            city: "S√£o Paulo",
             district: "Centro",
             street: "Rua Comercial",
             number: "100"
@@ -201,7 +201,7 @@ public class ClientTests
             state: "Minas Gerais",
             city: "Belo Horizonte",
             district: "Savassi",
-            street: "Avenida Get˙lio Vargas",
+            street: "Avenida Get√∫lio Vargas",
             number: "200"
         );
 
@@ -242,8 +242,8 @@ public class ClientTests
         Guid companyId = Guid.NewGuid();
 
         Address address = new Address(
-            state: "S„o Paulo",
-            city: "S„o Paulo",
+            state: "S√£o Paulo",
+            city: "S√£o Paulo",
             district: "Centro",
             street: "Rua Principal",
             number: "50"
@@ -251,7 +251,7 @@ public class ClientTests
 
         Client originalClient = new Client(
             companyId: companyId,
-            name: "Jo„o da Silva",
+            name: "Jo√£o da Silva",
             phoneNumber: "11987654321",
             clientType: ClientType.Individual,
             address: address,
@@ -263,7 +263,7 @@ public class ClientTests
 
         Client updatedClient = new Client(
             companyId: companyId,
-            name: "Empresa Jo„o Silva ME",
+            name: "Empresa Jo√£o Silva ME",
             phoneNumber: "11987654321",
             clientType: ClientType.LegalEntity,
             address: address,
@@ -289,8 +289,8 @@ public class ClientTests
         Guid companyId = Guid.NewGuid();
 
         Address address = new Address(
-            state: "S„o Paulo",
-            city: "S„o Paulo",
+            state: "S√£o Paulo",
+            city: "S√£o Paulo",
             district: "Centro",
             street: "Rua Principal",
             number: "50"
@@ -308,7 +308,7 @@ public class ClientTests
 
         Client updatedClient = new Client(
             companyId: companyId,
-            name: "Jo„o da Silva",
+            name: "Jo√£o da Silva",
             phoneNumber: "11987654321",
             clientType: ClientType.Individual,
             address: address,
@@ -338,8 +338,8 @@ public class AddressTests
     public void Constructor_Should_Initialize_All_Properties()
     {
         // arrange
-        string state = "S„o Paulo";
-        string city = "S„o Paulo";
+        string state = "S√£o Paulo";
+        string city = "S√£o Paulo";
         string district = "Centro";
         string street = "Rua das Flores";
         string number = "123";
@@ -366,8 +366,8 @@ public class AddressTests
     {
         // arrange
         Address originalAddress = new Address(
-            state: "S„o Paulo",
-            city: "S„o Paulo",
+            state: "S√£o Paulo",
+            city: "S√£o Paulo",
             district: "Centro",
             street: "Rua das Flores",
             number: "123"
@@ -377,7 +377,7 @@ public class AddressTests
             state: "Rio de Janeiro",
             city: "Rio de Janeiro",
             district: "Copacabana",
-            street: "Avenida Atl‚ntica",
+            street: "Avenida Atl√¢ntica",
             number: "456"
         );
 
@@ -400,8 +400,8 @@ public class AddressTests
     {
         // arrange
         Address originalAddress = new Address(
-            state: "S„o Paulo",
-            city: "S„o Paulo",
+            state: "S√£o Paulo",
+            city: "S√£o Paulo",
             district: "Centro",
             street: "Rua das Flores",
             number: "123"
@@ -411,7 +411,7 @@ public class AddressTests
             state: "Minas Gerais",
             city: "Belo Horizonte",
             district: "Savassi",
-            street: "Avenida Get˙lio Vargas",
+            street: "Avenida Get√∫lio Vargas",
             number: "789"
         );
 
@@ -419,7 +419,7 @@ public class AddressTests
         Address newAddress = originalAddress.WithUpdatedValues(updatedAddress);
 
         // assert
-        Assert.AreEqual("S„o Paulo", originalAddress.State);
+        Assert.AreEqual("S√£o Paulo", originalAddress.State);
         Assert.AreEqual("Minas Gerais", newAddress.State);
         Assert.AreNotSame(originalAddress, newAddress);
     }

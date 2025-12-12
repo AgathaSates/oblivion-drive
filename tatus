@@ -1,0 +1,197 @@
+[1mdiff --git a/server/Tests.Unit/ClientModule/ClientTests.cs b/server/Tests.Unit/ClientModule/ClientTests.cs[m
+[1mindex 3b9dd62..e789a4b 100644[m
+[1m--- a/server/Tests.Unit/ClientModule/ClientTests.cs[m
+[1m+++ b/server/Tests.Unit/ClientModule/ClientTests.cs[m
+[36m@@ -11,7 +11,7 @@[m [mpublic class ClientTests[m
+     {[m
+         // arrange[m
+         Guid companyId = Guid.NewGuid();[m
+[31m-        string name = "Jo„o da Silva";[m
+[32m+[m[32m        string name = "Jo√£o da Silva";[m
+         string email = "joao.silva@example.com";[m
+         string phoneNumber = "11987654321";[m
+         ClientType clientType = ClientType.Individual;[m
+[36m@@ -20,8 +20,8 @@[m [mpublic class ClientTests[m
+         string cnh = "12345678901";[m
+ [m
+         Address address = new Address([m
+[31m-            state: "S„o Paulo",[m
+[31m-            city: "S„o Paulo",[m
+[32m+[m[32m            state: "S√£o Paulo",[m
+[32m+[m[32m            city: "S√£o Paulo",[m
+             district: "Centro",[m
+             street: "Rua das Flores",[m
+             number: "123"[m
+[36m@@ -69,7 +69,7 @@[m [mpublic class ClientTests[m
+             state: "Rio de Janeiro",[m
+             city: "Rio de Janeiro",[m
+             district: "Copacabana",[m
+[31m-            street: "Avenida Atl‚ntica",[m
+[32m+[m[32m            street: "Avenida Atl√¢ntica",[m
+             number: "456"[m
+         );[m
+ [m
+[36m@@ -105,8 +105,8 @@[m [mpublic class ClientTests[m
+         Guid companyId = Guid.NewGuid();[m
+ [m
+         Address originalAddress = new Address([m
+[31m-            state: "S„o Paulo",[m
+[31m-            city: "S„o Paulo",[m
+[32m+[m[32m            state: "S√£o Paulo",[m
+[32m+[m[32m            city: "S√£o Paulo",[m
+             district: "Centro",[m
+             street: "Rua das Flores",[m
+             number: "123"[m
+[36m@@ -114,7 +114,7 @@[m [mpublic class ClientTests[m
+ [m
+         Client originalClient = new Client([m
+             companyId: companyId,[m
+[31m-            name: "Jo„o da Silva",[m
+[32m+[m[32m            name: "Jo√£o da Silva",[m
+             phoneNumber: "11987654321",[m
+             clientType: ClientType.Individual,[m
+             address: originalAddress,[m
+[36m@@ -131,13 +131,13 @@[m [mpublic class ClientTests[m
+             state: "Rio de Janeiro",[m
+             city: "Rio de Janeiro",[m
+             district: "Copacabana",[m
+[31m-            street: "Avenida Atl‚ntica",[m
+[32m+[m[32m            street: "Avenida Atl√¢ntica",[m
+             number: "789"[m
+         );[m
+ [m
+         Client updatedClient = new Client([m
+             companyId: Guid.NewGuid(),[m
+[31m-            name: "Jo„o Silva Santos",[m
+[32m+[m[32m            name: "Jo√£o Silva Santos",[m
+             phoneNumber: "11999887766",[m
+             clientType: ClientType.Individual,[m
+             address: updatedAddress,[m
+[36m@@ -177,8 +177,8 @@[m [mpublic class ClientTests[m
+         Guid companyId = Guid.NewGuid();[m
+ [m
+         Address originalAddress = new Address([m
+[31m-            state: "S„o Paulo",[m
+[31m-            city: "S„o Paulo",[m
+[32m+[m[32m            state: "S√£o Paulo",[m
+[32m+[m[32m            city: "S√£o Paulo",[m
+             district: "Centro",[m
+             street: "Rua Comercial",[m
+             number: "100"[m
+[36m@@ -201,7 +201,7 @@[m [mpublic class ClientTests[m
+             state: "Minas Gerais",[m
+             city: "Belo Horizonte",[m
+             district: "Savassi",[m
+[31m-            street: "Avenida Get˙lio Vargas",[m
+[32m+[m[32m            street: "Avenida Get√∫lio Vargas",[m
+             number: "200"[m
+         );[m
+ [m
+[36m@@ -242,8 +242,8 @@[m [mpublic class ClientTests[m
+         Guid companyId = Guid.NewGuid();[m
+ [m
+         Address address = new Address([m
+[31m-            state: "S„o Paulo",[m
+[31m-            city: "S„o Paulo",[m
+[32m+[m[32m            state: "S√£o Paulo",[m
+[32m+[m[32m            city: "S√£o Paulo",[m
+             district: "Centro",[m
+             street: "Rua Principal",[m
+             number: "50"[m
+[36m@@ -251,7 +251,7 @@[m [mpublic class ClientTests[m
+ [m
+         Client originalClient = new Client([m
+             companyId: companyId,[m
+[31m-            name: "Jo„o da Silva",[m
+[32m+[m[32m            name: "Jo√£o da Silva",[m
+             phoneNumber: "11987654321",[m
+             clientType: ClientType.Individual,[m
+             address: address,[m
+[36m@@ -263,7 +263,7 @@[m [mpublic class ClientTests[m
+ [m
+         Client updatedClient = new Client([m
+             companyId: companyId,[m
+[31m-            name: "Empresa Jo„o Silva ME",[m
+[32m+[m[32m            name: "Empresa Jo√£o Silva ME",[m
+             phoneNumber: "11987654321",[m
+             clientType: ClientType.LegalEntity,[m
+             address: address,[m
+[36m@@ -289,8 +289,8 @@[m [mpublic class ClientTests[m
+         Guid companyId = Guid.NewGuid();[m
+ [m
+         Address address = new Address([m
+[31m-            state: "S„o Paulo",[m
+[31m-            city: "S„o Paulo",[m
+[32m+[m[32m            state: "S√£o Paulo",[m
+[32m+[m[32m            city: "S√£o Paulo",[m
+             district: "Centro",[m
+             street: "Rua Principal",[m
+             number: "50"[m
+[36m@@ -308,7 +308,7 @@[m [mpublic class ClientTests[m
+ [m
+         Client updatedClient = new Client([m
+             companyId: companyId,[m
+[31m-            name: "Jo„o da Silva",[m
+[32m+[m[32m            name: "Jo√£o da Silva",[m
+             phoneNumber: "11987654321",[m
+             clientType: ClientType.Individual,[m
+             address: address,[m
+[36m@@ -338,8 +338,8 @@[m [mpublic class AddressTests[m
+     public void Constructor_Should_Initialize_All_Properties()[m
+     {[m
+         // arrange[m
+[31m-        string state = "S„o Paulo";[m
+[31m-        string city = "S„o Paulo";[m
+[32m+[m[32m        string state = "S√£o Paulo";[m
+[32m+[m[32m        string city = "S√£o Paulo";[m
+         string district = "Centro";[m
+         string street = "Rua das Flores";[m
+         string number = "123";[m
+[36m@@ -366,8 +366,8 @@[m [mpublic class AddressTests[m
+     {[m
+         // arrange[m
+         Address originalAddress = new Address([m
+[31m-            state: "S„o Paulo",[m
+[31m-            city: "S„o Paulo",[m
+[32m+[m[32m            state: "S√£o Paulo",[m
+[32m+[m[32m            city: "S√£o Paulo",[m
+             district: "Centro",[m
+             street: "Rua das Flores",[m
+             number: "123"[m
+[36m@@ -377,7 +377,7 @@[m [mpublic class AddressTests[m
+             state: "Rio de Janeiro",[m
+             city: "Rio de Janeiro",[m
+             district: "Copacabana",[m
+[31m-            street: "Avenida Atl‚ntica",[m
+[32m+[m[32m            street: "Avenida Atl√¢ntica",[m
+             number: "456"[m
+         );[m
+ [m
+[36m@@ -400,8 +400,8 @@[m [mpublic class AddressTests[m
+     {[m
+         // arrange[m
+         Address originalAddress = new Address([m
+[31m-            state: "S„o Paulo",[m
+[31m-            city: "S„o Paulo",[m
+[32m+[m[32m            state: "S√£o Paulo",[m
+[32m+[m[32m            city: "S√£o Paulo",[m
+             district: "Centro",[m
+             street: "Rua das Flores",[m
+             number: "123"[m
+[36m@@ -411,7 +411,7 @@[m [mpublic class AddressTests[m
+             state: "Minas Gerais",[m
+             city: "Belo Horizonte",[m
+             district: "Savassi",[m
+[31m-            street: "Avenida Get˙lio Vargas",[m
+[32m+[m[32m            street: "Avenida Get√∫lio Vargas",[m
+             number: "789"[m
+         );[m
+ [m
+[36m@@ -419,7 +419,7 @@[m [mpublic class AddressTests[m
+         Address newAddress = originalAddress.WithUpdatedValues(updatedAddress);[m
+ [m
+         // assert[m
+[31m-        Assert.AreEqual("S„o Paulo", originalAddress.State);[m
+[32m+[m[32m        Assert.AreEqual("S√£o Paulo", originalAddress.State);[m
+         Assert.AreEqual("Minas Gerais", newAddress.State);[m
+         Assert.AreNotSame(ori

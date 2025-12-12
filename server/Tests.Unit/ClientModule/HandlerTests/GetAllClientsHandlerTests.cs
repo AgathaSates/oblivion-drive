@@ -98,8 +98,8 @@ public class GetAllClientsHandlerTests
     private static Client CreateClient(Guid clientId, Guid companyId, string name)
     {
         Address address = new Address(
-            state: "S„o Paulo",
-            city: "S„o Paulo",
+            state: "S√£o Paulo",
+            city: "S√£o Paulo",
             district: "Centro",
             street: "Rua das Flores",
             number: "123"
@@ -271,7 +271,7 @@ public class GetAllClientsHandlerTests
 
         var clients = new List<Client>
         {
-            CreateClient(Guid.NewGuid(), currentCompanyId, "Jo„o da Silva"),
+            CreateClient(Guid.NewGuid(), currentCompanyId, "Jo√£o da Silva"),
             CreateClient(Guid.NewGuid(), currentCompanyId, "Maria Souza")
         };
 
@@ -359,7 +359,7 @@ public class GetAllClientsHandlerTests
 
         var clients = new List<Client>
         {
-            CreateClient(Guid.NewGuid(), currentCompanyId, "Jo„o da Silva")
+            CreateClient(Guid.NewGuid(), currentCompanyId, "Jo√£o da Silva")
         };
 
         _clientRepositoryMock

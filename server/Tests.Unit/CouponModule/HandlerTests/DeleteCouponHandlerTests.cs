@@ -126,7 +126,7 @@ public sealed class DeleteCouponHandlerTests
         var validationFailures = new List<ValidationFailure>
         {
             new(nameof(DeleteCouponCommand.CouponId),
-                "O identificador do cupom È obrigatÛrio.")
+                "O identificador do cupom √© obrigat√≥rio.")
         };
 
         _validatorMock
@@ -382,7 +382,7 @@ public sealed class DeleteCouponHandlerTests
                 LogLevel.Error,
                 It.IsAny<EventId>(),
                 It.Is<It.IsAnyType>((v, _) =>
-                    v.ToString()!.Contains("Ocorreu um erro durante a exclus„o de cupom")),
+                    v.ToString()!.Contains("Ocorreu um erro durante a exclus√£o de cupom")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);

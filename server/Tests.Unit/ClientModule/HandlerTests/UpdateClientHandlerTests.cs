@@ -127,7 +127,7 @@ public class UpdateClientHandlerTests
     {
         return new UpdateClientCommand(
             ClientId: clientId,
-            Name: "Jo„o da Silva Atualizado",
+            Name: "Jo√£o da Silva Atualizado",
             Email: "joao.silva.updated@example.com",
             PhoneNumber: "11999887766",
             ClientType: ClientType.Individual,
@@ -138,7 +138,7 @@ public class UpdateClientHandlerTests
             State: "Rio de Janeiro",
             City: "Rio de Janeiro",
             District: "Copacabana",
-            Street: "Avenida Atl‚ntica",
+            Street: "Avenida Atl√¢ntica",
             Number: "789"
         );
     }
@@ -158,7 +158,7 @@ public class UpdateClientHandlerTests
             State: "Minas Gerais",
             City: "Belo Horizonte",
             District: "Savassi",
-            Street: "Avenida Get˙lio Vargas",
+            Street: "Avenida Get√∫lio Vargas",
             Number: "200"
         );
     }
@@ -178,8 +178,8 @@ public class UpdateClientHandlerTests
     private static Client CreateExistingIndividualClient(Guid clientId, Guid companyId)
     {
         Address address = new(
-            state: "S„o Paulo",
-            city: "S„o Paulo",
+            state: "S√£o Paulo",
+            city: "S√£o Paulo",
             district: "Centro",
             street: "Rua das Flores",
             number: "123"
@@ -187,7 +187,7 @@ public class UpdateClientHandlerTests
 
         var client = new Client(
             companyId: companyId,
-            name: "Jo„o da Silva",
+            name: "Jo√£o da Silva",
             email: "joao.silva@example.com",
             phoneNumber: "11987654321",
             clientType: ClientType.Individual,
@@ -204,8 +204,8 @@ public class UpdateClientHandlerTests
     private static Client CreateExistingLegalEntityClient(Guid clientId, Guid companyId)
     {
         Address address = new(
-            state: "S„o Paulo",
-            city: "S„o Paulo",
+            state: "S√£o Paulo",
+            city: "S√£o Paulo",
             district: "Centro",
             street: "Rua Comercial",
             number: "100"
@@ -234,7 +234,7 @@ public class UpdateClientHandlerTests
 
         var validationFailures = new List<ValidationFailure>
         {
-            new(nameof(UpdateClientCommand.Name), "O nome do cliente È obrigatÛrio.")
+            new(nameof(UpdateClientCommand.Name), "O nome do cliente √© obrigat√≥rio.")
         };
 
         _validatorMock
@@ -434,8 +434,8 @@ public class UpdateClientHandlerTests
         var error = result.Errors.Single();
         Assert.IsTrue(
             error.Reasons.Any(r =>
-                r.Message.Contains("J· existe um cliente cadastrado com este e-mail", StringComparison.CurrentCulture)),
-            "Mensagem de erro deveria indicar que j· existe um cliente cadastrado com este e-mail.");
+                r.Message.Contains("J√° existe um cliente cadastrado com este e-mail", StringComparison.CurrentCulture)),
+            "Mensagem de erro deveria indicar que j√° existe um cliente cadastrado com este e-mail.");
 
         _clientRepositoryMock.Verify(r =>
             r.ExistsByEmailAsync(command.Email, clientId), Times.Once);
@@ -489,8 +489,8 @@ public class UpdateClientHandlerTests
         var error = result.Errors.Single();
         Assert.IsTrue(
             error.Reasons.Any(r =>
-                r.Message.Contains("J· existe um cliente cadastrado com este telefone", StringComparison.CurrentCulture)),
-            "Mensagem de erro deveria indicar que j· existe um cliente cadastrado com este telefone.");
+                r.Message.Contains("J√° existe um cliente cadastrado com este telefone", StringComparison.CurrentCulture)),
+            "Mensagem de erro deveria indicar que j√° existe um cliente cadastrado com este telefone.");
 
         _clientRepositoryMock.Verify(r =>
             r.ExistsByPhoneNumberAsync(command.PhoneNumber, clientId), Times.Once);
@@ -548,8 +548,8 @@ public class UpdateClientHandlerTests
         var error = result.Errors.Single();
         Assert.IsTrue(
             error.Reasons.Any(r =>
-                r.Message.Contains("J· existe um cliente cadastrado com este CPF", StringComparison.CurrentCulture)),
-            "Mensagem de erro deveria indicar que j· existe um cliente cadastrado com este CPF.");
+                r.Message.Contains("J√° existe um cliente cadastrado com este CPF", StringComparison.CurrentCulture)),
+            "Mensagem de erro deveria indicar que j√° existe um cliente cadastrado com este CPF.");
 
         _clientRepositoryMock.Verify(r =>
             r.ExistsByCpfAsync(command.Cpf!, clientId), Times.Once);
@@ -611,8 +611,8 @@ public class UpdateClientHandlerTests
         var error = result.Errors.Single();
         Assert.IsTrue(
             error.Reasons.Any(r =>
-                r.Message.Contains("J· existe um cliente cadastrado com este RG", StringComparison.CurrentCulture)),
-            "Mensagem de erro deveria indicar que j· existe um cliente cadastrado com este RG.");
+                r.Message.Contains("J√° existe um cliente cadastrado com este RG", StringComparison.CurrentCulture)),
+            "Mensagem de erro deveria indicar que j√° existe um cliente cadastrado com este RG.");
 
         _clientRepositoryMock.Verify(r =>
             r.ExistsByRgAsync(command.Rg!, clientId), Times.Once);
@@ -678,8 +678,8 @@ public class UpdateClientHandlerTests
         var error = result.Errors.Single();
         Assert.IsTrue(
             error.Reasons.Any(r =>
-                r.Message.Contains("J· existe um cliente cadastrado com esta CNH", StringComparison.CurrentCulture)),
-            "Mensagem de erro deveria indicar que j· existe um cliente cadastrado com esta CNH.");
+                r.Message.Contains("J√° existe um cliente cadastrado com esta CNH", StringComparison.CurrentCulture)),
+            "Mensagem de erro deveria indicar que j√° existe um cliente cadastrado com esta CNH.");
 
         _clientRepositoryMock.Verify(r =>
             r.ExistsByCnhAsync(command.Cnh!, clientId), Times.Once);
@@ -737,8 +737,8 @@ public class UpdateClientHandlerTests
         var error = result.Errors.Single();
         Assert.IsTrue(
             error.Reasons.Any(r =>
-                r.Message.Contains("J· existe um cliente cadastrado com este CNPJ", StringComparison.CurrentCulture)),
-            "Mensagem de erro deveria indicar que j· existe um cliente cadastrado com este CNPJ.");
+                r.Message.Contains("J√° existe um cliente cadastrado com este CNPJ", StringComparison.CurrentCulture)),
+            "Mensagem de erro deveria indicar que j√° existe um cliente cadastrado com este CNPJ.");
 
         _clientRepositoryMock.Verify(r =>
             r.ExistsByCnpjAsync(command.Cnpj!, clientId), Times.Once);
@@ -997,7 +997,7 @@ public class UpdateClientHandlerTests
                 LogLevel.Error,
                 It.IsAny<EventId>(),
                 It.Is<It.IsAnyType>((v, _) =>
-                    v.ToString()!.Contains("Ocorreu um erro durante a atualizaÁ„o do cliente")),
+                    v.ToString()!.Contains("Ocorreu um erro durante a atualiza√ß√£o do cliente")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);

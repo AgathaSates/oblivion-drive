@@ -11,7 +11,7 @@ public sealed class GetAllCouponsQueryValidatorTests
     private GetAllCouponsQueryValidator _validator = null!;
     private const int MaximumQuantity = 1_000;
     private readonly string _quantityGreaterThanZeroMessage = "A quantidade deve ser maior que zero.";
-    private readonly string _quantityMaxMessage = $"A quantidade n„o pode ser maior que {MaximumQuantity}.";
+    private readonly string _quantityMaxMessage = $"A quantidade n√£o pode ser maior que {MaximumQuantity}.";
 
     [TestInitialize]
     public void Setup()

@@ -78,7 +78,7 @@ public sealed class CouponTests
         Assert.AreEqual(updatedExpirationDate, coupon.ExpirationDate);
         Assert.AreEqual(updatedPartnerId, coupon.PartnerId);
 
-        // ID e CompanyId n„o devem ser alterados
+        // ID e CompanyId n√£o devem ser alterados
         Assert.AreEqual(originalCouponId, coupon.Id);
         Assert.AreEqual(originalCompanyId, coupon.CompanyId);
     }

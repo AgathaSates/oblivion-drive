@@ -50,6 +50,6 @@ public class GetClientByIdQueryValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(GetClientByIdQuery.ClientId) &&
-            e.ErrorMessage == "O identificador do cliente é obrigatório."));
+            e.ErrorMessage == "O identificador do cliente Ã© obrigatÃ³rio."));
     }
 }

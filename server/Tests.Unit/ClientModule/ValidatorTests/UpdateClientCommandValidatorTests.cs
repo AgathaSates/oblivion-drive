@@ -35,7 +35,7 @@ public class UpdateClientCommandValidatorTests
     {
         return new UpdateClientCommand(
             ClientId: Guid.NewGuid(),
-            Name: "João da Silva",
+            Name: "JoÃ£o da Silva",
             Email: "joao.silva@example.com",
             PhoneNumber: "11987654321",
             ClientType: ClientType.Individual,
@@ -43,8 +43,8 @@ public class UpdateClientCommandValidatorTests
             Rg: "123456789",
             Cnh: "12345678901",
             Cnpj: null,
-            State: "São Paulo",
-            City: "São Paulo",
+            State: "SÃ£o Paulo",
+            City: "SÃ£o Paulo",
             District: "Centro",
             Street: "Rua das Flores",
             Number: "123"
@@ -66,7 +66,7 @@ public class UpdateClientCommandValidatorTests
             State: "Rio de Janeiro",
             City: "Rio de Janeiro",
             District: "Copacabana",
-            Street: "Avenida Atlântica",
+            Street: "Avenida AtlÃ¢ntica",
             Number: "456"
         );
     }
@@ -113,7 +113,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.ClientId) &&
-            e.ErrorMessage == "O identificador do cliente é obrigatório."));
+            e.ErrorMessage == "O identificador do cliente Ã© obrigatÃ³rio."));
     }
 
     // Name validation tests
@@ -130,7 +130,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Name) &&
-            e.ErrorMessage == "O nome do cliente é obrigatório."));
+            e.ErrorMessage == "O nome do cliente Ã© obrigatÃ³rio."));
     }
 
     [TestMethod]
@@ -163,14 +163,14 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Name) &&
-            e.ErrorMessage == $"O nome do cliente deve ter no máximo {MaximumNameLength} caracteres."));
+            e.ErrorMessage == $"O nome do cliente deve ter no mÃ¡ximo {MaximumNameLength} caracteres."));
     }
 
     [TestMethod]
     public void Should_Fail_When_Name_Contains_Invalid_Characters()
     {
         // arrange
-        UpdateClientCommand command = CreateValidIndividualCommand() with { Name = "João123" };
+        UpdateClientCommand command = CreateValidIndividualCommand() with { Name = "JoÃ£o123" };
 
         // act
         ValidationResult result = _validator.Validate(command);
@@ -179,7 +179,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Name) &&
-            e.ErrorMessage == "O nome do cliente deve conter apenas letras e espaços."));
+            e.ErrorMessage == "O nome do cliente deve conter apenas letras e espaÃ§os."));
     }
 
     // Email validation tests
@@ -196,7 +196,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Email) &&
-            e.ErrorMessage == "O email do cliente é obrigatório."));
+            e.ErrorMessage == "O email do cliente Ã© obrigatÃ³rio."));
     }
 
     [TestMethod]
@@ -213,7 +213,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Email) &&
-            e.ErrorMessage == $"O email do cliente deve ter no máximo {MaximumEmailLength} caracteres."));
+            e.ErrorMessage == $"O email do cliente deve ter no mÃ¡ximo {MaximumEmailLength} caracteres."));
     }
 
     [TestMethod]
@@ -229,7 +229,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Email) &&
-            e.ErrorMessage == "O email do cliente deve ser válido."));
+            e.ErrorMessage == "O email do cliente deve ser vÃ¡lido."));
     }
 
     // PhoneNumber validation tests
@@ -246,7 +246,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.PhoneNumber) &&
-            e.ErrorMessage == "O telefone do cliente é obrigatório."));
+            e.ErrorMessage == "O telefone do cliente Ã© obrigatÃ³rio."));
     }
 
     [TestMethod]
@@ -263,7 +263,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.PhoneNumber) &&
-            e.ErrorMessage == $"O telefone do cliente deve ter no máximo {MaximumPhoneLength} caracteres."));
+            e.ErrorMessage == $"O telefone do cliente deve ter no mÃ¡ximo {MaximumPhoneLength} caracteres."));
     }
 
     [TestMethod]
@@ -279,7 +279,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.PhoneNumber) &&
-            e.ErrorMessage == "O telefone do cliente deve conter apenas números."));
+            e.ErrorMessage == "O telefone do cliente deve conter apenas nÃºmeros."));
     }
 
     // Individual Client (CPF, RG, CNH) validation tests
@@ -296,7 +296,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Cpf) &&
-            e.ErrorMessage == "O CPF do cliente é obrigatório para clientes do tipo Pessoa Física."));
+            e.ErrorMessage == "O CPF do cliente Ã© obrigatÃ³rio para clientes do tipo Pessoa FÃ­sica."));
     }
 
     [TestMethod]
@@ -312,7 +312,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Cpf) &&
-            e.ErrorMessage == "O CPF do cliente deve conter exatamente 11 dígitos numéricos."));
+            e.ErrorMessage == "O CPF do cliente deve conter exatamente 11 dÃ­gitos numÃ©ricos."));
     }
 
     [TestMethod]
@@ -329,7 +329,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Cpf) &&
-            e.ErrorMessage == $"O CPF do cliente deve ter no máximo {MaximumCpfLength} caracteres."));
+            e.ErrorMessage == $"O CPF do cliente deve ter no mÃ¡ximo {MaximumCpfLength} caracteres."));
     }
 
     [TestMethod]
@@ -345,7 +345,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Rg) &&
-            e.ErrorMessage == "O RG do cliente é obrigatório para clientes do tipo Pessoa Física."));
+            e.ErrorMessage == "O RG do cliente Ã© obrigatÃ³rio para clientes do tipo Pessoa FÃ­sica."));
     }
 
     [TestMethod]
@@ -362,7 +362,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Rg) &&
-            e.ErrorMessage == $"O RG do cliente deve ter no máximo {MaximumRgLength} caracteres."));
+            e.ErrorMessage == $"O RG do cliente deve ter no mÃ¡ximo {MaximumRgLength} caracteres."));
     }
 
     [TestMethod]
@@ -378,7 +378,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Rg) &&
-            e.ErrorMessage == "O RG do cliente deve conter apenas números."));
+            e.ErrorMessage == "O RG do cliente deve conter apenas nÃºmeros."));
     }
 
     [TestMethod]
@@ -394,7 +394,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Cnh) &&
-            e.ErrorMessage == "A CNH do cliente é obrigatória para clientes do tipo Pessoa Física."));
+            e.ErrorMessage == "A CNH do cliente Ã© obrigatÃ³ria para clientes do tipo Pessoa FÃ­sica."));
     }
 
     [TestMethod]
@@ -411,7 +411,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Cnh) &&
-            e.ErrorMessage == $"A CNH do cliente deve ter no máximo {MaximumCnhLength} caracteres."));
+            e.ErrorMessage == $"A CNH do cliente deve ter no mÃ¡ximo {MaximumCnhLength} caracteres."));
     }
 
     [TestMethod]
@@ -427,7 +427,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Cnh) &&
-            e.ErrorMessage == "A CNH do cliente deve conter apenas números."));
+            e.ErrorMessage == "A CNH do cliente deve conter apenas nÃºmeros."));
     }
 
     // LegalEntity Client (CNPJ) validation tests
@@ -444,7 +444,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Cnpj) &&
-            e.ErrorMessage == "O CNPJ do cliente é obrigatório para clientes do tipo Pessoa Jurídica."));
+            e.ErrorMessage == "O CNPJ do cliente Ã© obrigatÃ³rio para clientes do tipo Pessoa JurÃ­dica."));
     }
 
     [TestMethod]
@@ -460,7 +460,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Cnpj) &&
-            e.ErrorMessage == "O CNPJ do cliente deve conter exatamente 14 dígitos numéricos."));
+            e.ErrorMessage == "O CNPJ do cliente deve conter exatamente 14 dÃ­gitos numÃ©ricos."));
     }
 
     [TestMethod]
@@ -477,7 +477,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Cnpj) &&
-            e.ErrorMessage == $"O CNPJ do cliente deve ter no máximo {MaximumCnpjLength} caracteres."));
+            e.ErrorMessage == $"O CNPJ do cliente deve ter no mÃ¡ximo {MaximumCnpjLength} caracteres."));
     }
 
     // Address validation tests
@@ -494,7 +494,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.State) &&
-            e.ErrorMessage == "O estado do endereço é obrigatório."));
+            e.ErrorMessage == "O estado do endereÃ§o Ã© obrigatÃ³rio."));
     }
 
     [TestMethod]
@@ -511,7 +511,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.State) &&
-            e.ErrorMessage == $"O estado deve ter no máximo {MaximumStateLength} caracteres."));
+            e.ErrorMessage == $"O estado deve ter no mÃ¡ximo {MaximumStateLength} caracteres."));
     }
 
     [TestMethod]
@@ -527,7 +527,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.City) &&
-            e.ErrorMessage == "A cidade do endereço é obrigatória."));
+            e.ErrorMessage == "A cidade do endereÃ§o Ã© obrigatÃ³ria."));
     }
 
     [TestMethod]
@@ -544,7 +544,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.City) &&
-            e.ErrorMessage == $"A cidade deve ter no máximo {MaximumCityLength} caracteres."));
+            e.ErrorMessage == $"A cidade deve ter no mÃ¡ximo {MaximumCityLength} caracteres."));
     }
 
     [TestMethod]
@@ -560,7 +560,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.District) &&
-            e.ErrorMessage == "O bairro do endereço é obrigatório."));
+            e.ErrorMessage == "O bairro do endereÃ§o Ã© obrigatÃ³rio."));
     }
 
     [TestMethod]
@@ -577,7 +577,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.District) &&
-            e.ErrorMessage == $"O bairro deve ter no máximo {MaximumDistrictLength} caracteres."));
+            e.ErrorMessage == $"O bairro deve ter no mÃ¡ximo {MaximumDistrictLength} caracteres."));
     }
 
     [TestMethod]
@@ -593,7 +593,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Street) &&
-            e.ErrorMessage == "A rua do endereço é obrigatória."));
+            e.ErrorMessage == "A rua do endereÃ§o Ã© obrigatÃ³ria."));
     }
 
     [TestMethod]
@@ -610,7 +610,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Street) &&
-            e.ErrorMessage == $"A rua deve ter no máximo {MaximumStreetLength} caracteres."));
+            e.ErrorMessage == $"A rua deve ter no mÃ¡ximo {MaximumStreetLength} caracteres."));
     }
 
     [TestMethod]
@@ -626,7 +626,7 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Number) &&
-            e.ErrorMessage == "O número do endereço é obrigatório."));
+            e.ErrorMessage == "O nÃºmero do endereÃ§o Ã© obrigatÃ³rio."));
     }
 
     [TestMethod]
@@ -643,6 +643,6 @@ public class UpdateClientCommandValidatorTests
         Assert.IsFalse(result.IsValid);
         Assert.IsTrue(result.Errors.Any(e =>
             e.PropertyName == nameof(UpdateClientCommand.Number) &&
-            e.ErrorMessage == $"O número deve ter no máximo {MaximumNumberLength} caracteres."));
+            e.ErrorMessage == $"O nÃºmero deve ter no mÃ¡ximo {MaximumNumberLength} caracteres."));
     }
 }

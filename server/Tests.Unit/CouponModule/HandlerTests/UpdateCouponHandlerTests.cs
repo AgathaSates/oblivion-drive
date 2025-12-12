@@ -150,7 +150,7 @@ public class UpdateCouponHandlerTests
 
         var validationFailures = new List<ValidationFailure>
         {
-            new(nameof(UpdateCouponCommand.Name), "O nome do cupom é obrigatório.")
+            new(nameof(UpdateCouponCommand.Name), "O nome do cupom Ã© obrigatÃ³rio.")
         };
 
         _validatorMock
@@ -456,7 +456,7 @@ public class UpdateCouponHandlerTests
 
         Assert.IsTrue(
             error.Reasons.Any(reason =>
-                reason.Message.Contains("Já existe um cupom cadastrado com este nome", StringComparison.CurrentCulture)),
+                reason.Message.Contains("JÃ¡ existe um cupom cadastrado com este nome", StringComparison.CurrentCulture)),
             "Deveria conter a mensagem de nome de cupom duplicado."
         );
 
@@ -524,7 +524,7 @@ public class UpdateCouponHandlerTests
                 LogLevel.Error,
                 It.IsAny<EventId>(),
                 It.Is<It.IsAnyType>((v, _) =>
-                    v.ToString()!.Contains("Ocorreu um erro durante a atualização do cupom")),
+                    v.ToString()!.Contains("Ocorreu um erro durante a atualizaÃ§Ã£o do cupom")),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);

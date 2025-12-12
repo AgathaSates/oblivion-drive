@@ -122,7 +122,7 @@ public class RegisterClientHandlerTests
     private static RegisterClientCommand CreateValidIndividualCommand()
     {
         return new RegisterClientCommand(
-            Name: "Jo„o da Silva",
+            Name: "Jo√£o da Silva",
             Email: "joao.silva@example.com",
             PhoneNumber: "11987654321",
             ClientType: ClientType.Individual,
@@ -130,8 +130,8 @@ public class RegisterClientHandlerTests
             Rg: "123456789",
             Cnh: "12345678901",
             Cnpj: null,
-            State: "S„o Paulo",
-            City: "S„o Paulo",
+            State: "S√£o Paulo",
+            City: "S√£o Paulo",
             District: "Centro",
             Street: "Rua das Flores",
             Number: "123"
@@ -152,7 +152,7 @@ public class RegisterClientHandlerTests
             State: "Rio de Janeiro",
             City: "Rio de Janeiro",
             District: "Copacabana",
-            Street: "Avenida Atl‚ntica",
+            Street: "Avenida Atl√¢ntica",
             Number: "456"
         );
     }
@@ -177,7 +177,7 @@ public class RegisterClientHandlerTests
 
         var validationFailures = new List<ValidationFailure>
         {
-            new(nameof(RegisterClientCommand.Name), "O nome do cliente È obrigatÛrio.")
+            new(nameof(RegisterClientCommand.Name), "O nome do cliente √© obrigat√≥rio.")
         };
 
         _validatorMock
@@ -294,8 +294,8 @@ public class RegisterClientHandlerTests
         var error = result.Errors.Single();
         Assert.IsTrue(
             error.Reasons.Any(r => 
-                r.Message.Contains("J· existe um cliente cadastrado com este e-mail", StringComparison.CurrentCulture)),
-            "Mensagem de erro deveria indicar que j· existe um cliente cadastrado com este e-mail.");
+                r.Message.Contains("J√° existe um cliente cadastrado com este e-mail", StringComparison.CurrentCulture)),
+            "Mensagem de erro deveria indicar que j√° existe um cliente cadastrado com este e-mail.");
 
         _clientRepositoryMock.Verify(r =>
             r.ExistsByEmailAsync(command.Email), Times.Once);
@@ -338,8 +338,8 @@ public class RegisterClientHandlerTests
         var error = result.Errors.Single();
         Assert.IsTrue(
             error.Reasons.Any(r => 
-                r.Message.Contains("J· existe um cliente cadastrado com este telefone", StringComparison.CurrentCulture)),
-            "Mensagem de erro deveria indicar que j· existe um cliente cadastrado com este telefone.");
+                r.Message.Contains("J√° existe um cliente cadastrado com este telefone", StringComparison.CurrentCulture)),
+            "Mensagem de erro deveria indicar que j√° existe um cliente cadastrado com este telefone.");
 
         _clientRepositoryMock.Verify(r =>
             r.ExistsByPhoneNumberAsync(command.PhoneNumber), Times.Once);
@@ -390,8 +390,8 @@ public class RegisterClientHandlerTests
         var error = result.Errors.Single();
         Assert.IsTrue(
             error.Reasons.Any(r => 
-                r.Message.Contains("J· existe um cliente cadastrado com este CPF", StringComparison.CurrentCulture)),
-            "Mensagem de erro deveria indicar que j· existe um cliente cadastrado com este CPF.");
+                r.Message.Contains("J√° existe um cliente cadastrado com este CPF", StringComparison.CurrentCulture)),
+            "Mensagem de erro deveria indicar que j√° existe um cliente cadastrado com este CPF.");
 
         _clientRepositoryMock.Verify(r =>
             r.ExistsByCpfAsync(command.Cpf!), Times.Once);
@@ -446,8 +446,8 @@ public class RegisterClientHandlerTests
         var error = result.Errors.Single();
         Assert.IsTrue(
             error.Reasons.Any(r => 
-                r.Message.Contains("J· existe um cliente cadastrado com este RG", StringComparison.CurrentCulture)),
-            "Mensagem de erro deveria indicar que j· existe um cliente cadastrado com este RG.");
+                r.Message.Contains("J√° existe um cliente cadastrado com este RG", StringComparison.CurrentCulture)),
+            "Mensagem de erro deveria indicar que j√° existe um cliente cadastrado com este RG.");
 
         _clientRepositoryMock.Verify(r =>
             r.ExistsByRgAsync(command.Rg!), Times.Once);
@@ -506,8 +506,8 @@ public class RegisterClientHandlerTests
         var error = result.Errors.Single();
         Assert.IsTrue(
             error.Reasons.Any(r => 
-                r.Message.Contains("J· existe um cliente cadastrado com esta CNH", StringComparison.CurrentCulture)),
-            "Mensagem de erro deveria indicar que j· existe um cliente cadastrado com esta CNH.");
+                r.Message.Contains("J√° existe um cliente cadastrado com esta CNH", StringComparison.CurrentCulture)),
+            "Mensagem de erro deveria indicar que j√° existe um cliente cadastrado com esta CNH.");
 
         _clientRepositoryMock.Verify(r =>
             r.ExistsByCnhAsync(command.Cnh!), Times.Once);
@@ -558,8 +558,8 @@ public class RegisterClientHandlerTests
         var error = result.Errors.Single();
         Assert.IsTrue(
             error.Reasons.Any(r => 
-                r.Message.Contains("J· existe um cliente cadastrado com este CNPJ", StringComparison.CurrentCulture)),
-            "Mensagem de erro deveria indicar que j· existe um cliente cadastrado com este CNPJ.");
+                r.Message.Contains("J√° existe um cliente cadastrado com este CNPJ", StringComparison.CurrentCulture)),
+            "Mensagem de erro deveria indicar que j√° existe um cliente cadastrado com este CNPJ.");
 
         _clientRepositoryMock.Verify(r =>
             r.ExistsByCnpjAsync(command.Cnpj!), Times.Once);
