@@ -15,5 +15,5 @@ public record UpdateRentalCommand(
     decimal InsuranceDailyPricePerPerson,
     int InsurancePersonsCount,
     int? EstimatedTotalKilometers,
-    IReadOnlyCollection<Guid> ServiceIds)
+    IReadOnlyCollection<Guid>? ServiceIds)
     : IRequest<Result<UpdatedRentalDTO>>;

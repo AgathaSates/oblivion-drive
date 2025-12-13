@@ -14,12 +14,8 @@ using OblivionDrive.Domain.RentalModule;
 
 namespace OblivionDrive.Application.RentalModule.Handlers;
 public class GetAllRentalsHandler(
-    UserManager<User> userManager,
-    ITenantProvider tenantProvider,
-    IRepositoryRental rentalRepository,
-    IMapper mapper,
-    ILogger<GetAllRentalsHandler> logger,
-    IValidator<GetAllRentalsQuery> validator)
+    UserManager<User> userManager, ITenantProvider tenantProvider, IRepositoryRental rentalRepository,
+    IMapper mapper, ILogger<GetAllRentalsHandler> logger, IValidator<GetAllRentalsQuery> validator)
     : IRequestHandler<GetAllRentalsQuery, Result<RentalsResult>>
 {
     public async Task<Result<RentalsResult>> Handle(GetAllRentalsQuery query, CancellationToken cancellationToken)

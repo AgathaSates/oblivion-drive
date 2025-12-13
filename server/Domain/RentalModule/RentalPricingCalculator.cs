@@ -13,7 +13,7 @@ public class RentalPricingCalculator
         return estimatedRentalAmount;
     }
 
-    public decimal CalculateOnReturn(decimal rentalBasePrice, decimal insuranceTotalPrice,
+    public virtual decimal CalculateOnReturn(decimal rentalBasePrice, decimal insuranceTotalPrice,
        decimal servicesTotalPrice, decimal fuelChargePrice, decimal penaltyPrice)
     {
         decimal grossRentalAmount =
@@ -27,7 +27,7 @@ public class RentalPricingCalculator
     }
 
     // Serviços
-    public decimal CalculateServicesTotalPrice(IReadOnlyCollection<Service> selectedServices, int rentalDays)
+    public virtual decimal CalculateServicesTotalPrice(IReadOnlyCollection<Service> selectedServices, int rentalDays)
     {
         if (selectedServices is null || selectedServices.Count == 0)
             return 0m;
@@ -56,7 +56,7 @@ public class RentalPricingCalculator
     }
 
     // Seguro
-    public decimal CalculateInsuranceTotalPrice(decimal insuranceDailyPricePerPerson, int insurancePersonsCount, int rentalDays)
+    public virtual decimal CalculateInsuranceTotalPrice(decimal insuranceDailyPricePerPerson, int insurancePersonsCount, int rentalDays)
     {
         if (rentalDays <= 0)
             return 0m;
@@ -81,7 +81,7 @@ public class RentalPricingCalculator
         return rentalDays * dailyRate;
     }
 
-    public decimal CalculateFinalRentalAmountOnReturn(
+    public virtual decimal CalculateFinalRentalAmountOnReturn(
     BillingPlan billingPlan, RentalPlanType planType,
     DateOnly startDate, DateOnly actualReturnDate,
     int initialOdometerInKilometers, int currentOdometerInKilometers,int? estimatedTotalKilometers)
@@ -136,7 +136,7 @@ public class RentalPricingCalculator
     }
 
     // Multa
-    public decimal CalculateLateReturnPenalty(DateOnly expectedReturnDate, DateOnly actualReturnDate, decimal rentalBasePrice)
+    public virtual decimal CalculateLateReturnPenalty(DateOnly expectedReturnDate, DateOnly actualReturnDate, decimal rentalBasePrice)
     {
         if (actualReturnDate <= expectedReturnDate)
             return 0m;
@@ -149,7 +149,7 @@ public class RentalPricingCalculator
         return rentalBasePrice * LatePenaltyPercentage;
     }
 
-    public int CalculateRentalDays(DateOnly startDate, DateOnly endDate)
+    public virtual int CalculateRentalDays(DateOnly startDate, DateOnly endDate)
     {
         if (endDate < startDate)
             return 0;

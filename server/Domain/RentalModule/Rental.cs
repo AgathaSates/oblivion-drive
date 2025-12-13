@@ -138,6 +138,9 @@ public class Rental : TenantEntity<Rental>
 
         GrossRentalAmount = grossRentalAmount;
 
+        CouponId = couponId;
+        CouponDiscountAmount = couponDiscountAmount;
+
         if (HasDamage)
         {
             FinalAmountToPay = GrossRentalAmount;

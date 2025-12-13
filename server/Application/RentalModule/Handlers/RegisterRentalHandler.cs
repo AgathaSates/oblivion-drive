@@ -132,7 +132,6 @@ public class RegisterRentalHandler(
                     command.InsurancePersonsCount,
                     rentalDays);
 
-            // Serviços
             decimal servicesTotalPrice =
                 rentalPricingCalculator.CalculateServicesTotalPrice(
                     selectedServices,
@@ -191,7 +190,7 @@ public class RegisterRentalHandler(
     }
 
     private async Task<Result<IReadOnlyCollection<Service>>> LoadSelectedServicesAsync(
-        IReadOnlyCollection<Guid> serviceIds, Guid companyId)
+        IReadOnlyCollection<Guid>? serviceIds, Guid companyId)
     {
         if (serviceIds is null || serviceIds.Count == 0)
             return Result.Ok<IReadOnlyCollection<Service>>(Array.Empty<Service>());
