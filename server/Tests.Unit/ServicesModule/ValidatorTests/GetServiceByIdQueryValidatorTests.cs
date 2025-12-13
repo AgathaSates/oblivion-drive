@@ -1,5 +1,4 @@
-﻿
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 using OblivionDrive.Application.FluentValidation.Services;
 using OblivionDrive.Application.ServicesModule.Querys;
 
