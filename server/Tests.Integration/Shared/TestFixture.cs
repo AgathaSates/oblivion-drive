@@ -1,9 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OblivionDrive.Domain.FuelPriceConfigurationModule;
-using OblivionDrive.Domain.VehicleGroupModule;
 using OblivionDrive.Infrastructure.Orm.BillingPlanModule;
+using OblivionDrive.Infrastructure.Orm.ClientModule;
+using OblivionDrive.Infrastructure.Orm.CouponModule;
+using OblivionDrive.Infrastructure.Orm.DriverModule;
 using OblivionDrive.Infrastructure.Orm.EmployeeModule;
 using OblivionDrive.Infrastructure.Orm.FuelPriceConfigurationModule;
+using OblivionDrive.Infrastructure.Orm.PartnerModule;
+using OblivionDrive.Infrastructure.Orm.RentalModule;
 using OblivionDrive.Infrastructure.Orm.ServicesModule;
 using OblivionDrive.Infrastructure.Orm.Shared;
 using OblivionDrive.Infrastructure.Orm.VehicleGroupModule;
@@ -17,12 +20,17 @@ public class TestFixture
 {
     protected OblivionDriveDbContext? DbContext;
 
+    protected BillingPlanOrmRepository? _billingPlanRepository;
+    protected ClientOrmRepository? _clientRepository;
+    protected CouponOrmRepository? _couponRepository;
+    protected DriverOrmRepository? _driverRepository;
     protected EmployeeOrmRepository? _employeeRepository;
     protected FuelPriceConfigurationOrmRepository? _fuelRepository;
+    protected PartnerOrmRepository? _partnerRepository;
+    protected RentalOrmRepository? _rentalRepository;
     protected ServicesOrmRepository? _servicesRepository;
-    protected VehicleGroupOrmRepository? _vehicleGroupRepository;
-    protected BillingPlanOrmRepository? _billingPlanRepository;
     protected VehicleOrmRepository? _vehicleRepository;
+    protected VehicleGroupOrmRepository? _vehicleGroupRepository;
 
     protected static MsSqlContainer? DatabaseContainer;
 
@@ -57,20 +65,30 @@ public class TestFixture
         DbContext.Users.RemoveRange(DbContext.Users);
         DbContext.Roles.RemoveRange(DbContext.Roles);
 
+        DbContext.BillingPlans.RemoveRange(DbContext.BillingPlans);
+        DbContext.Clients.RemoveRange(DbContext.Clients);
+        DbContext.Coupons.RemoveRange(DbContext.Coupons);
+        DbContext.Drivers.RemoveRange(DbContext.Drivers);
         DbContext.Employees.RemoveRange(DbContext.Employees);
         DbContext.fuelPrices.RemoveRange(DbContext.fuelPrices);
+        DbContext.Partners.RemoveRange(DbContext.Partners);
+        DbContext.Rentals.RemoveRange(DbContext.Rentals);
         DbContext.Services.RemoveRange(DbContext.Services);
         DbContext.VehicleGroups.RemoveRange(DbContext.VehicleGroups);
-        DbContext.BillingPlans.RemoveRange(DbContext.BillingPlans);
         DbContext.Vehicles.RemoveRange(DbContext.Vehicles);
 
         DbContext.SaveChanges();
 
+        _billingPlanRepository = new BillingPlanOrmRepository(DbContext);
+        _clientRepository = new ClientOrmRepository(DbContext);
+        _couponRepository = new CouponOrmRepository(DbContext);
+        _driverRepository = new DriverOrmRepository(DbContext);
         _employeeRepository = new EmployeeOrmRepository(DbContext);
         _fuelRepository = new FuelPriceConfigurationOrmRepository(DbContext);
+        _partnerRepository = new PartnerOrmRepository(DbContext);
+        _rentalRepository = new RentalOrmRepository(DbContext);
         _servicesRepository = new ServicesOrmRepository(DbContext);
         _vehicleGroupRepository = new VehicleGroupOrmRepository(DbContext);
-        _billingPlanRepository = new BillingPlanOrmRepository(DbContext);
         _vehicleRepository = new VehicleOrmRepository(DbContext);
 
         Environment.SetEnvironmentVariable("SQL_CONNECTION_STRING", connectionString);

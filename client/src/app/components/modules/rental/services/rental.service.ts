@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
@@ -13,6 +13,8 @@ import {
   GetAllRentalsResponseModel,
   CompleteRentalReturnRequestModel,
   CompleteRentalReturnResponseModel,
+  SendRentalReceiptEmailRequestModel,
+  SendRentalReceiptEmailResponseModel,
 } from '../models/rental.models';
 
 @Injectable()
@@ -66,5 +68,22 @@ export class RentalService {
   ): Observable<CompleteRentalReturnResponseModel> {
     const fullUrl: string = `${this.apiUrl}/${rentalId}/return`;
     return this.http.post<CompleteRentalReturnResponseModel>(fullUrl, requestModel);
+  }
+
+  public getReceiptPdf(rentalId: string): Observable<HttpResponse<Blob>> {
+    const fullUrl: string = `${this.apiUrl}/${rentalId}/receipt`;
+
+    return this.http.get(fullUrl, {
+      observe: 'response',
+      responseType: 'blob',
+    });
+  }
+
+  public sendReceiptByEmail(
+    rentalId: string,
+    requestModel: SendRentalReceiptEmailRequestModel,
+  ): Observable<SendRentalReceiptEmailResponseModel> {
+    const fullUrl: string = `${this.apiUrl}/${rentalId}/receipt/email`;
+    return this.http.post<SendRentalReceiptEmailResponseModel>(fullUrl, requestModel);
   }
 }

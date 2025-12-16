@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using OblivionDrive.Api.Helpers;
 using OblivionDrive.Api.Models.RentalModule.Requests;
 using OblivionDrive.Api.Models.RentalModule.Responses;
@@ -134,5 +135,42 @@ public class RentalController(IMediator mediator, IMapper mapper) : ControllerBa
         var response = mapper.Map<CompleteRentalReturnResponse>(result.Value);
 
         return Ok(response);
+    }
+
+    [HttpGet("{rentalId:guid}/receipt")]
+    [SwaggerOperation(
+    Summary = "Gerar recibo (PDF) de aluguel encerrado",
+    Description = "Gera um PDF estilo nota/recibo para um aluguel concluído."
+    )]
+    public async Task<IActionResult> GetReceiptPdf(Guid rentalId, CancellationToken cancellationToken)
+    {
+        var query = new GenerateRentalReceiptPdfQuery(rentalId);
+
+        var result = await mediator.Send(query, cancellationToken);
+
+        if (result.IsFailed)
+            return result.ToActionResult();
+
+        Response.Headers.Append("Access-Control-Expose-Headers", "Content-Disposition");
+
+        return File(
+            fileContents: result.Value.Content,
+            contentType: "application/pdf",
+            fileDownloadName: result.Value.FileName
+        );
+    }
+
+    [HttpPost("{rentalId:guid}/receipt/email")]
+    [EnableRateLimiting("RentalReceiptEmailPolicy")]
+    public async Task<IActionResult> SendReceiptByEmail(Guid rentalId, SendRentalReceiptEmailRequest request, CancellationToken cancellationToken)
+    {
+        var command = new SendRentalReceiptEmailCommand(rentalId, request.Email);
+
+        var result = await mediator.Send(command, cancellationToken);
+
+        if (result.IsFailed)
+            return result.ToActionResult();
+
+        return Ok(new { sentSuccessfully = true });
     }
 }
