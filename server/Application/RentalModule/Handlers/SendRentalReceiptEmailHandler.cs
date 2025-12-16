@@ -1,4 +1,6 @@
-﻿using FluentResults;
+﻿using System.Globalization;
+using System.Text;
+using FluentResults;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
@@ -88,13 +90,43 @@ public class SendRentalReceiptEmailHandler(
 
             byte[] pdfBytes = receiptPdfGenerator.Generate(receiptData);
 
-            string subject = $"Recibo do aluguel {rental.Id:N}";
-            string body =
-                $"Olá!\n\nSegue em anexo o recibo do aluguel encerrado.\n" +
-                $"Cliente: {client.Name}\n" +
-                $"Veículo: {vehicle.Brand} {vehicle.Model} ({vehicle.LicensePlate})\n" +
-                $"Período: {rental.StartDate:dd/MM/yyyy} até {rental.ActualReturnDate:dd/MM/yyyy}\n\n" +
-                $"Atenciosamente,\nOblivionDrive";
+            CultureInfo ptBrCulture = CultureInfo.GetCultureInfo("pt-BR");
+
+            string rentalId = rental.Id.ToString("N");
+            string subject = $"Recibo do aluguel encerrado — {rentalId}";
+
+            string clientName = client.Name;
+
+            var emailBodyBuilder = new StringBuilder()
+                .AppendLine($"Olá, {clientName}!")
+                .AppendLine()
+                .AppendLine("Seu aluguel foi encerrado com sucesso.")
+                .AppendLine()
+                .AppendLine("Em anexo, você encontra o recibo em PDF com todos os detalhes do aluguel (período, valores e eventuais ajustes como caução, cupom, combustível e/ou multa).")
+                .AppendLine()
+                .AppendLine("Se precisar conferir rapidamente:")
+                .AppendLine("• O valor final está indicado no campo “Valor final a pagar” do recibo.");
+
+            if (rental.FinalAmountToPay > 0m)
+            {
+                emailBodyBuilder.AppendLine($"• Valor final a pagar: {rental.FinalAmountToPay.ToString("C", ptBrCulture)}");
+            }
+            else
+            {
+                emailBodyBuilder.AppendLine("• Não há saldo pendente a pagar.");
+            }
+
+            emailBodyBuilder
+                .AppendLine()
+                .AppendLine("Caso identifique qualquer divergência, é só responder este e-mail que a gente verifica.")
+                .AppendLine()
+                .AppendLine("Obrigado por escolher a OblivionDrive.")
+                .AppendLine()
+                .AppendLine("Atenciosamente,")
+                .AppendLine("OblivionDrive")
+                .AppendLine("(Este e-mail foi gerado automaticamente.)");
+
+            string body = emailBodyBuilder.ToString();
 
             var message = new EmailMessage(
                 To: command.Email,
