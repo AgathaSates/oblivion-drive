@@ -21,18 +21,42 @@
         <div class="col-md-6 col-xl-4">
           <mat-card class="mb-2 app-list-card">
             <mat-card-header>
-              <mat-card-title [matTooltip]="rental.driverName">
-                <strong>Condutor:</strong>
-                {{
-                  rental.driverName.length > 22
-                    ? (rental.driverName | slice: 0 : 22) + '…'
-                    : rental.driverName
-                }}
-              </mat-card-title>
+              <div class="app-rental-card-header">
+                <div class="app-rental-card-header__title">
+                  <mat-card-title [matTooltip]="rental.driverName">
+                    <strong>Condutor:</strong>
+                    {{
+                      rental.driverName.length > 22
+                        ? (rental.driverName | slice: 0 : 22) + '…'
+                        : rental.driverName
+                    }}
+                  </mat-card-title>
 
-              <mat-card-subtitle>
-                <strong>Plano:</strong> {{ rental.planTypeLabel }}
-              </mat-card-subtitle>
+                  <mat-card-subtitle>
+                    <strong>Plano:</strong> {{ rental.planTypeLabel }}
+                  </mat-card-subtitle>
+                </div>
+
+                <div class="app-rental-card-header__badge">
+                  @if (rental.isCompleted) {
+                    <span
+                      class="app-rental-status app-rental-status--completed"
+                      matTooltip="Concluído"
+                      aria-label="Concluído"
+                    >
+                      <mat-icon>check_circle</mat-icon>
+                    </span>
+                  } @else {
+                    <span
+                      class="app-rental-status app-rental-status--open"
+                      matTooltip="Em andamento"
+                      aria-label="Em andamento"
+                    >
+                      <mat-icon>schedule</mat-icon>
+                    </span>
+                  }
+                </div>
+              </div>
             </mat-card-header>
 
             <mat-card-content class="mt-2">
@@ -58,17 +82,58 @@
                   {{ rental.expectedReturnDateFormatted | date: 'dd/MM/yyyy' }}
                 </span>
               </div>
-
-              <div class="d-flex align-items-center mb-1">
-                <mat-icon class="me-2" aria-hidden="true">attach_money</mat-icon>
-                <span class="text-monospace">
-                  <strong>Valor total:</strong>
-                  {{ rental.estimatedRentalAmount | currency: 'BRL' : 'symbol-narrow' }}
-                </span>
-              </div>
+              @if (rental.isCompleted) {
+                <div class="d-flex align-items-center mb-1">
+                  <mat-icon class="me-2" aria-hidden="true">attach_money</mat-icon>
+                  <span class="text-monospace">
+                    <strong>Valor total:</strong>
+                    {{ rental.finalAmountToPay | currency: 'BRL' : 'symbol-narrow' }}
+                  </span>
+                </div>
+              } @else {
+                <div class="d-flex align-items-center mb-1">
+                  <mat-icon class="me-2" aria-hidden="true">attach_money</mat-icon>
+                  <span class="text-monospace">
+                    <strong>Valor estimado:</strong>
+                    {{ rental.estimatedRentalAmount | currency: 'BRL' : 'symbol-narrow' }}
+                  </span>
+                </div>
+              }
             </mat-card-content>
 
             <mat-card-actions align="end">
+              @if (rental.isCompleted) {
+                <button
+                  mat-icon-button
+                  type="button"
+                  class="app-accent-button"
+                  (click)="downloadReceiptPdf(rental.id)"
+                  matTooltip="Emitir recibo (PDF)"
+                >
+                  <mat-icon>download</mat-icon>
+                </button>
+
+                <button
+                  mat-icon-button
+                  type="button"
+                  class="app-accent-button"
+                  (click)="openReceiptPdf(rental.id)"
+                  matTooltip="Abrir recibo (PDF)"
+                >
+                  <mat-icon>picture_as_pdf</mat-icon>
+                </button>
+
+                <button
+                  mat-icon-button
+                  type="button"
+                  class="app-accent-button"
+                  (click)="openSendReceiptEmailDialog(rental.id)"
+                  matTooltip="Enviar recibo por e-mail"
+                >
+                  <mat-icon>email</mat-icon>
+                </button>
+              }
+
               @if (!rental.isCompleted) {
                 <a [routerLink]="['editar', rental.id]" mat-icon-button class="app-accent-button">
                   <mat-icon>edit</mat-icon>

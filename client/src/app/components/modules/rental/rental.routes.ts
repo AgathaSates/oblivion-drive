@@ -23,7 +23,7 @@ import { RentalListPage } from './pages/list/rental-list.page';
 import { RentalCreatePage } from './pages/register/rental-create.page';
 import { RentalEditPage } from './pages/edit/rental-edit.page';
 import { RentalDeletePage } from './pages/delete/rental-delete.page';
-import { RentalReturnPage } from './return/rental-return.page';
+import { RentalReturnPage } from './pages/return/rental-return.page';
 
 export const rentalsListResolver: ResolveFn<RentalDetailModel[]> = () => {
   const rentalService = inject(RentalService);

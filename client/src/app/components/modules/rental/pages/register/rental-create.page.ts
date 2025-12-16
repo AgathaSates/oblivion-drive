@@ -239,10 +239,8 @@ export class RentalCreatePage {
     };
 
     const observer: PartialObserver<RegisterRentalResponseModel> = {
-      next: (response) => {
-        this.notificationService.success(
-          `O aluguel "${response?.rentalId ?? ''}" foi cadastrado com sucesso!`,
-        );
+      next: () => {
+        this.notificationService.success(`O aluguel foi cadastrado com sucesso!`);
         this.router.navigate(['/alugueis']);
       },
       error: (err) => {

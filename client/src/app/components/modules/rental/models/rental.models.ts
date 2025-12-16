@@ -108,3 +108,15 @@ export interface CompleteRentalReturnResponseModel {
   couponId: string | null;
   couponDiscountAmount: number;
 }
+
+export interface SendRentalReceiptEmailRequestModel {
+  email: string;
+}
+
+export interface SendRentalReceiptEmailResponseModel {
+  sentSuccessfully: boolean;
+}
+
+export interface RentalReturnConfirmationDialogResult {
+  confirmed: boolean;
+}

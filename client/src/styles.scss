@@ -519,6 +519,73 @@ button[mat-mini-fab].mat-primary {
   border-top-right-radius: 16px;
 }
 
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  background-color: $color-background;
+  color: $color-text;
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+}
+
+input.mat-mdc-input-element::placeholder {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+.app-rental-card-header {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.app-rental-card-header__title {
+  min-width: 0;
+}
+
+.app-rental-card-header__title mat-card-title,
+.app-rental-card-header__title mat-card-subtitle {
+  margin: 0; // evita espaçamentos estranhos
+}
+
+.app-rental-card-header__badge {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.app-rental-status {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.app-rental-status--completed {
+  background: rgba(46, 204, 113, 0.18);
+  border: 1px solid rgba(46, 204, 113, 0.35);
+
+  mat-icon {
+    color: rgba(46, 204, 113, 1);
+  }
+}
+
+.app-rental-status--open {
+  background: rgba(243, 156, 18, 0.18);
+  border: 1px solid rgba(243, 156, 18, 0.35);
+
+  mat-icon {
+    color: rgba(243, 156, 18, 1);
+  }
+}
+
 @media (min-width: 960px) {
   .app-footer.app-footer--with-shell {
     justify-content: center;

@@ -10,7 +10,7 @@
 
     <mat-card class="app-form-card">
       @if (rentalView$ | async; as rental) {
-        <form [formGroup]="returnForm" (ngSubmit)="completeReturn()">
+        <form [formGroup]="returnForm" (ngSubmit)="requestReturnConfirmation()">
           <mat-card-header>
             <mat-card-title>Confirme os dados e preencha a devolução</mat-card-title>
           </mat-card-header>
@@ -136,10 +136,10 @@
               type="submit"
               mat-flat-button
               class="app-primary-button"
-              [disabled]="returnForm.invalid"
+              [disabled]="returnForm.invalid || isSubmitting"
             >
               <mat-icon>check</mat-icon>
-              Confirmar devolução
+              {{ isSubmitting ? 'Processando...' : 'Confirmar devolução' }}
             </button>
           </mat-card-actions>
         </form>
