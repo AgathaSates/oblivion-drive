@@ -173,4 +173,37 @@ public class RentalController(IMediator mediator, IMapper mapper) : ControllerBa
 
         return Ok(new { sentSuccessfully = true });
     }
+
+    [HttpGet("report/payments")]
+    [SwaggerOperation(
+    Summary = "Gerar relatório de aluguéis (PDF)",
+    Description = "Gera um PDF simples com os aluguéis concluídos e totalizadores."
+    )]
+    [Produces("application/pdf")]
+    public async Task<IActionResult> GetPaymentsReportPdf(int? quantity, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GenerateRentalPaymentsReportPdfQuery(quantity), cancellationToken);
+        if (result.IsFailed) return result.ToActionResult();
+
+        Response.Headers.Append("Access-Control-Expose-Headers", "Content-Disposition");
+
+        return File(result.Value.Content, "application/pdf", result.Value.FileName);
+    }
+
+
+    [HttpGet("export/csv")]
+    [SwaggerOperation(
+    Summary = "Exportar aluguéis (CSV)",
+    Description = "Exporta a listagem de aluguéis da empresa do usuário logado em CSV."
+    )]
+    [Produces("text/csv")]
+    public async Task<IActionResult> ExportCsv(int? quantity, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new ExportRentalsCsvQuery(quantity), cancellationToken);
+        if (result.IsFailed) return result.ToActionResult();
+
+        Response.Headers.Append("Access-Control-Expose-Headers", "Content-Disposition");
+
+        return File(result.Value.Content, "text/csv", result.Value.FileName);
+    }
 }

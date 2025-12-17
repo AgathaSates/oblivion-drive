@@ -12,6 +12,25 @@
           Cadastrar
         </a>
       </div>
+
+      <div class="col-auto">
+        <button mat-stroked-button type="button" (click)="downloadRentalsCsv()">
+          <mat-icon>table_view</mat-icon>
+          Exportar (CSV)
+        </button>
+      </div>
+
+      <div class="col-auto">
+        <button
+          mat-flat-button
+          class="app-accent-button"
+          type="button"
+          (click)="openPaymentsReportPdf()"
+        >
+          <mat-icon>summarize</mat-icon>
+          Resumo financeiro (PDF)
+        </button>
+      </div>
     </div>
 
     <hr />

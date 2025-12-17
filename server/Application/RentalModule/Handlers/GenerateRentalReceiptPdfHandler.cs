@@ -67,7 +67,7 @@ public sealed class GenerateRentalReceiptPdfHandler(
                 return Result.Fail(ErrorResults.UnauthorizedError("Não é permitido emitir recibo com dados de outra empresa."));
             }
 
-            string planTypeDisplayName = rental.PlanType.ToString();
+            string planTypeDisplayName = GetPlanTypeLabel(rental.PlanType);
 
             var receiptData = new RentalReceiptPdfData(
                 RentalId: rental.Id,
@@ -118,5 +118,15 @@ public sealed class GenerateRentalReceiptPdfHandler(
 
             return Result.Fail(ErrorResults.InternalExceptionError(exception));
         }
+    }
+    private static string GetPlanTypeLabel(RentalPlanType planType)
+    {
+        return planType switch
+        {
+            RentalPlanType.Daily => "Diário",
+            RentalPlanType.Controlled => "Controlado",
+            RentalPlanType.Free => "Livre",
+            _ => planType.ToString()
+        };
     }
 }

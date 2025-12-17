@@ -210,4 +210,58 @@ export class RentalListPage {
         },
       });
   }
+
+  private readonly financialReportQuantity: number = 50; // "últimos 50" (ajuste como quiser)
+
+  protected downloadRentalsCsv(): void {
+    this.rentalService
+      .exportRentalsCsv(this.financialReportQuantity)
+      .pipe(take(1))
+      .subscribe({
+        next: (response) => {
+          const csvBlob: Blob | null = response.body;
+          if (!csvBlob) return;
+
+          const contentDispositionHeader: string | null =
+            response.headers.get('content-disposition');
+
+          const fileName: string =
+            this.tryGetFileNameFromContentDisposition(contentDispositionHeader) ?? 'Alugueis.csv';
+
+          this.downloadBlob(csvBlob, fileName);
+        },
+        error: () => {
+          this.notificationService.error('Falha ao exportar aluguéis em CSV.');
+        },
+      });
+  }
+
+  protected openPaymentsReportPdf(): void {
+    this.rentalService
+      .getPaymentsReportPdf(this.financialReportQuantity)
+      .pipe(take(1))
+      .subscribe({
+        next: (response) => {
+          const pdfBlob: Blob | null = response.body;
+          if (!pdfBlob) return;
+
+          const objectUrl: string = URL.createObjectURL(pdfBlob);
+          window.open(objectUrl, '_blank', 'noopener');
+        },
+        error: () => {
+          this.notificationService.error('Falha ao gerar resumo financeiro em PDF.');
+        },
+      });
+  }
+
+  private downloadBlob(fileBlob: Blob, fileName: string): void {
+    const objectUrl: string = URL.createObjectURL(fileBlob);
+
+    const anchorElement: HTMLAnchorElement = document.createElement('a');
+    anchorElement.href = objectUrl;
+    anchorElement.download = fileName;
+    anchorElement.click();
+
+    URL.revokeObjectURL(objectUrl);
+  }
 }

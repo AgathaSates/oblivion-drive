@@ -55,7 +55,7 @@ public static class InfrastructureDependencyInjection
         services.Configure<EmailSettings>(configuration.GetSection("Email"));
         services.AddScoped<IEmailSender, SmtpEmailSender>();
 
-
+        services.AddScoped<IRentalPaymentsReportPdfGenerator, QuestPdfRentalPaymentsReportPdfGenerator>();
 
         services.AddEntityFrameworkConfig(configuration);
 

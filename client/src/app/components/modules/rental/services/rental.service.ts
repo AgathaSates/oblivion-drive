@@ -86,4 +86,34 @@ export class RentalService {
     const fullUrl: string = `${this.apiUrl}/${rentalId}/receipt/email`;
     return this.http.post<SendRentalReceiptEmailResponseModel>(fullUrl, requestModel);
   }
+
+  public getPaymentsReportPdf(quantity?: number): Observable<HttpResponse<Blob>> {
+    const fullUrl: string = `${this.apiUrl}/report/payments`;
+
+    let params = new HttpParams();
+    if (quantity !== undefined && quantity !== null) {
+      params = params.set('quantity', quantity.toString());
+    }
+
+    return this.http.get(fullUrl, {
+      params,
+      observe: 'response',
+      responseType: 'blob',
+    });
+  }
+
+  public exportRentalsCsv(quantity?: number): Observable<HttpResponse<Blob>> {
+    const fullUrl: string = `${this.apiUrl}/export/csv`;
+
+    let params = new HttpParams();
+    if (quantity !== undefined && quantity !== null) {
+      params = params.set('quantity', quantity.toString());
+    }
+
+    return this.http.get(fullUrl, {
+      params,
+      observe: 'response',
+      responseType: 'blob',
+    });
+  }
 }

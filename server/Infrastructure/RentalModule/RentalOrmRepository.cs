@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OblivionDrive.Application.RentalModule.DTOs;
 using OblivionDrive.Domain.RentalModule;
 using OblivionDrive.Infrastructure.Orm.Shared;
 
@@ -50,5 +51,35 @@ public class RentalOrmRepository(OblivionDriveDbContext context) : BaseRepositor
     public Task<bool> ExistsAnyRentalForDriverAsync(Guid driverId)
     {
         return context.Rentals.AnyAsync(r => r.DriverId == driverId);
+    }
+
+    public async Task<List<RentalSummaryRow>> GetSummaryRowsByCompanyIdAsync(Guid companyId, int? count, CancellationToken cancellationToken)
+    {
+        IQueryable<Rental> query = context.Rentals
+            .AsNoTracking()
+            .Include(r => r.Client)
+            .Include(r => r.Vehicle)
+            .Where(r => r.CompanyId == companyId)
+            .OrderByDescending(r => r.StartDate);
+
+        if (count.HasValue && count.Value > 0)
+            query = query.Take(count.Value);
+
+        return await query
+            .Select(r => new RentalSummaryRow(
+                r.Id,
+                r.Client.Name,
+                r.Vehicle.Brand,
+                r.Vehicle.Model,
+                r.Vehicle.LicensePlate,
+                r.PlanType,
+                r.StartDate,
+                r.ExpectedReturnDate,
+                r.ActualReturnDate,
+                r.IsCompleted,
+                r.GrossRentalAmount,
+                r.FinalAmountToPay
+            ))
+            .ToListAsync(cancellationToken);
     }
 }

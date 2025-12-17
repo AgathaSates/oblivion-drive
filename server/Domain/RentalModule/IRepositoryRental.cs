@@ -11,4 +11,5 @@ public interface IRepositoryRental : IRepository<Rental>
     Task<bool> ExistsOpenRentalForDriverAsync(Guid driverId);
     Task<bool> ExistsOpenRentalUsingServiceAsync(Guid serviceId);
     Task<bool> ExistsAnyRentalForDriverAsync(Guid driverId);
+    Task<List<RentalSummaryRow>> GetSummaryRowsByCompanyIdAsync(Guid companyId, int? count, CancellationToken cancellationToken);
 }
