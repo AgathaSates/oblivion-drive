@@ -120,7 +120,6 @@ public class ExportRentalsCsvHandlerTests
         SetNonPublicProperty(row, nameof(RentalSummaryRow.PlanType), planType);
 
         SetNonPublicProperty(row, nameof(RentalSummaryRow.StartDate), startDate);
-        SetNonPublicProperty(row, nameof(RentalSummaryRow.ExpectedReturnDate), expectedReturnDate);
         SetNonPublicProperty(row, nameof(RentalSummaryRow.ActualReturnDate), actualReturnDate);
 
         SetNonPublicProperty(row, nameof(RentalSummaryRow.IsCompleted), isCompleted);

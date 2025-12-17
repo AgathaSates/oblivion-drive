@@ -87,61 +87,6 @@ public class GenerateRentalPaymentsReportPdfHandlerTests
             CompanyId = companyId ?? userId
         };
 
-    private static T CreateUninitialized<T>() where T : class
-        => (T)RuntimeHelpers.GetUninitializedObject(typeof(T));
-
-    private static void SetNonPublicProperty<TObj, TValue>(TObj instance, string propertyName, TValue value)
-    {
-        PropertyInfo? propertyInfo = instance!
-            .GetType()
-            .GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
-        if (propertyInfo is null)
-            throw new InvalidOperationException($"Property '{propertyName}' not found on type '{instance!.GetType().Name}'.");
-
-        MethodInfo? setter = propertyInfo.GetSetMethod(true);
-        if (setter is null)
-            throw new InvalidOperationException($"Property '{propertyName}' on '{instance!.GetType().Name}' does not have a setter.");
-
-        setter.Invoke(instance, new object?[] { value });
-    }
-
-    private static RentalSummaryRow CreateSummaryRow(
-        Guid rentalId,
-        bool isCompleted,
-        DateOnly startDate,
-        DateOnly expectedReturnDate,
-        DateOnly? actualReturnDate,
-        RentalPlanType planType,
-        decimal grossAmount,
-        decimal finalAmountToPay,
-        string clientName = "Cliente",
-        string vehicleBrand = "Ford",
-        string vehicleModel = "Ka",
-        string vehiclePlate = "ABC1D23")
-    {
-        RentalSummaryRow row = CreateUninitialized<RentalSummaryRow>();
-
-        SetNonPublicProperty(row, nameof(RentalSummaryRow.RentalId), rentalId);
-        SetNonPublicProperty(row, nameof(RentalSummaryRow.ClientName), clientName);
-        SetNonPublicProperty(row, nameof(RentalSummaryRow.VehicleBrand), vehicleBrand);
-        SetNonPublicProperty(row, nameof(RentalSummaryRow.VehicleModel), vehicleModel);
-        SetNonPublicProperty(row, nameof(RentalSummaryRow.VehicleLicensePlate), vehiclePlate);
-
-        SetNonPublicProperty(row, nameof(RentalSummaryRow.PlanType), planType);
-
-        SetNonPublicProperty(row, nameof(RentalSummaryRow.StartDate), startDate);
-        SetNonPublicProperty(row, nameof(RentalSummaryRow.ExpectedReturnDate), expectedReturnDate);
-        SetNonPublicProperty(row, nameof(RentalSummaryRow.ActualReturnDate), actualReturnDate);
-
-        SetNonPublicProperty(row, nameof(RentalSummaryRow.IsCompleted), isCompleted);
-
-        SetNonPublicProperty(row, nameof(RentalSummaryRow.GrossRentalAmount), grossAmount);
-        SetNonPublicProperty(row, nameof(RentalSummaryRow.FinalAmountToPay), finalAmountToPay);
-
-        return row;
-    }
-
     [TestMethod]
     public async Task Handle_Should_Return_Unauthorized_When_UserId_Is_Null()
     {
