@@ -47,7 +47,6 @@ public sealed class ExportRentalsCsvHandler(
                     .Append(Escape(vehicleDisplay)).Append(';')
                     .Append(Escape(row.PlanType.ToString())).Append(';')
                     .Append(Escape(row.StartDate.ToString("dd/MM/yyyy"))).Append(';')
-                    .Append(Escape(row.ExpectedReturnDate.ToString("dd/MM/yyyy"))).Append(';')
                     .Append(Escape(row.ActualReturnDate?.ToString("dd/MM/yyyy") ?? "")).Append(';')
                     .Append(Escape(status)).Append(';')
                     .Append(Escape(row.GrossRentalAmount.ToString("C", ptBrCulture))).Append(';')

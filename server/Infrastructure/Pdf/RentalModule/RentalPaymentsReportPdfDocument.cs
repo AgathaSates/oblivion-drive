@@ -93,8 +93,8 @@ public class RentalPaymentsReportPdfDocument(RentalPaymentsReportPdfData reportD
                         header.Cell().Text("Cliente").SemiBold();
                         header.Cell().Text("Veículo").SemiBold();
                         header.Cell().Text("Plano").SemiBold();
-                        header.Cell().AlignRight().Text("Faturado").SemiBold();
-                        header.Cell().AlignRight().Text("A receber").SemiBold();
+                        header.Cell().AlignRight().Text("Total (bruto)").SemiBold();
+                        header.Cell().AlignRight().Text("Pago na devolução").SemiBold();
 
                         header.Cell().ColumnSpan(6).PaddingTop(4)
                             .LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
@@ -142,14 +142,20 @@ public class RentalPaymentsReportPdfDocument(RentalPaymentsReportPdfData reportD
 
                 column.Item().Row(row =>
                 {
-                    row.RelativeItem().Text("Total faturado").SemiBold();
+                    row.RelativeItem().Text("Total do aluguel (bruto)").SemiBold();
                     row.ConstantItem(140).AlignRight().Text(FormatMoney(reportData.TotalGrossAmount)).SemiBold();
                 });
 
                 column.Item().Row(row =>
                 {
-                    row.RelativeItem().Text("Total a receber").FontSize(14).SemiBold();
-                    row.ConstantItem(140).AlignRight().Text(FormatMoney(reportData.TotalFinalAmountToPay)).FontSize(14).SemiBold();
+                    row.RelativeItem().Text("Descontos (cupons)").FontColor(Colors.Grey.Darken2);
+                    row.ConstantItem(140).AlignRight().Text(FormatMoney(reportData.TotalCouponDiscountAmount)).FontColor(Colors.Grey.Darken2);
+                });
+
+                column.Item().Row(row =>
+                {
+                    row.RelativeItem().Text("Total líquido (após cupons)").FontSize(14).SemiBold();
+                    row.ConstantItem(140).AlignRight().Text(FormatMoney(reportData.TotalNetAmountAfterCoupons)).FontSize(14).SemiBold();
                 });
             });
     }

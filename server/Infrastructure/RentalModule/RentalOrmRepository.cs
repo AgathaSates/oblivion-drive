@@ -74,11 +74,11 @@ public class RentalOrmRepository(OblivionDriveDbContext context) : BaseRepositor
                 r.Vehicle.LicensePlate,
                 r.PlanType,
                 r.StartDate,
-                r.ExpectedReturnDate,
                 r.ActualReturnDate,
                 r.IsCompleted,
                 r.GrossRentalAmount,
-                r.FinalAmountToPay
+                r.FinalAmountToPay,
+                r.CouponDiscountAmount
             ))
             .ToListAsync(cancellationToken);
     }

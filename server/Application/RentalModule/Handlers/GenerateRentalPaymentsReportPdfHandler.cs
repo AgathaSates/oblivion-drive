@@ -43,18 +43,23 @@ public sealed class GenerateRentalPaymentsReportPdfHandler(
                     StartDate: r.StartDate,
                     ActualReturnDate: r.ActualReturnDate,
                     GrossRentalAmount: r.GrossRentalAmount,
-                    FinalAmountToPay: r.FinalAmountToPay
+                    FinalAmountToPay: r.FinalAmountToPay,
+                    CouponDiscountAmount: r.CouponDiscountAmount
                 ))
                 .ToList();
 
             decimal totalGrossAmount = completedRows.Sum(r => r.GrossRentalAmount);
-            decimal totalFinalAmountToPay = completedRows.Sum(r => r.FinalAmountToPay);
+            decimal totalPaidOnReturnAmount = completedRows.Sum(r => r.FinalAmountToPay);
+            decimal totalCouponDiscountAmount = completedRows.Sum(r => r.CouponDiscountAmount);
+            decimal totalNetAmountAfterCoupons = totalGrossAmount - totalCouponDiscountAmount;
 
             var reportData = new RentalPaymentsReportPdfData(
                 GeneratedAt: DateTime.Now,
                 Rows: completedRows,
                 TotalGrossAmount: totalGrossAmount,
-                TotalFinalAmountToPay: totalFinalAmountToPay
+                TotalPaidOnReturnAmount: totalPaidOnReturnAmount,
+                TotalCouponDiscountAmount: totalCouponDiscountAmount,
+                TotalNetAmountAfterCoupons: totalNetAmountAfterCoupons
             );
 
             byte[] pdfBytes = reportPdfGenerator.Generate(reportData);

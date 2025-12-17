@@ -4,7 +4,9 @@ public record RentalPaymentsReportPdfData(
     DateTime GeneratedAt,
     IReadOnlyList<RentalPaymentsReportRow> Rows,
     decimal TotalGrossAmount,
-    decimal TotalFinalAmountToPay
+    decimal TotalPaidOnReturnAmount,
+    decimal TotalCouponDiscountAmount,
+    decimal TotalNetAmountAfterCoupons
 );
 
 public record RentalPaymentsReportRow(
@@ -15,5 +17,6 @@ public record RentalPaymentsReportRow(
     DateOnly StartDate,
     DateOnly? ActualReturnDate,
     decimal GrossRentalAmount,
-    decimal FinalAmountToPay
+    decimal FinalAmountToPay,
+    decimal CouponDiscountAmount
 );

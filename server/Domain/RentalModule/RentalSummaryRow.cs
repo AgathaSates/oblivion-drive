@@ -7,9 +7,9 @@ public record RentalSummaryRow(
     string VehicleLicensePlate,
     RentalPlanType PlanType,
     DateOnly StartDate,
-    DateOnly ExpectedReturnDate,
     DateOnly? ActualReturnDate,
     bool IsCompleted,
     decimal GrossRentalAmount,
-    decimal FinalAmountToPay
+    decimal FinalAmountToPay,
+    decimal CouponDiscountAmount
 );
