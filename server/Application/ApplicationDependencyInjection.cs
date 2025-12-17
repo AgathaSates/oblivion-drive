@@ -36,6 +36,7 @@ public static class ApplicationDependencyInjection
         services.AddStackExchangeRedisCache(opt =>
         {
             opt.Configuration = redisConnectionString;
+            opt.InstanceName = "oblivion-drive-api";
         });
 
         return services;

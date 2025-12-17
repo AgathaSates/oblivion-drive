@@ -126,15 +126,13 @@ public static class ApiDependencyInjection
     public static void ApplyMigrations(this IHost host)
     {
         using var scope = host.Services.CreateScope();
+        var services = scope.ServiceProvider;
+
         var dbContext = scope.ServiceProvider.GetRequiredService<OblivionDriveDbContext>();
 
-        var executionStrategy = dbContext.Database.CreateExecutionStrategy();
+        dbContext.Database.Migrate();
 
-        executionStrategy.Execute(() =>
-        {
-            dbContext.Database.Migrate();
-            CreateRoles(scope.ServiceProvider);
-        });
+        CreateRoles(services);
     }
 
     private static void CreateRoles(IServiceProvider services)

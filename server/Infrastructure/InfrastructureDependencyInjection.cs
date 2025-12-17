@@ -64,16 +64,11 @@ public static class InfrastructureDependencyInjection
 
     private static void AddEntityFrameworkConfig(this IServiceCollection services, IConfiguration configuration)
     {
-        string? sqlConnectionString = configuration.GetConnectionString("SQL_CONNECTION_STRING");
+        var connectionString = configuration["SQL_CONNECTION_STRING"];
 
-        if (string.IsNullOrWhiteSpace(sqlConnectionString))
-            throw new Exception("A connection string 'SQL_CONNECTION_STRING' não foi fornecida.");
+        if (string.IsNullOrWhiteSpace(connectionString)) throw new Exception("A connection string 'SQL_CONNECTION_STRING' não foi fornecida.");
 
-        services.AddDbContext<IUnitOfWork, OblivionDriveDbContext>(dbContextOptions =>
-        {
-            dbContextOptions.UseSqlServer(sqlConnectionString, sqlServerOptions =>
-                sqlServerOptions.EnableRetryOnFailure(10, TimeSpan.FromSeconds(30), null));
-        });
+        services.AddDbContext<IUnitOfWork, OblivionDriveDbContext>(options =>
+                options.UseSqlServer(connectionString, (opt) => opt.EnableRetryOnFailure(3)));
     }
-
 }
