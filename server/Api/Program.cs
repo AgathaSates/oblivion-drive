@@ -41,7 +41,15 @@ namespace OblivionDrive.Api
 
             var app = builder.Build();
 
-            app.ApplyMigrations();
+            try
+            {
+                app.ApplyMigrations();
+            }
+            catch (Exception exception)
+            {
+                app.Logger.LogError(exception, "Startup migrations failed. API will start without DB ready.");
+            }
+
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseHttpsRedirection();

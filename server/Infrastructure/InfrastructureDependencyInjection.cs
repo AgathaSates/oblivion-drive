@@ -72,11 +72,15 @@ public static class InfrastructureDependencyInjection
         if (string.IsNullOrWhiteSpace(sqlConnectionString))
             throw new Exception("A variável SQL_CONNECTION_STRING não foi fornecida.");
 
-        services.AddDbContext<IUnitOfWork, OblivionDriveDbContext>(options =>
-            options.UseSqlServer(sqlConnectionString, sql =>
-            sql.EnableRetryOnFailure(
-                maxRetryCount: 10,
-                maxRetryDelay: TimeSpan.FromSeconds(30),
-                errorNumbersToAdd: null)));
+        services.AddDbContext<IUnitOfWork, OblivionDriveDbContext>(dbContextOptions =>
+        {
+            dbContextOptions.UseSqlServer(sqlConnectionString, sqlServerOptions =>
+                sqlServerOptions.EnableRetryOnFailure(
+                    maxRetryCount: 10,
+                    maxRetryDelay: TimeSpan.FromSeconds(30),
+                    errorNumbersToAdd: null
+                ));
+        });
+
     }
 }

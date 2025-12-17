@@ -126,20 +126,15 @@ public static class ApiDependencyInjection
     public static void ApplyMigrations(this IHost host)
     {
         using var scope = host.Services.CreateScope();
-        var services = scope.ServiceProvider;
+        var dbContext = scope.ServiceProvider.GetRequiredService<OblivionDriveDbContext>();
 
-        var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger("Migrations");
-        var dbContext = services.GetRequiredService<OblivionDriveDbContext>();
+        var executionStrategy = dbContext.Database.CreateExecutionStrategy();
 
-        try
+        executionStrategy.Execute(() =>
         {
             dbContext.Database.Migrate();
-            CreateRoles(services);
-        }
-        catch (Exception exception)
-        {
-            logger.LogError(exception, "Failed to apply migrations at startup.");
-        }
+            CreateRoles(scope.ServiceProvider);
+        });
     }
 
     private static void CreateRoles(IServiceProvider services)
