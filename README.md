@@ -6,23 +6,23 @@
 
 ## 🔐 Login e Página Inicial
 
-![Demonstração do Projeto](login-e-pagina-inicial.gif)
+![Demonstração do Projeto](gifs/login-e-pagina-inicial.gif)
 
 ## 🧭 Navegação entre Módulos
 
-![Demonstração do Projeto](navegacao-entre-modulos.gif)
+![Demonstração do Projeto](gifs/navegacao-entre-modulos.gif)
 
 ## 🚗 Cadastro de Aluguel
 
-![Demonstração do Projeto](cadastro-de-aluguel.gif)
+![Demonstração do Projeto](gifs/cadastro-de-aluguel.gif)
 
-## 🧾 Emissão e envio da Nota Fiscal
+## 🧾  Devolução e emissão da Nota Fiscal
 
-![Demonstração do Projeto](emissao-e-envio-da-nota-fiscal.gif)
+![Demonstração do Projeto](gifs/devolucao-e-missao-nota.gif)
 
-## 📊 Relatório financeiro
+## 📊 Envio por E-mail e Relatório financeiro
 
-![Demonstração do Projeto](relatorio-financeiro.gif)
+![Demonstração do Projeto](gifs/envio-email-e-relatorio-financeiro.gif)
 
 # 💡 Índice
 

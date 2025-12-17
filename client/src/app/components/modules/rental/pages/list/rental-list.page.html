@@ -82,7 +82,12 @@
               <div class="d-flex align-items-center mb-1">
                 <mat-icon class="me-2" aria-hidden="true">directions_car</mat-icon>
                 <span class="text-monospace">
-                  <strong>Veículo:</strong> {{ rental.vehicleLabel }}
+                  <strong>Veículo:</strong>
+                  {{
+                    rental.vehicleLabel.length > 30
+                      ? (rental.vehicleLabel | slice: 0 : 30) + '…'
+                      : rental.vehicleLabel
+                  }}
                 </span>
               </div>
 
