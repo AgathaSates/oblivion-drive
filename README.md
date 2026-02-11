@@ -1,7 +1,5 @@
 # OblivionDrive
 
-> 🔗 **Site (Azure Static Web Apps):** ()
-
 # 📌 Demonstração
 
 ## 🔐 Login e Página Inicial
@@ -213,7 +211,6 @@ OblivionDrive
 - 🌐 **ASP.NET Core Web API** — endpoints e autenticação
 - 🗺️ **AutoMapper** — mapeamentos na API/Application
 - ✅ **FluentValidation** — validações no back-end
-- ☁️ **Azure Static Web Apps** — deploy da aplicação front-end
   
 # 🧠 Commits e Convenções
 
